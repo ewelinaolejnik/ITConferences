@@ -1,14 +1,15 @@
-﻿using ITConferences.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ITConferences.Domain.Abstract
 {
-    public interface ITagRepository
+    public interface IDataContext
     {
-        IEnumerable<Tag> Tags { get; }
+        IDbSet<T> Set<T>() where T : class;
+        int SaveChanges();
     }
 }

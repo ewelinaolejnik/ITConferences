@@ -77,9 +77,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstract\ITagRepository.cs" />
-    <Compile Include="Concrete\ITConferencesContext.cs" />
-    <Compile Include="Concrete\TagRepository.cs" />
+    <Compile Include="Abstract\IDataContext.cs" />
+    <Compile Include="Abstract\IGenericRepository.cs" />
+    <Compile Include="Concrete\DataContext.cs" />
+    <Compile Include="Concrete\GenericRepository.cs" />
     <Compile Include="Entities\Attendee.cs" />
     <Compile Include="Entities\City.cs" />
     <Compile Include="Entities\Conference.cs" />
@@ -89,11 +90,21 @@
     <Compile Include="Entities\Organizer.cs" />
     <Compile Include="Entities\Speaker.cs" />
     <Compile Include="Entities\Tag.cs" />
+    <Compile Include="Migrations\201511221407342_InitialCreate.cs" />
+    <Compile Include="Migrations\201511221407342_InitialCreate.Designer.cs">
+      <DependentUpon>201511221407342_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201511221407342_InitialCreate.resx">
+      <DependentUpon>201511221407342_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
