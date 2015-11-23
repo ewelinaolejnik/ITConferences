@@ -1,12 +1,19 @@
-﻿body {
+﻿html, body, #map, .body-content {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
 
-/* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ITConferences.Domain.Entities
 {
-    public class Attendee
+    public class Attendee 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -21,7 +21,7 @@ namespace ITConferences.Domain.Entities
 
         [Required]
         [Display(Name = "Email")]
-        [EmailAddress(ErrorMessage = "Invalid Email")]
+        [EmailAddress(ErrorMessage = "Invalid email")]
         public string Email { get; set; }
 
         public virtual ICollection<Attendee> Friends { get; set; }
