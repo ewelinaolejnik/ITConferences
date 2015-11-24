@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace ITConferences.WebUI.Infrastructure
+namespace ITConferences.Domain.Infrastructure
 {
     public class NinjectDependencyResolver : IDependencyResolver
     {

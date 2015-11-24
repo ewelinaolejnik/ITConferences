@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace ITConferences.WebUI.Controllers
+namespace ITConferences.Domain.Controllers
 {
     public class HomeController : Controller
     {

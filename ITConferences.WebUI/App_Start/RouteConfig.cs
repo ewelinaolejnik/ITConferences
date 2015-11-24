@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace ITConferences.WebUI
+namespace ITConferences.Domain
 {
     public class RouteConfig
     {

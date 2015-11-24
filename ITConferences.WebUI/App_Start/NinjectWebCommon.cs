@@ -1,7 +1,7 @@
-[assembly: WebActivator.PreApplicationStartMethod(typeof(ITConferences.WebUI.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivator.ApplicationShutdownMethodAttribute(typeof(ITConferences.WebUI.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivator.PreApplicationStartMethod(typeof(ITConferences.Domain.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivator.ApplicationShutdownMethodAttribute(typeof(ITConferences.Domain.App_Start.NinjectWebCommon), "Stop")]
 
-namespace ITConferences.WebUI.App_Start
+namespace ITConferences.Domain.App_Start
 {
     using System;
     using System.Web;

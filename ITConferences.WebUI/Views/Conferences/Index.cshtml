@@ -1,0 +1,62 @@
+﻿@model IEnumerable<ITConferences.Domain.Entities.Conference>
+
+@{
+    ViewBag.Title = "Conferences";
+}
+
+<div class="container">
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TargetCity.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TargetCountry.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Url)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPaid)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TargetCity.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TargetCountry.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Url)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsPaid)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.ConferenceID })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

@@ -7,13 +7,13 @@ namespace ITConferences.Domain.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class InitialCreate : IMigrationMetadata
+    public sealed partial class AttendeeIsUser : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AttendeeIsUser));
         
         string IMigrationMetadata.Id
         {
-            get { return "201511221407342_InitialCreate"; }
+            get { return "201511242001205_AttendeeIsUser"; }
         }
         
         string IMigrationMetadata.Source

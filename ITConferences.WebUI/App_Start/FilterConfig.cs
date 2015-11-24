@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace ITConferences.WebUI
+namespace ITConferences.Domain
 {
     public class FilterConfig
     {

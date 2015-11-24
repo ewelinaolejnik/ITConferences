@@ -1,17 +1,13 @@
 ﻿using ITConferences.Domain.Abstract;
 using ITConferences.Domain.Entities;
-using System;
-using System.Collections.Generic;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITConferences.Domain.Concrete
 {
-    public class DataContext : DbContext, IDataContext
+    public class DataContext : IdentityDbContext, IDataContext
     {
-        public DataContext() : base("ITConferencesDb")
+        public DataContext() : base("ITConferencesDatabase")
         {
 
         }
@@ -44,6 +40,11 @@ namespace ITConferences.Domain.Concrete
         public void ExecuteCommand(string command, params object[] parameters)
         {
             base.Database.ExecuteSqlCommand(command, parameters);
+        }
+
+        public static DataContext Create()
+        {
+            return new DataContext();
         }
     }
 }
