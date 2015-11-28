@@ -16,10 +16,10 @@ namespace ITConferences.Domain.Entities
 
         //[Required]
         //[StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
-        //[Display(Name = "Name")]
+        //[Display(Name = "User name")]
         //public string Name { get; set; }
 
-        ////[Required]
+        //////[Required]
         ////[Display(Name = "Email")]
         ////[EmailAddress(ErrorMessage = "Invalid email")]
         ////public string Email { get; set; }

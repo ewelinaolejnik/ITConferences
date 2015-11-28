@@ -11,6 +11,7 @@ namespace ITConferences.WebUI.Models
 
         [Required]
         [Display(Name = "User name")]
+        [StringLength(100,ErrorMessage = "The {0} must be at least {2} characters long.",MinimumLength = 3)]
         public string UserName { get; set; }
     }
 
@@ -53,9 +54,14 @@ namespace ITConferences.WebUI.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "User name")]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 3)]
+        public string UserName { get; set; }
+
+        //[Required]
+        //[Display(Name = "Email")]
+        //[EmailAddress]
+        //public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -70,15 +76,17 @@ namespace ITConferences.WebUI.Models
     {
         [Required]
         [Display(Name = "User name")]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 3)]
         public string UserName { get; set; }
 
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
+        [RegularExpression("^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$", ErrorMessage = "Must be a valid email")]
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 8)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
@@ -112,6 +120,10 @@ namespace ITConferences.WebUI.Models
 
     public class ForgotPasswordViewModel
     {
+        [Required]
+        [Display(Name = "User name")]
+        public string UserName { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

@@ -13,17 +13,32 @@ using Microsoft.Owin.Security;
 using ITConferences.Domain.Entities;
 using ITConferences.Domain.Abstract;
 using ITConferences.Domain.Concrete;
+using System.Net.Mail;
+using ITConferences.WebUI.Service;
 
-namespace ITConferences.Domain
+namespace ITConferences.WebUI
 {
-    //    public class EmailService : IIdentityMessageService
-    //    {
-    //        public Task SendAsync(IdentityMessage message)
-    //        {
-    //            // Plug in your email service here to send an email.
-    //            return Task.FromResult(0);
-    //        }
-    //    }
+    public class EmailService : IIdentityMessageService
+    {
+        public async Task SendAsync(IdentityMessage message)
+        {
+            MailMessage email = new MailMessage(new MailAddress("noreply@itconferences.com", "(do not reply)"),
+            new MailAddress(message.Destination));
+
+            email.Subject = message.Subject;
+            email.Body = message.Body;
+
+            email.IsBodyHtml = true;
+
+            using (var mailClient = new EmailClient())
+            {
+                //In order to use the original from email address, uncomment this line:
+                //email.From = new MailAddress(mailClient.UserName, "(do not reply)");
+
+                await mailClient.SendMailAsync(email);
+            }
+        }
+    }
 
     //public class SmsService : IIdentityMessageService
     //{
@@ -34,17 +49,7 @@ namespace ITConferences.Domain
     //    }
     //}
 
-    //public partial class Attendee : IdentityUser
-    //{
-    //    public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<Attendee> manager)
-    //    {
 
-    //        // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
-    //        var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
-    //        // Add custom user claims here
-    //        return userIdentity;
-    //    }
-    //}
 
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class ApplicationUserManager : UserManager<Attendee>
@@ -67,7 +72,7 @@ namespace ITConferences.Domain
             // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 6,
+                RequiredLength = 8,
                 RequireNonLetterOrDigit = true,
                 RequireDigit = true,
                 RequireLowercase = true,
@@ -90,14 +95,14 @@ namespace ITConferences.Domain
             //    Subject = "Security Code",
             //    BodyFormat = "Your security code is {0}"
             //});
-            //manager.EmailService = new EmailService();
+            manager.EmailService = new EmailService();
             //manager.SmsService = new SmsService();
-            //var dataProtectionProvider = options.DataProtectionProvider;
-            //if (dataProtectionProvider != null)
-            //{
-            //    manager.UserTokenProvider = 
-            //        new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
-            //}
+            var dataProtectionProvider = options.DataProtectionProvider;
+            if (dataProtectionProvider != null)
+            {
+                manager.UserTokenProvider =
+                    new DataProtectorTokenProvider<Attendee>(dataProtectionProvider.Create("ASP.NET Identity"));
+            }
             return manager;
         }
     }

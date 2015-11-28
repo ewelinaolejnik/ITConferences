@@ -106,6 +106,14 @@
     <Compile Include="Migrations\201511242001205_AttendeeIsUser.Designer.cs">
       <DependentUpon>201511242001205_AttendeeIsUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201511251614193_NameForAttendee.cs" />
+    <Compile Include="Migrations\201511251614193_NameForAttendee.Designer.cs">
+      <DependentUpon>201511251614193_NameForAttendee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201511251700580_RemoveName.cs" />
+    <Compile Include="Migrations\201511251700580_RemoveName.Designer.cs">
+      <DependentUpon>201511251700580_RemoveName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -116,6 +124,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201511242001205_AttendeeIsUser.resx">
       <DependentUpon>201511242001205_AttendeeIsUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511251614193_NameForAttendee.resx">
+      <DependentUpon>201511251614193_NameForAttendee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511251700580_RemoveName.resx">
+      <DependentUpon>201511251700580_RemoveName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Owin;
 using ITConferences.Domain.Concrete;
 using ITConferences.Domain.Entities;
+using ITConferences.WebUI;
 
 namespace ITConferences.Domain
 {
