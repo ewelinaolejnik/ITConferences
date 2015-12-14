@@ -13,6 +13,9 @@ namespace ITConferences.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CountryID { get; set; }
+
+        [Required]
+        [Display(Name = "Country:")]
         public string Name { get; set; }
         public virtual ICollection<City> Cities { get; set; }
     }

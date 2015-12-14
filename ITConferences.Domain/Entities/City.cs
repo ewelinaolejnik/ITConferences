@@ -13,6 +13,11 @@ namespace ITConferences.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CityID { get; set; }
+
+        [Required]
+        [Display(Name = "City:")]
         public string Name { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

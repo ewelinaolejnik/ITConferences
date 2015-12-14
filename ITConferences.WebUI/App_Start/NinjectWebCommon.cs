@@ -1,7 +1,7 @@
-[assembly: WebActivator.PreApplicationStartMethod(typeof(ITConferences.Domain.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivator.ApplicationShutdownMethodAttribute(typeof(ITConferences.Domain.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(ITConferences.WebUI.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(ITConferences.WebUI.App_Start.NinjectWebCommon), "Stop")]
 
-namespace ITConferences.Domain.App_Start
+namespace ITConferences.WebUI.App_Start
 {
     using System;
     using System.Web;
@@ -10,8 +10,6 @@ namespace ITConferences.Domain.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
-    using System.Web.Mvc;
-    using Infrastructure;
 
     public static class NinjectWebCommon 
     {
@@ -42,11 +40,19 @@ namespace ITConferences.Domain.App_Start
         private static IKernel CreateKernel()
         {
             var kernel = new StandardKernel();
-            kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
-            kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-            
-            RegisterServices(kernel);
-            return kernel;
+            try
+            {
+                kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+                kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+
+                RegisterServices(kernel);
+                return kernel;
+            }
+            catch
+            {
+                kernel.Dispose();
+                throw;
+            }
         }
 
         /// <summary>
@@ -55,7 +61,6 @@ namespace ITConferences.Domain.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
         }        
     }
 }

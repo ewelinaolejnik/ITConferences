@@ -40,8 +40,12 @@ namespace ITConferences.Domain.Controllers
         // GET: Conferences/Create
         public ActionResult Create()
         {
-            ViewBag.TargetCityId = new SelectList(db.Cities, "CityID", "Name");
-            ViewBag.TargetCountryId = new SelectList(db.Countries, "CountryID", "Name");
+            
+           // var countries = new SelectList(db.Countries, "CountryID", "Name");
+            ViewData["Countries"] = new SelectList(db.Countries, "CountryID", "Name");
+            //ViewBag.TargetCountryId = countries;
+            //var selected = countries.SelectedValue;
+            //ViewBag.TargetCityId = new SelectList(db.Cities, "CityID", "Name", selected, "DropDownList");
             return View();
         }
 
@@ -59,9 +63,21 @@ namespace ITConferences.Domain.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.TargetCityId = new SelectList(db.Cities, "CityID", "Name", conference.TargetCityId);
+            //ViewBag.TargetCityId = new SelectList(db.Cities, "CityID", "Name", conference.TargetCityId);
             ViewBag.TargetCountryId = new SelectList(db.Countries, "CountryID", "Name", conference.TargetCountryId);
             return View(conference);
+        }
+
+        public JsonResult GetSelectedCities(int countryID)
+        {
+            var country = db.Countries.Where(e => e.CountryID == countryID).First();
+            var selectedCities = country.Cities.Select(c => new SelectListItem()
+            {
+                Text = c.Name,
+                Value = c.CityID.ToString()
+            });
+
+            return Json(selectedCities, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

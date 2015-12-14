@@ -16,25 +16,26 @@ namespace ITConferences.Domain.Entities
         public int ConferenceID { get; set; }
 
         [Required]
-        [Display(Name = "Name of the conference")]
+        [Display(Name = "Event name:")]
         public string Name { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [Display(Name = "When?")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [Display(Name = "When: ")]
         public DateTime Date { get; set; }
 
         [Required]
         [Url(ErrorMessage = "Invalid URL!")]
-        [Display(Name = "Website")]
+        [Display(Name = "Website:")]
         public string Url { get; set; }
 
-        [Display(Name = "Is it paid?")]
+        [Display(Name = "Paid?")]
         public bool IsPaid { get; set; }
 
         public virtual City TargetCity { get; set; }
         public virtual Country TargetCountry { get; set; }
+        public virtual Image Image { get; set; }
         public virtual ICollection<Attendee> Attendees { get; set; }
         public virtual ICollection<Speaker> Speakers { get; set; }
         public virtual ICollection<Organizer> Organizers { get; set; }
@@ -45,5 +46,7 @@ namespace ITConferences.Domain.Entities
         public int TargetCityId { get; set; }
         [ForeignKey("TargetCountry")]
         public int TargetCountryId { get; set; }
+        [ForeignKey("Image")]
+        public int ImageId { get; set; }
     }
 }

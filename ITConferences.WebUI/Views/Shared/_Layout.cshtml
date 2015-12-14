@@ -13,13 +13,19 @@
 </head>
 <body>
 
+    <noscript>
+        <div>
+            <h2>This site requires JavaScript</h2>
+        </div>
+    </noscript>
+
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
+        <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-5">
                     <span class="sr-only">Toggle navigation</span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand navbar-left" })
+                @Html.ActionLink("IT Conferences", "Index", "Home", new { area = "" }, new { @class = "navbar-brand navbar-left" })
             </div>
             <div class="nav navbar-nav navbar-right" id="#navbar-collapse-5">
                 <div class="navbar-form navbar-left">

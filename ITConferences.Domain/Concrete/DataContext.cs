@@ -19,7 +19,7 @@ namespace ITConferences.Domain.Concrete
 
         public override int SaveChanges()
         {
-            return this.SaveChanges();
+            return base.SaveChanges();
         }
 
         public IDbSet<Conference> Conferences { get; set; }
