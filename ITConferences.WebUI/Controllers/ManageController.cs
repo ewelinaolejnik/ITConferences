@@ -7,11 +7,12 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ITConferences.WebUI.Models;
 using ITConferences.WebUI;
+using ITConferences.WebUI.Controllers;
 
 namespace ITConferences.Domain.Controllers
 {
     [Authorize]
-    public class ManageController : Controller
+    public class ManageController : BaseController
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;

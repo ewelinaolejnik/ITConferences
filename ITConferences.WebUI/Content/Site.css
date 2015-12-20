@@ -14,6 +14,11 @@ body {
     padding-bottom: 0px;
     padding-left: 0px;
     padding-right: 0px;
+    position:relative;
+}
+
+ #map {
+    z-index:-100;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 

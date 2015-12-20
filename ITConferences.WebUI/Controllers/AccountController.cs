@@ -10,11 +10,12 @@ using ITConferences.Domain.Entities;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.AspNet.Identity.EntityFramework;
 using ITConferences.WebUI;
+using ITConferences.WebUI.Controllers;
 
 namespace ITConferences.Domain.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;

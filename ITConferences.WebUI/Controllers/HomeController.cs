@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ITConferences.WebUI.Controllers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,7 +8,7 @@ using System.Web.Mvc;
 namespace ITConferences.Domain.Controllers
 {
     [RequireHttps]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public ActionResult Index()
         {

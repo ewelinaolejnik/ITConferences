@@ -8,10 +8,11 @@ using System.Web;
 using System.Web.Mvc;
 using ITConferences.Domain.Concrete;
 using ITConferences.Domain.Entities;
+using ITConferences.WebUI.Controllers;
 
 namespace ITConferences.Domain.Controllers
 {
-    public class ConferencesController : Controller
+    public class ConferencesController : BaseController
     {
         private DataContext db = new DataContext();
 
@@ -40,8 +41,14 @@ namespace ITConferences.Domain.Controllers
         // GET: Conferences/Create
         public ActionResult Create()
         {
-            
-           // var countries = new SelectList(db.Countries, "CountryID", "Name");
+            if (!Request.IsAuthenticated)
+            {
+                Danger("Log in to add an event, please",
+                true);
+
+                return RedirectToAction("Index", "Home");
+            }
+            // var countries = new SelectList(db.Countries, "CountryID", "Name");
             ViewData["Countries"] = new SelectList(db.Countries, "CountryID", "Name");
             //ViewBag.TargetCountryId = countries;
             //var selected = countries.SelectedValue;
@@ -56,6 +63,7 @@ namespace ITConferences.Domain.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ConferenceID,Name,Date,Url,IsPaid,TargetCityId,TargetCountryId")] Conference conference)
         {
+            
             if (ModelState.IsValid)
             {
                 db.Conferences.Add(conference);

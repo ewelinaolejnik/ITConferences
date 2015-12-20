@@ -29,7 +29,7 @@
             </div>
             <div class="nav navbar-nav navbar-right" id="#navbar-collapse-5">
                 <div class="navbar-form navbar-left">
-                    <button type="button" style="background-color: red" class="btn btn-danger" onclick="window.location.href='@Url.Action("Create", "Conferences")';">Add an event</button>
+                    @Html.ActionLink("Add an event", "Create", "Conferences", null, new { @class = "btn btn-danger pull-right" })
                 </div>
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Conferences", "Index", "Conferences")</li>
@@ -46,7 +46,9 @@
         </div>
     </div>
 
+    
     <div class="container body-content">
+        @Html.Partial("_Alerts")
         @RenderBody()
 
         <div class="footer navbar-inverse navbar-fixed-bottom">

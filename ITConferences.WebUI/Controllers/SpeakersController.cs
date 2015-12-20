@@ -8,10 +8,11 @@ using System.Web;
 using System.Web.Mvc;
 using ITConferences.Domain.Concrete;
 using ITConferences.Domain.Entities;
+using ITConferences.WebUI.Controllers;
 
 namespace ITConferences.Domain.Controllers
 {
-    public class SpeakersController : Controller
+    public class SpeakersController : BaseController
     {
         private DataContext db = new DataContext();
 
