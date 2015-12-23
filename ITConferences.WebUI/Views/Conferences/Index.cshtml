@@ -2,23 +2,50 @@
 
 @{
     ViewBag.Title = "Conferences";
+    int i = 1;
 }
 
 <div class="container">
-
     <div class="row">
+        <p>filtry</p>
+    </div>
+    <div class="form-group">
 
-        <div id="small-img" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 center">
-            <div class=".col-md-4">
+        @*<div id="small-img" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 center">*@
+        @*<div class="col-lg-4 center">
                 @foreach (var item in Model)
                 {
 
                     <img src="http://placehold.it/150x100" class="img-responsive img-thumbnail" alt="Responsive image" />
                     @Html.ActionLink(item.Name, "Details", new { id = item.ConferenceID })
-                }
-            </div>
 
-        </div>
+                    if (i % 3 == 0)
+                    {
+                        <br />
+                    }
+
+                    i++;
+                }
+            </div>*@
+
+        @*</div>*@
+
+        @foreach (var item in Model)
+        {
+            <div class="form-group">
+                <div class="col-md-4 col-xs-4 btn">
+                    <a href="@Url.Action("Details","Conferences",new { id = item.ConferenceID })">
+                        <div class="col-md-6 col-xs-6">
+                            <img src="http://placehold.it/150x100" class="img-responsive img-thumbnail center-block" alt="Responsive image" />
+                        </div>
+                        <div class="col-md-6 col-xs-6 thumbnail">
+                            @Html.ActionLink(item.Name, "Details", new { id = item.ConferenceID })
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+
 
     </div>
 
