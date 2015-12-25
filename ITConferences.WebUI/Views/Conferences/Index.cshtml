@@ -5,99 +5,69 @@
     int i = 1;
 }
 
-<div class="container">
-    <div class="row">
-        <p>filtry</p>
-    </div>
-    <div class="form-group">
+<style>
+    .btn:active {
+        box-shadow: none;
+    }
 
-        @*<div id="small-img" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 center">*@
-        @*<div class="col-lg-4 center">
-                @foreach (var item in Model)
-                {
+    .link-format {
+        color: lightseagreen;
+    }
 
-                    <img src="http://placehold.it/150x100" class="img-responsive img-thumbnail" alt="Responsive image" />
-                    @Html.ActionLink(item.Name, "Details", new { id = item.ConferenceID })
-
-                    if (i % 3 == 0)
-                    {
-                        <br />
-                    }
-
-                    i++;
-                }
-            </div>*@
-
-        @*</div>*@
-
-        @foreach (var item in Model)
-        {
-            <div class="form-group">
-                <div class="col-md-4 col-xs-4 btn">
-                    <a href="@Url.Action("Details","Conferences",new { id = item.ConferenceID })">
-                        <div class="col-md-6 col-xs-6">
-                            <img src="http://placehold.it/150x100" class="img-responsive img-thumbnail center-block" alt="Responsive image" />
-                        </div>
-                        <div class="col-md-6 col-xs-6 thumbnail">
-                            @Html.ActionLink(item.Name, "Details", new { id = item.ConferenceID })
-                        </div>
-                    </a>
-                </div>
-            </div>
+        .link-format:hover {
+            color: lightseagreen;
+            text-decoration: none;
         }
 
+    .conference-name {
+        font-weight: bold;
+    }
+</style>
 
+<div class="container">
+    <div class="row">
+        <section>
+
+            <div class="form-group">
+                <div class="col-md-4 col-xs-4">
+                    <div class="input-group">
+                        <div class="form-group">
+                            <input type="search" class="form-control glyphicon glyphicon-search" placeholder="Search..."/>
+                            <span class="glyphicon glyphicon-search"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-xs-4">
+                </div>
+                <div class="col-md-4 col-xs-4">
+                </div>
+            </div>
+
+        </section>
     </div>
-
-    @*<table class="table">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.TargetCity.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TargetCountry.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Date)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Url)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsPaid)
-                </th>
-                <th></th>
-            </tr>
-
-            @foreach (var item in Model)
+    <div class="row">
+        <section>
+            <div class="form-group">
+                @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TargetCity.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TargetCountry.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Url)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsPaid)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Details", "Details", new { id = item.ConferenceID })
-                    </td>
-                </tr>
-            }
+                    <div class="form-group">
+                        <div class="col-md-4 col-xs-4 btn">
+                            <a href="@Url.Action("Details","Conferences",new { id = item.ConferenceID })" class="link-format">
+                                <div class="col-md-6 col-xs-6">
+                                    <img src="../../img/default.jpg" class="img-responsive img-thumbnail center-block" alt="Responsive image" />
+                                </div>
 
-        </table>*@
+                                <div class="col-md-6 col-xs-6 thumbnail">
+                                    <div class="row conference-name">@Html.DisplayFor(modelItem => item.Name)</div>
+                                    <div class="row">@Html.DisplayFor(modelItem => item.TargetCountry.Name), @Html.DisplayFor(modelItem => item.TargetCity.Name)</div>
+                                    <div class="row">@Html.DisplayFor(modelItem => item.Date)</div>
+                                    <div class="row">@Html.DisplayFor(modelItem => item.Url)</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+    </div>
 </div>
