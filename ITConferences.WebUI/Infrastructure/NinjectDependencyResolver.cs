@@ -1,15 +1,13 @@
-﻿using ITConferences.Domain.Abstract;
+﻿using System;
+using System.Collections.Generic;
+using System.Web.Mvc;
+using ITConferences.Domain.Abstract;
 using ITConferences.Domain.Concrete;
 using ITConferences.Domain.Entities;
 using Ninject;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+using Ninject.Web.Common;
 
-namespace ITConferences.Domain.Infrastructure
+namespace ITConferences.WebUI.Infrastructure
 {
     public class NinjectDependencyResolver : IDependencyResolver
     {

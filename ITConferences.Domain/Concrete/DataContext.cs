@@ -7,7 +7,7 @@ namespace ITConferences.Domain.Concrete
 {
     public class DataContext : IdentityDbContext, IDataContext
     {
-        public DataContext() : base("ITConferencesDatabase")
+        public DataContext() : base("ITConferences")
         {
 
         }

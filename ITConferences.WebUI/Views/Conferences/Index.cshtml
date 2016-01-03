@@ -31,9 +31,8 @@
                 <div class="col-md-3 col-xs-4">
                     <form class="form-inline" role="form">
                         <div class="form-group">
-                            <label class="control-label"></label>
                             <input type="text" class="form-control" placeholder="Event name">
-                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                            @Html.TextBox("Filter",ViewData["Filter"])
                         </div>
                     </form>
                 </div>

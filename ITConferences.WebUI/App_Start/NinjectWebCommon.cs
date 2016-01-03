@@ -1,3 +1,6 @@
+using System.Web.Mvc;
+using ITConferences.WebUI.Infrastructure;
+
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(ITConferences.WebUI.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(ITConferences.WebUI.App_Start.NinjectWebCommon), "Stop")]
 
@@ -61,6 +64,7 @@ namespace ITConferences.WebUI.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
         }        
     }
 }

@@ -9,9 +9,10 @@ namespace ITConferences.Domain.Abstract
     public interface IGenericRepository<T> where T : class
     {
         IEnumerable<T> GetAll();
-        T GetById(int id);
+        T GetById(int? id);
         void InsertAndSubmit(T entity);
         void UpdateAndSubmit(T entity);
         void DeleteAndSubmit(T entity);
+        void DisposeDataContext();
     }
 }

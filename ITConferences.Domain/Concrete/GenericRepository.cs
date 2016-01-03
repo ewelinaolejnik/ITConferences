@@ -24,7 +24,7 @@ namespace ITConferences.Domain.Concrete
             return _dataContext.Set<T>();
         }
 
-        public T GetById(int id)
+        public T GetById(int? id)
         {
             return _dataContext.Set<T>().Find(id);
         }
@@ -44,6 +44,11 @@ namespace ITConferences.Domain.Concrete
         {
             _dataContext.Set<T>().Remove(entity);
             _dataContext.SaveChanges();
+        }
+
+        public void DisposeDataContext()
+        {
+            _dataContext.Dispose();
         }
     }
 }

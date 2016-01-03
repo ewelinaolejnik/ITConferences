@@ -1,26 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
+using ITConferences.Domain.Abstract;
 using ITConferences.Domain.Concrete;
 using ITConferences.Domain.Entities;
-using ITConferences.WebUI.Controllers;
 
-namespace ITConferences.Domain.Controllers
+namespace ITConferences.WebUI.Controllers
 {
     public class ConferencesController : BaseController
     {
-        private DataContext db = new DataContext();
+        private IGenericRepository<Conference> _conferenceRepository;
+        private IGenericRepository<Country> _countryRepository;
+
+        public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository)
+        {
+            if (conferenceRepository == null || countryRepository == null)
+            {
+                throw new ArgumentNullException("Some repository does not exist!");
+            }
+
+            _conferenceRepository = conferenceRepository;
+            _countryRepository = countryRepository;
+        }
 
         // GET: Conferences
-        public ActionResult Index()
+        public ActionResult Index(string id)
         {
-            var conferences = db.Conferences.Include(c => c.TargetCity).Include(c => c.TargetCountry);
-            ViewData["Countries"] = new SelectList(db.Countries, "CountryID", "Name");
+            //var conferences = _conferenceRepository.Include(c => c.TargetCity).Include(c => c.TargetCountry);
+            var conferences = _conferenceRepository.GetAll();
+            ViewData["Countries"] = new SelectList(_countryRepository.GetAll(), "CountryID", "Name");
+            ViewData["Filter"] = id;
             return View(conferences.ToList());
         }
 
@@ -31,7 +42,9 @@ namespace ITConferences.Domain.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Conference conference = db.Conferences.Find(id);
+
+            Conference conference = _conferenceRepository.GetById(id);
+
             if (conference == null)
             {
                 return HttpNotFound();
@@ -44,16 +57,12 @@ namespace ITConferences.Domain.Controllers
         {
             if (!Request.IsAuthenticated)
             {
-                Danger("Log in to add an event, please",
-                true);
+                Danger("Log in to add an event, please", true);
 
                 return RedirectToAction("Index", "Home");
             }
 
-            ViewData["Countries"] = new SelectList(db.Countries, "CountryID", "Name");
-            //ViewBag.TargetCountryId = countries;
-            //var selected = countries.SelectedValue;
-            //ViewBag.TargetCityId = new SelectList(db.Cities, "CityID", "Name", selected, "DropDownList");
+            ViewData["Countries"] = new SelectList(_countryRepository.GetAll(), "CountryID", "Name");
             return View();
         }
 
@@ -67,19 +76,17 @@ namespace ITConferences.Domain.Controllers
             
             if (ModelState.IsValid)
             {
-                db.Conferences.Add(conference);
-                db.SaveChanges();
+                _conferenceRepository.InsertAndSubmit(conference);
                 return RedirectToAction("Index");
             }
-
-            //ViewBag.TargetCityId = new SelectList(db.Cities, "CityID", "Name", conference.TargetCityId);
-            ViewBag.TargetCountryId = new SelectList(db.Countries, "CountryID", "Name", conference.TargetCountryId);
+            
+            ViewBag.TargetCountryId = new SelectList(_countryRepository.GetAll(), "CountryID", "Name", conference.TargetCountryId);
             return View(conference);
         }
 
-        public JsonResult GetSelectedCities(int countryID)
+        public JsonResult GetSelectedCities(int countryId)
         {
-            var country = db.Countries.Where(e => e.CountryID == countryID).First();
+            var country = _countryRepository.GetById(countryId);
             var selectedCities = country.Cities.Select(c => new SelectListItem()
             {
                 Text = c.Name,
@@ -93,7 +100,8 @@ namespace ITConferences.Domain.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _conferenceRepository.DisposeDataContext();
+                _countryRepository.DisposeDataContext();
             }
             base.Dispose(disposing);
         }
