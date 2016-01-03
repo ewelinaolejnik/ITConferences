@@ -20,6 +20,7 @@ namespace ITConferences.Domain.Controllers
         public ActionResult Index()
         {
             var conferences = db.Conferences.Include(c => c.TargetCity).Include(c => c.TargetCountry);
+            ViewData["Countries"] = new SelectList(db.Countries, "CountryID", "Name");
             return View(conferences.ToList());
         }
 
@@ -48,7 +49,7 @@ namespace ITConferences.Domain.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-            // var countries = new SelectList(db.Countries, "CountryID", "Name");
+
             ViewData["Countries"] = new SelectList(db.Countries, "CountryID", "Name");
             //ViewBag.TargetCountryId = countries;
             //var selected = countries.SelectedValue;

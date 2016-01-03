@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Content/flat-ui.css" rel="stylesheet" />
+    @*<link href="~/Content/flat-ui.css" rel="stylesheet" />*@
+    <link rel="stylesheet" href="~/Content/grayscale.css" />
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -19,7 +20,7 @@
         </div>
     </noscript>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar navbar navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-5">
@@ -34,13 +35,14 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Conferences", "Index", "Conferences")</li>
                     <li>@Html.ActionLink("Speakers", "Index", "Speakers")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
                 </ul>
-                <div role="search" class="navbar-form navbar-left">
+                @*<div role="search" class="navbar-form navbar-left">
                     <div class="form-group">
                         <input type="text" placeholder="Search" class="form-control">
                     </div>
                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-                </div>
+                </div>*@
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
@@ -51,14 +53,14 @@
         @Html.Partial("_Alerts")
         @RenderBody()
 
-        <div class="footer navbar-inverse navbar-fixed-bottom">
+        @*<div class="footer navbar-inverse navbar-fixed-bottom">
             <div class="container">
                 <div class="row">
                     <a class="col-xs-6" href="mailto:ewelina.olejnik@outlook.com">Contact us</a>
                     <a class="col-xs-6 text-right" href="../Home/About">About</a>
                 </div>
             </div>
-        </div>
+        </div>*@
 
     </div>
 
