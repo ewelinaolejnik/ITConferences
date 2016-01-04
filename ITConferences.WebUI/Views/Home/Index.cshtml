@@ -71,9 +71,12 @@
                     <p class="intro-text">Don't be shy, just search an event:</p>
                     <form class="form-inline" role="form">
                         <div class="form-group">
-                            <input type="text" class="form-control input-lg" placeholder="Search...">
-                            <button type="submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search"></span></button>
-                            @Html.ActionLink("Aad","Index","Conferences", new { id = "asd" })
+                            @using (Html.BeginForm("Index", "Home"))
+                            {
+                                @Html.TextBox("Filter", null, new {@class = "form-control input-lg", @placeholder = "Search..."})
+                            @*<input type="text" class="form-control input-lg" placeholder="Search...">*@
+                                <button type="submit" value="Submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search"></span></button>
+                               }
                         </div>
                     </form>
                 </div>

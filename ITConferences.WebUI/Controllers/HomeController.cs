@@ -5,8 +5,12 @@ namespace ITConferences.WebUI.Controllers
     [RequireHttps]
     public class HomeController : BaseController
     {
-        public ActionResult Index()
+        public ActionResult Index(string filter)
         {
+            if (!string.IsNullOrEmpty(filter))
+            {
+                return RedirectToAction("Index", "Conferences", filter);
+            }
             return View();
         }
 

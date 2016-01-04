@@ -26,12 +26,16 @@ namespace ITConferences.WebUI.Controllers
         }
 
         // GET: Conferences
-        public ActionResult Index(string id)
+        public ActionResult Index(string filter)
         {
             //var conferences = _conferenceRepository.Include(c => c.TargetCity).Include(c => c.TargetCountry);
             var conferences = _conferenceRepository.GetAll();
             ViewData["Countries"] = new SelectList(_countryRepository.GetAll(), "CountryID", "Name");
-            ViewData["Filter"] = id;
+            if (!string.IsNullOrEmpty(filter))
+            {
+                ViewData["Filter"] = filter;
+            }
+            
             return View(conferences.ToList());
         }
 
