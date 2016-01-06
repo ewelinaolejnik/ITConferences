@@ -63,7 +63,7 @@ namespace ITConferences.WebUI.Controllers
             {
                 Danger("Log in to add an event, please", true);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Account");
             }
 
             ViewData["Countries"] = new SelectList(_countryRepository.GetAll(), "CountryID", "Name");

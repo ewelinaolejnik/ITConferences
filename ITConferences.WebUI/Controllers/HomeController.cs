@@ -9,7 +9,7 @@ namespace ITConferences.WebUI.Controllers
         {
             if (!string.IsNullOrEmpty(filter))
             {
-                return RedirectToAction("Index", "Conferences", filter);
+                return RedirectToAction("Index", "Conferences", new { filter = filter});
             }
             return View();
         }
