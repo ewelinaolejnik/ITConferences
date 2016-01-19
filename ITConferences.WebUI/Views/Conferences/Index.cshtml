@@ -2,7 +2,6 @@
 
 @{
     ViewBag.Title = "Conferences";
-    int i = 1;
 }
 
 <style>
@@ -25,13 +24,16 @@
 </style>
 
 <div class="container">
-    <div class="row jumbotron center-block">
-            <div class="form-group">
+    <div class="row jumbotron">
+        <div class="form-group  center-block">
+            @using (Html.BeginForm("Index", "Conferences"))
+            {
                 <div class="col-md-3 col-xs-4">
-                    @Html.TextBox("Filter", ViewData["Filter"], new { @type = "text", @class = "form-control", @placeholder = "Event name" })
+                    @Html.TextBox("NameFilter", ViewData["NameFilter"], new {@type = "text", @class = "form-control", @placeholder = "Event name"})
                 </div>
+
                 <div class="col-md-3 col-xs-4">
-                    <input type="text" class="form-control" placeholder="Location">
+                    @Html.TextBox("LocationFilter", ViewData["LocationFilter"], new { @id= "location", @type = "text", @class = "form-control", @placeholder = "Location"})
                 </div>
                 <div class="col-md-2 col-xs-4">
                     <input type="text" class="form-control" placeholder="Tags">
@@ -42,38 +44,39 @@
                 <div class="col-md-2 col-xs-4">
                     <button type="submit" value="Submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search"></span></button>
                 </div>
-                @*Partial class for countries and cities Country, City - textbox for it*@
-                @*Partial class for tags*@
-                @*Dropdown list: newest, top rated, oldest, poor rated*@
-            </div>
+            }
+            @*Partial class for countries and cities Country, City - textbox for it*@
+            @*Partial class for tags*@
+            @*Dropdown list: newest, top rated, oldest, poor rated*@
+        </div>
     </div>
     <div class="row">
-            <div class="form-group">
-                @foreach (var item in Model)
+        <div class="form-group">
+            @foreach (var item in Model)
             {
-                    <div class="form-group">
-                        <div class="col-md-4 col-xs-4 btn">
-                            <a href="@Url.Action("Details","Conferences",new { id = item.ConferenceID })" class="link-format">
-                                <div class="col-md-6 col-xs-6">
-                                    <img src="../../img/default.jpg" class="img-responsive img-thumbnail center-block" alt="Responsive image" />
-                                </div>
 
-                                <div class="col-md-6 col-xs-6 thumbnail">
-                                    <div class="row conference-name">@Html.DisplayFor(modelItem => item.Name)</div>
-                                    <div class="row">@Html.DisplayFor(modelItem => item.TargetCountry.Name), @Html.DisplayFor(modelItem => item.TargetCity.Name)</div>
-                                    <div class="row">@Html.DisplayFor(modelItem => item.Date)</div>
-                                    <div class="row">@Html.DisplayFor(modelItem => item.Url)</div>
-                                </div>
-                            </a>
+                <div class="col-md-4 col-xs-4 btn thumbnail-inline">
+                    <a href="@Url.Action("Details", "Conferences", new {id = item.ConferenceID})" class="link-format">
+                        <div class="col-md-6 col-xs-6">
+                            <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Responsive image"/>
                         </div>
-                    </div>
-                }
-            </div>
+
+                        <div class="col-md-6 col-xs-6 text-left">
+                            <div class="row conference-name ">@Html.DisplayFor(modelItem => item.Name)</div>
+                            <div class="row">@Html.DisplayFor(modelItem => item.TargetCountry.Name), @Html.DisplayFor(modelItem => item.TargetCity.Name)</div>
+                            <div class="row">@Html.DisplayFor(modelItem => item.Date)</div>
+                            <div class="row">@Html.DisplayFor(modelItem => item.Url)</div>
+                        </div>
+                    </a>
+                </div>
+
+            }
+
+        </div>
+
     </div>
 </div>
 
-<script src="~/Scripts/jquery-2.1.4.js" type="text/javascript"></script>
-<script src="~/Scripts/bootstrap.js" type="text/javascript"></script>
-<script src="~/Scripts/bootstrap-datepicker.js" type="text/javascript"></script>
-<script src="~/Scripts/create-conference.js" type="text/javascript"></script>
-
+@*<script src="~/Scripts/jquery-2.2.0.min.js"></script>
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/create-conference.js"></script>*@

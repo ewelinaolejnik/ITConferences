@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -13,30 +15,60 @@ namespace ITConferences.WebUI.Controllers
     {
         private IGenericRepository<Conference> _conferenceRepository;
         private IGenericRepository<Country> _countryRepository;
+        private IGenericRepository<City> _cityRepository;
+        public IEnumerable<Conference> Conferences; 
 
-        public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository)
+        public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository, IGenericRepository<City> cityRepository)
         {
-            if (conferenceRepository == null || countryRepository == null)
+            if (conferenceRepository == null || countryRepository == null || cityRepository == null)
             {
                 throw new ArgumentNullException("Some repository does not exist!");
             }
 
             _conferenceRepository = conferenceRepository;
             _countryRepository = countryRepository;
+            _cityRepository = cityRepository;
+            Conferences = _conferenceRepository.GetAll().ToList();
         }
 
         // GET: Conferences
-        public ActionResult Index(string filter)
+        public ActionResult Index(string nameFilter, string locationFilter)
         {
             //var conferences = _conferenceRepository.Include(c => c.TargetCity).Include(c => c.TargetCountry);
-            var conferences = _conferenceRepository.GetAll();
+            //Conferences = _conferenceRepository.GetAll().ToList();
             ViewData["Countries"] = new SelectList(_countryRepository.GetAll(), "CountryID", "Name");
-            if (!string.IsNullOrEmpty(filter))
+
+            if (!string.IsNullOrEmpty(nameFilter))
             {
-                ViewData["Filter"] = filter;
+                ViewData["NameFilter"] = nameFilter;
+                Conferences = Conferences.Where(e => e.Name.ToLower().Contains(nameFilter.ToLower())).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(locationFilter))
+            {
+                ViewData["LocationFilter"] = locationFilter;
+                if (locationFilter.Contains(','))
+                {
+                    var countryCity = locationFilter.Split(',');
+                    var country = countryCity[1].Trim();
+                    var city = countryCity[0].Trim();
+                    Conferences =
+                        Conferences.Where(
+                            e =>
+                                e.TargetCity.Name.ToLower().Contains(city.ToLower()) ||
+                                e.TargetCountry.Name.ToLower().Contains(country.ToLower())).ToList();
+                }
+                else
+                {
+                    Conferences =
+                        Conferences.Where(
+                            e =>
+                                e.TargetCity.Name.ToLower().Contains(locationFilter.ToLower()) ||
+                                e.TargetCountry.Name.ToLower().Contains(locationFilter.ToLower())).ToList();
+                }
             }
             
-            return View(conferences.ToList());
+            return View(Conferences);
         }
 
         // GET: Conferences/Details/5
@@ -98,6 +130,20 @@ namespace ITConferences.WebUI.Controllers
             });
 
             return Json(selectedCities, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetLocations(string locationFilter)
+        {
+            var filteredConferences = Conferences.Where(
+                e =>
+                    e.TargetCity.Name.ToLower().StartsWith(locationFilter.ToLower()) ||
+                    e.TargetCountry.Name.ToLower().StartsWith(locationFilter.ToLower())).ToList();
+
+            List<string> result = new List<string>();
+
+            filteredConferences.ForEach(e=>result.Add(e.TargetCity.Name + ", " + e.TargetCountry.Name));
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

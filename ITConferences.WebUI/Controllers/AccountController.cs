@@ -2,17 +2,13 @@
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using ITConferences.Domain.Entities;
+using ITConferences.WebUI.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using ITConferences.WebUI.Models;
-using ITConferences.Domain.Entities;
-using Microsoft.Owin.Security.DataProtection;
-using Microsoft.AspNet.Identity.EntityFramework;
-using ITConferences.WebUI;
-using ITConferences.WebUI.Controllers;
 
-namespace ITConferences.Domain.Controllers
+namespace ITConferences.WebUI.Controllers
 {
     [Authorize]
     public class AccountController : BaseController

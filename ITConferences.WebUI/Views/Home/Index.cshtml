@@ -73,8 +73,7 @@
                         <div class="form-group">
                             @using (Html.BeginForm("Index", "Home"))
                             {
-                                @Html.TextBox("Filter", null, new {@class = "form-control input-lg", @placeholder = "Search..."})
-                            @*<input type="text" class="form-control input-lg" placeholder="Search...">*@
+                                @Html.TextBox("SearchText", null, new {@class = "form-control input-lg", @placeholder = "Search..."})
                                 <button type="submit" value="Submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search"></span></button>
                                }
                         </div>
