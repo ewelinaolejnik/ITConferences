@@ -179,7 +179,7 @@ namespace ITConferences.UnitTests.Controllers
         public void ConferencesController_Index_assing_conferences_as_filtered_items_when_passed_location_filter_is_neither_null_nor_empty_and_if_contains_comma()
         {
             //Arrange
-            sut.Index(null, "asd, asd2");
+            sut.Index(null, "asd, asd");
 
             //Assign
             var expectedConferencesByCity = new[] { new Conference() { TargetCity = new City() { Name = "Asd" } } };

@@ -55,7 +55,7 @@ namespace ITConferences.WebUI.Controllers
                     Conferences =
                         Conferences.Where(
                             e =>
-                                e.TargetCity.Name.ToLower().Contains(city.ToLower()) ||
+                                e.TargetCity.Name.ToLower().Contains(city.ToLower()) &&
                                 e.TargetCountry.Name.ToLower().Contains(country.ToLower())).ToList();
                 }
                 else
@@ -132,6 +132,7 @@ namespace ITConferences.WebUI.Controllers
             return Json(selectedCities, JsonRequestBehavior.AllowGet);
         }
 
+        //TODO: get from countires and cities, not from conferences
         public JsonResult GetLocations(string locationFilter)
         {
             var filteredConferences = Conferences.Where(
