@@ -20,6 +20,7 @@ namespace ITConferences.UnitTests.Controllers
         private Mock<IGenericRepository<Conference>> _conferenceRepositoryMock;
         private Mock<IGenericRepository<Country>> _countryRepositoryMock;
         private Mock<IGenericRepository<City>> _cityRepositoryMock;
+        private Mock<IGenericRepository<Tag>> _tagRepositoryMock;
         private Country country1;
 
         [TestInitialize]
@@ -28,9 +29,10 @@ namespace ITConferences.UnitTests.Controllers
             _conferenceRepositoryMock = new Mock<IGenericRepository<Conference>>();
             _countryRepositoryMock = new Mock<IGenericRepository<Country>>();
             _cityRepositoryMock = new Mock<IGenericRepository<City>>();
-            var city1 = new City() {Name = "Asd", CityID = 1};
+            _tagRepositoryMock = new Mock<IGenericRepository<Tag>>();
+            var city1 = new City() {Name = "Asd", CityID = 1, Country = new Country() {Name = "Asd"}};
             country1 = new Country() {Name = "Asd", CountryID = 1, Cities = new City[] {city1}};
-            var city2 = new City() { Name = "Test", CityID = 2};
+            var city2 = new City() {Name = "Test", CityID = 2, Country = new Country() {Name = "Test"}};
             var country2 = new Country() { Name = "Test", CountryID = 2, Cities = new City[] { city2 } };
 
             _conferenceRepositoryMock.Setup(e => e.GetAll())
@@ -44,7 +46,11 @@ namespace ITConferences.UnitTests.Controllers
                 .Returns(new[]
                 {country1, country2});
 
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, _cityRepositoryMock.Object);
+            _cityRepositoryMock.Setup(e => e.GetAll())
+                .Returns(new[]
+                {city1, city2});
+
+            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, _tagRepositoryMock.Object, _cityRepositoryMock.Object);
         }
 
         [TestCleanup]
@@ -65,7 +71,7 @@ namespace ITConferences.UnitTests.Controllers
         [ExpectedException(typeof(ArgumentNullException))]
         public void ConferencesController_Ctor_throws_exception_if_conference_repository_is_null()
         {
-            sut = new ConferencesController(null, _countryRepositoryMock.Object, _cityRepositoryMock.Object);
+            sut = new ConferencesController(null, _countryRepositoryMock.Object, _tagRepositoryMock.Object, _cityRepositoryMock.Object);
         }
 
 
@@ -75,7 +81,16 @@ namespace ITConferences.UnitTests.Controllers
         [ExpectedException(typeof(ArgumentNullException))]
         public void ConferencesController_Ctor_throws_exception_if_country_repository_is_null()
         {
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, null, _cityRepositoryMock.Object);
+            sut = new ConferencesController(_conferenceRepositoryMock.Object, null, _tagRepositoryMock.Object, _cityRepositoryMock.Object);
+        }
+
+        [TestMethod]
+        [TestCategory("ConferencesController")]
+        [Owner("Ewelina Olejnik")]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ConferencesController_Ctor_throws_exception_if_tag_repository_is_null()
+        {
+            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, null, _cityRepositoryMock.Object);
         }
 
         [TestMethod]
@@ -84,7 +99,7 @@ namespace ITConferences.UnitTests.Controllers
         [ExpectedException(typeof(ArgumentNullException))]
         public void ConferencesController_Ctor_throws_exception_if_city_repository_is_null()
         {
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, null);
+            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, _tagRepositoryMock.Object, null);
         }
         #endregion
 
@@ -211,7 +226,6 @@ namespace ITConferences.UnitTests.Controllers
             CollectionAssert.AreEqual(expectedList, jsonLocation);
         }
         #endregion
-
 
         #region | GetSelectedCities |
         [TestMethod]

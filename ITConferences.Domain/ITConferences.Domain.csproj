@@ -135,6 +135,18 @@
     <Compile Include="Migrations\201512140000198_ImageForConference.Designer.cs">
       <DependentUpon>201512140000198_ImageForConference.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601192111567_TagNameAsString.cs" />
+    <Compile Include="Migrations\201601192111567_TagNameAsString.Designer.cs">
+      <DependentUpon>201601192111567_TagNameAsString.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601192123577_TagWithConferences.cs" />
+    <Compile Include="Migrations\201601192123577_TagWithConferences.Designer.cs">
+      <DependentUpon>201601192123577_TagWithConferences.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601200750273_CountryInCity.cs" />
+    <Compile Include="Migrations\201601200750273_CountryInCity.Designer.cs">
+      <DependentUpon>201601200750273_CountryInCity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -166,6 +178,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201512140000198_ImageForConference.resx">
       <DependentUpon>201512140000198_ImageForConference.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601192111567_TagNameAsString.resx">
+      <DependentUpon>201601192111567_TagNameAsString.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601192123577_TagWithConferences.resx">
+      <DependentUpon>201601192123577_TagWithConferences.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601200750273_CountryInCity.resx">
+      <DependentUpon>201601200750273_CountryInCity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

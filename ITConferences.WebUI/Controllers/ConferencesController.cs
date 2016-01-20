@@ -15,18 +15,26 @@ namespace ITConferences.WebUI.Controllers
     {
         private IGenericRepository<Conference> _conferenceRepository;
         private IGenericRepository<Country> _countryRepository;
+        private IGenericRepository<Tag> _tagRepository;
         private IGenericRepository<City> _cityRepository;
-        public IEnumerable<Conference> Conferences; 
 
-        public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository, IGenericRepository<City> cityRepository)
+        public IEnumerable<Conference> Conferences { get; private set; }
+
+        public IEnumerable<Country> Countries
         {
-            if (conferenceRepository == null || countryRepository == null || cityRepository == null)
+            get { return _countryRepository.GetAll().ToList(); }
+        }
+
+        public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository)
+        {
+            if (conferenceRepository == null || countryRepository == null || tagRepository == null || cityRepository == null)
             {
                 throw new ArgumentNullException("Some repository does not exist!");
             }
 
             _conferenceRepository = conferenceRepository;
             _countryRepository = countryRepository;
+            _tagRepository = tagRepository;
             _cityRepository = cityRepository;
             Conferences = _conferenceRepository.GetAll().ToList();
         }
@@ -35,8 +43,9 @@ namespace ITConferences.WebUI.Controllers
         public ActionResult Index(string nameFilter, string locationFilter)
         {
             //var conferences = _conferenceRepository.Include(c => c.TargetCity).Include(c => c.TargetCountry);
-            //Conferences = _conferenceRepository.GetAll().ToList();
-            ViewData["Countries"] = new SelectList(_countryRepository.GetAll(), "CountryID", "Name");
+            ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name");
+            var tagsMultiSelectList = new MultiSelectList(_tagRepository.GetAll(), "TagID", "Name");
+            ViewData["Tags"] = tagsMultiSelectList;
 
             if (!string.IsNullOrEmpty(nameFilter))
             {
@@ -66,6 +75,11 @@ namespace ITConferences.WebUI.Controllers
                                 e.TargetCity.Name.ToLower().Contains(locationFilter.ToLower()) ||
                                 e.TargetCountry.Name.ToLower().Contains(locationFilter.ToLower())).ToList();
                 }
+            }
+
+            if (tagsMultiSelectList.SelectedValues != null)
+            {
+                
             }
             
             return View(Conferences);
@@ -98,7 +112,7 @@ namespace ITConferences.WebUI.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            ViewData["Countries"] = new SelectList(_countryRepository.GetAll(), "CountryID", "Name");
+            ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name");
             return View();
         }
 
@@ -132,17 +146,19 @@ namespace ITConferences.WebUI.Controllers
             return Json(selectedCities, JsonRequestBehavior.AllowGet);
         }
 
-        //TODO: get from countires and cities, not from conferences
+       
         public JsonResult GetLocations(string locationFilter)
         {
-            var filteredConferences = Conferences.Where(
-                e =>
-                    e.TargetCity.Name.ToLower().StartsWith(locationFilter.ToLower()) ||
-                    e.TargetCountry.Name.ToLower().StartsWith(locationFilter.ToLower())).ToList();
+            var cities = _cityRepository.GetAll().ToList();
+            var filteredLocation =
+                cities.Where(
+                    e =>
+                        e.Name.ToLower().StartsWith(locationFilter.ToLower()) ||
+                        e.Country.Name.ToLower().StartsWith(locationFilter.ToLower())).ToList();
 
             List<string> result = new List<string>();
 
-            filteredConferences.ForEach(e=>result.Add(e.TargetCity.Name + ", " + e.TargetCountry.Name));
+            filteredLocation.ForEach(e=>result.Add(e.Name + ", " + e.Country.Name));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

@@ -19,5 +19,6 @@ namespace ITConferences.Domain.Entities
         public string Name { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+        public virtual Country Country { get; set; }
     }
 }

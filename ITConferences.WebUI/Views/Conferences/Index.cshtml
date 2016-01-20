@@ -13,50 +13,58 @@
         color: lightseagreen;
     }
 
-    .link-format:hover {
-        color: lightseagreen;
-        text-decoration: none;
-    }
+        .link-format:hover {
+            color: lightseagreen;
+            text-decoration: none;
+        }
 
     .conference-name {
         font-weight: bold;
     }
 </style>
 
-<link href="~/Content/jquery-ui.min.css" rel="stylesheet"/>
+<link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/multi-select.css" rel="stylesheet" />
+<link href="~/Content/jquery.multiselect.filter.css" rel="stylesheet" />
 <script src="~/Scripts/jquery-2.2.0.min.js"></script>
 <script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/jquery.multi-select.js"></script>
+<script src="~/Scripts/jquery.multiselect.filter.js"></script>
 <script src="~/Scripts/create-conference.js"></script>
 
 
 
 <div class="container">
-    <div class="row jumbotron">
-        <div class="form-group  center-block">
-            @using (Html.BeginForm("Index", "Conferences"))
+    <div class="jumbotron">
+        @using (Html.BeginForm("Index", "Conferences"))
             {
-                <div class="col-md-3 col-xs-4">
-                    @Html.TextBox("NameFilter", ViewData["NameFilter"], new {@type = "text", @class = "form-control", @placeholder = "Event name"})
-                </div>
+            <div class="row">
+                <div class="form-group  center-block">
 
-                <div class="col-md-3 col-xs-4">
-                    @Html.TextBox("LocationFilter", ViewData["LocationFilter"], new { @id= "location", @type = "text", @class = "form-control", @placeholder = "Location"})
+                    <div class="col-md-3 col-xs-4">
+                        @Html.TextBox("NameFilter", ViewData["NameFilter"], new {@type = "text", @class = "form-control", @placeholder = "Event name"})
+                    </div>
+                    <div class="col-md-3 col-xs-4">
+                        @Html.TextBox("LocationFilter", ViewData["LocationFilter"], new {@id = "location", @type = "text", @class = "form-control", @placeholder = "Location"})
+                    </div>
+                    <div class="col-md-3 col-xs-4">
+                        @Html.ListBox("TagsFilter", ViewData["Tags"] as MultiSelectList, htmlAttributes: new {@id = "tags"})
+                    </div>
+
+                    <div class="col-md-2 col-xs-4">
+                        <input type="text" class="form-control" placeholder="Sorting">
+                    </div>
                 </div>
-                <div class="col-md-2 col-xs-4">
-                    <input type="text" class="form-control" placeholder="Tags">
-                </div>
-                <div class="col-md-2 col-xs-4">
-                    <input type="text" class="form-control" placeholder="Sorting">
-                </div>
-                <div class="col-md-2 col-xs-4">
-                    <button type="submit" value="Submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search"></span></button>
-                </div>
-            }
+            </div>
+            <div class="row">
+                <button type="submit" value="Submit" class="btn btn-success btn-lg pull-right"><span class="glyphicon glyphicon-search"></span></button>
+            </div>
             @*Partial class for countries and cities Country, City - textbox for it*@
             @*Partial class for tags*@
             @*Dropdown list: newest, top rated, oldest, poor rated*@
-        </div>
+        }
     </div>
+
     <div class="row">
         <div class="form-group">
             @foreach (var item in Model)
@@ -65,7 +73,7 @@
                 <div class="col-md-4 col-xs-4 btn thumbnail-inline">
                     <a href="@Url.Action("Details", "Conferences", new {id = item.ConferenceID})" class="link-format">
                         <div class="col-md-6 col-xs-6">
-                            <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Responsive image"/>
+                            <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Responsive image" />
                         </div>
 
                         <div class="col-md-6 col-xs-6 text-left">

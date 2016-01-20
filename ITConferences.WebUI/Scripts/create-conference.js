@@ -35,15 +35,9 @@ $m(document).ready(function () {
         }
     });
 
-
-
-
-
-
-
-
-
-
+    $m("#tags").multiselect({
+        noneSelectedText : "Select tags"
+    }).multiselectfilter();
 
 
     //    $("#TargetCountryId").change(function () {
