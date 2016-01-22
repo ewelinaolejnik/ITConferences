@@ -62,6 +62,9 @@
         </form>
     </div>*@
 
+<script src="~/Scripts/jquery-2.2.0.min.js"></script>
+<script src="~/Scripts/home-page.js"></script>
+
 <header class="intro">
     <div class="intro-body">
         <div class="container">
@@ -71,11 +74,9 @@
                     <p class="intro-text">Don't be shy, just search an event:</p>
                     <form class="form-inline" role="form">
                         <div class="form-group">
-                            @using (Html.BeginForm("Index", "Home"))
-                            {
-                                @Html.TextBox("SearchText", null, new {@class = "form-control input-lg", @placeholder = "Search..."})
-                                <button type="submit" value="Submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search"></span></button>
-                               }
+                            @Html.TextBox("NameFilter", null, new { @class = "form-control input-lg", @placeholder = "Search..." })
+                            <button id="homeButton" type="submit" value="Submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search"></span></button>
+
                         </div>
                     </form>
                 </div>

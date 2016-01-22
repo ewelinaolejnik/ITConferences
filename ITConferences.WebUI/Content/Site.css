@@ -1,7 +1,6 @@
 ﻿html, body, #map, .body-content {
     height: 100%;
     width: 100%;
-    overflow: hidden;
 }
 
 body {
@@ -9,6 +8,8 @@ body {
     padding-bottom: 20px;
     
 }
+
+.navbar-custom { background-color: #FFFFFF;}
 
 .body-content {
     padding-top: 0px;

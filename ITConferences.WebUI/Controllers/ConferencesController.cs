@@ -8,15 +8,21 @@ using System.Web.Mvc;
 using ITConferences.Domain.Abstract;
 using ITConferences.Domain.Concrete;
 using ITConferences.Domain.Entities;
+using ITConferences.WebUI.Abstract.Helpers;
+using WebGrease.Css.Extensions;
 
 namespace ITConferences.WebUI.Controllers
 {
     public class ConferencesController : BaseController
     {
+        #region Fields
+        private const int PageSize = 15;
+
         private IGenericRepository<Conference> _conferenceRepository;
         private IGenericRepository<Country> _countryRepository;
         private IGenericRepository<Tag> _tagRepository;
         private IGenericRepository<City> _cityRepository;
+        private IFilterConferenceHelper _conferenceFilter;
 
         public IEnumerable<Conference> Conferences { get; private set; }
 
@@ -25,11 +31,23 @@ namespace ITConferences.WebUI.Controllers
             get { return _countryRepository.GetAll().ToList(); }
         }
 
-        public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository)
+        public IEnumerable<Tag> Tags
+        {
+            get { return _tagRepository.GetAll().ToList(); }
+        }
+
+        #endregion
+
+        #region Ctor
+        public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository, IFilterConferenceHelper conferenceFilter)
         {
             if (conferenceRepository == null || countryRepository == null || tagRepository == null || cityRepository == null)
             {
                 throw new ArgumentNullException("Some repository does not exist!");
+            }
+            if (conferenceFilter == null)
+            {
+                throw new ArgumentNullException("Conference filter is null!");
             }
 
             _conferenceRepository = conferenceRepository;
@@ -37,53 +55,68 @@ namespace ITConferences.WebUI.Controllers
             _tagRepository = tagRepository;
             _cityRepository = cityRepository;
             Conferences = _conferenceRepository.GetAll().ToList();
+            _conferenceFilter = conferenceFilter;
+            _conferenceFilter.Conferences = Conferences;
         }
+        #endregion
 
+        #region Index
+        //TODO: unit tests!
         // GET: Conferences
-        public ActionResult Index(string nameFilter, string locationFilter)
+        public ActionResult Index(string nameFilter)
         {
-            //var conferences = _conferenceRepository.Include(c => c.TargetCity).Include(c => c.TargetCountry);
-            ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name");
-            var tagsMultiSelectList = new MultiSelectList(_tagRepository.GetAll(), "TagID", "Name");
-            ViewData["Tags"] = tagsMultiSelectList;
+            ViewData["TagsFilter"] = new MultiSelectList(_tagRepository.GetAll(), "TagID", "Name");
+            _conferenceFilter.FilterByName(ViewData, nameFilter);
 
-            if (!string.IsNullOrEmpty(nameFilter))
-            {
-                ViewData["NameFilter"] = nameFilter;
-                Conferences = Conferences.Where(e => e.Name.ToLower().Contains(nameFilter.ToLower())).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(locationFilter))
-            {
-                ViewData["LocationFilter"] = locationFilter;
-                if (locationFilter.Contains(','))
-                {
-                    var countryCity = locationFilter.Split(',');
-                    var country = countryCity[1].Trim();
-                    var city = countryCity[0].Trim();
-                    Conferences =
-                        Conferences.Where(
-                            e =>
-                                e.TargetCity.Name.ToLower().Contains(city.ToLower()) &&
-                                e.TargetCountry.Name.ToLower().Contains(country.ToLower())).ToList();
-                }
-                else
-                {
-                    Conferences =
-                        Conferences.Where(
-                            e =>
-                                e.TargetCity.Name.ToLower().Contains(locationFilter.ToLower()) ||
-                                e.TargetCountry.Name.ToLower().Contains(locationFilter.ToLower())).ToList();
-                }
-            }
-
-            if (tagsMultiSelectList.SelectedValues != null)
-            {
-                
-            }
-            
-            return View(Conferences);
+            var pageSize = GetPageSize(0);
+            var pagedConfs =
+                _conferenceFilter.Conferences.ToList().GetRange(0, pageSize);
+            return View(pagedConfs);
         }
+
+        public JsonResult GetLocations(string locationFilter)
+        {
+            var cities = _cityRepository.GetAll().ToList();
+            var filteredLocation =
+                cities.Where(
+                    e =>
+                        e.Name.ToLower().StartsWith(locationFilter.ToLower()) ||
+                        e.Country.Name.ToLower().StartsWith(locationFilter.ToLower())).ToList();
+
+            List<string> result = new List<string>();
+            filteredLocation.ForEach(e => result.Add(e.Name + ", " + e.Country.Name));
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        //TODO: unit tests!
+        public PartialViewResult GetConferences(string nameFilter, string locationFilter, string[] selectedTagsIds, int? page)
+        {
+            _conferenceFilter.FilterByName(ViewData, nameFilter);
+            _conferenceFilter.FilterByLocation(ViewData, locationFilter);
+            _conferenceFilter.FilterByTags(ViewData, selectedTagsIds, Tags);
+
+            var pageId = page ?? 0;
+            var pageSize = GetPageSize(pageId);
+
+            if (pageId * PageSize >= _conferenceFilter.Conferences.Count())
+            {
+                return null;
+            }
+
+            var pagedConfs =
+                 _conferenceFilter.Conferences.ToList().GetRange(pageId * PageSize, pageSize);
+            return PartialView("_ConferencesView", pagedConfs);
+        }
+
+        //TODO: unit tests!
+        private int GetPageSize(int pageId)
+        {
+            return (PageSize * pageId) + PageSize < _conferenceFilter.Conferences.Count()
+               ? PageSize
+               : Math.Abs(_conferenceFilter.Conferences.Count() - (PageSize * pageId));
+        }
+        #endregion
 
         // GET: Conferences/Details/5
         public ActionResult Details(int? id)
@@ -102,6 +135,7 @@ namespace ITConferences.WebUI.Controllers
             return View(conference);
         }
 
+        #region Create
         // GET: Conferences/Create
         public ActionResult Create()
         {
@@ -123,13 +157,13 @@ namespace ITConferences.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ConferenceID,Name,Date,Url,IsPaid,TargetCityId,TargetCountryId")] Conference conference)
         {
-            
+
             if (ModelState.IsValid)
             {
                 _conferenceRepository.InsertAndSubmit(conference);
                 return RedirectToAction("Index");
             }
-            
+
             ViewBag.TargetCountryId = new SelectList(_countryRepository.GetAll(), "CountryID", "Name", conference.TargetCountryId);
             return View(conference);
         }
@@ -145,23 +179,7 @@ namespace ITConferences.WebUI.Controllers
 
             return Json(selectedCities, JsonRequestBehavior.AllowGet);
         }
-
-       
-        public JsonResult GetLocations(string locationFilter)
-        {
-            var cities = _cityRepository.GetAll().ToList();
-            var filteredLocation =
-                cities.Where(
-                    e =>
-                        e.Name.ToLower().StartsWith(locationFilter.ToLower()) ||
-                        e.Country.Name.ToLower().StartsWith(locationFilter.ToLower())).ToList();
-
-            List<string> result = new List<string>();
-
-            filteredLocation.ForEach(e=>result.Add(e.Name + ", " + e.Country.Name));
-
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
+        #endregion
 
         protected override void Dispose(bool disposing)
         {
@@ -169,6 +187,8 @@ namespace ITConferences.WebUI.Controllers
             {
                 _conferenceRepository.DisposeDataContext();
                 _countryRepository.DisposeDataContext();
+                _cityRepository.DisposeDataContext();
+                _tagRepository.DisposeDataContext();
             }
             base.Dispose(disposing);
         }

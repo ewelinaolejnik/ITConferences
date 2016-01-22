@@ -212,6 +212,8 @@
     </Compile>
     <Compile Include="Helpers\Alert.cs" />
     <Compile Include="Helpers\AlertStyles.cs" />
+    <Compile Include="Helpers\FilterHelper.cs" />
+    <Compile Include="Abstract\Helpers\IFilterConferenceHelper.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\LocationViewModel.cs" />
@@ -287,6 +289,7 @@
     <Content Include="fonts\flat-ui-icons-regular.ttf" />
     <Content Include="fonts\flat-ui-icons-regular.woff" />
     <Content Include="fonts\selection.json" />
+    <Content Include="img\ajax-loader.gif" />
     <Content Include="img\default.jpg" />
     <Content Include="img\glyphicons-halflings-white.png" />
     <Content Include="img\glyphicons-halflings.png" />
@@ -327,6 +330,8 @@
     <Content Include="Scripts\bootstrap\js\tests\vendor\qunit.js" />
     <Content Include="Scripts\create-conference.js" />
     <Content Include="Content\grayscale.css" />
+    <Content Include="Scripts\display-conferences.js" />
+    <Content Include="Scripts\home-page.js" />
     <Content Include="Scripts\html5shiv.js" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -525,6 +530,8 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\_Alerts.cshtml" />
     <Content Include="Views\Conferences\_FilterPartial.cshtml" />
+    <Content Include="Views\Conferences\_TagsFilter.cshtml" />
+    <Content Include="Views\Conferences\_ConferencesView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
