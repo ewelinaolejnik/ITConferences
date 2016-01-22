@@ -7,13 +7,13 @@ namespace ITConferences.Domain.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class RemoveName : IMigrationMetadata
+    public sealed partial class OptionalImage : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(RemoveName));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(OptionalImage));
         
         string IMigrationMetadata.Id
         {
-            get { return "201511251700580_RemoveName"; }
+            get { return "201601220910146_OptionalImage"; }
         }
         
         string IMigrationMetadata.Source

@@ -103,49 +103,13 @@
     <Compile Include="Entities\Organizer.cs" />
     <Compile Include="Entities\Speaker.cs" />
     <Compile Include="Entities\Tag.cs" />
-    <Compile Include="Migrations\201511242001205_AttendeeIsUser.cs" />
-    <Compile Include="Migrations\201511242001205_AttendeeIsUser.Designer.cs">
-      <DependentUpon>201511242001205_AttendeeIsUser.cs</DependentUpon>
+    <Compile Include="Migrations\201601220902523_Initial.cs" />
+    <Compile Include="Migrations\201601220902523_Initial.Designer.cs">
+      <DependentUpon>201601220902523_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201511251614193_NameForAttendee.cs" />
-    <Compile Include="Migrations\201511251614193_NameForAttendee.Designer.cs">
-      <DependentUpon>201511251614193_NameForAttendee.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201511251700580_RemoveName.cs" />
-    <Compile Include="Migrations\201511251700580_RemoveName.Designer.cs">
-      <DependentUpon>201511251700580_RemoveName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201511291026502_ImageAndCoordinates.cs" />
-    <Compile Include="Migrations\201511291026502_ImageAndCoordinates.Designer.cs">
-      <DependentUpon>201511291026502_ImageAndCoordinates.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201511300448018_LttLong.cs" />
-    <Compile Include="Migrations\201511300448018_LttLong.Designer.cs">
-      <DependentUpon>201511300448018_LttLong.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201512111050593_NameForCityCountryConference.cs" />
-    <Compile Include="Migrations\201512111050593_NameForCityCountryConference.Designer.cs">
-      <DependentUpon>201512111050593_NameForCityCountryConference.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201512132358152_Image.cs" />
-    <Compile Include="Migrations\201512132358152_Image.Designer.cs">
-      <DependentUpon>201512132358152_Image.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201512140000198_ImageForConference.cs" />
-    <Compile Include="Migrations\201512140000198_ImageForConference.Designer.cs">
-      <DependentUpon>201512140000198_ImageForConference.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201601192111567_TagNameAsString.cs" />
-    <Compile Include="Migrations\201601192111567_TagNameAsString.Designer.cs">
-      <DependentUpon>201601192111567_TagNameAsString.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201601192123577_TagWithConferences.cs" />
-    <Compile Include="Migrations\201601192123577_TagWithConferences.Designer.cs">
-      <DependentUpon>201601192123577_TagWithConferences.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201601200750273_CountryInCity.cs" />
-    <Compile Include="Migrations\201601200750273_CountryInCity.Designer.cs">
-      <DependentUpon>201601200750273_CountryInCity.cs</DependentUpon>
+    <Compile Include="Migrations\201601220910146_OptionalImage.cs" />
+    <Compile Include="Migrations\201601220910146_OptionalImage.Designer.cs">
+      <DependentUpon>201601220910146_OptionalImage.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -155,38 +119,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201511242001205_AttendeeIsUser.resx">
-      <DependentUpon>201511242001205_AttendeeIsUser.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201601220902523_Initial.resx">
+      <DependentUpon>201601220902523_Initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201511251614193_NameForAttendee.resx">
-      <DependentUpon>201511251614193_NameForAttendee.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201511251700580_RemoveName.resx">
-      <DependentUpon>201511251700580_RemoveName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201511291026502_ImageAndCoordinates.resx">
-      <DependentUpon>201511291026502_ImageAndCoordinates.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201511300448018_LttLong.resx">
-      <DependentUpon>201511300448018_LttLong.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201512111050593_NameForCityCountryConference.resx">
-      <DependentUpon>201512111050593_NameForCityCountryConference.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201512132358152_Image.resx">
-      <DependentUpon>201512132358152_Image.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201512140000198_ImageForConference.resx">
-      <DependentUpon>201512140000198_ImageForConference.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201601192111567_TagNameAsString.resx">
-      <DependentUpon>201601192111567_TagNameAsString.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201601192123577_TagWithConferences.resx">
-      <DependentUpon>201601192123577_TagWithConferences.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201601200750273_CountryInCity.resx">
-      <DependentUpon>201601200750273_CountryInCity.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201601220910146_OptionalImage.resx">
+      <DependentUpon>201601220910146_OptionalImage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

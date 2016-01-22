@@ -4,8 +4,10 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using ITConferences.Domain.Migrations;
 
 namespace ITConferences.Domain.Entities
 {
@@ -41,12 +43,15 @@ namespace ITConferences.Domain.Entities
         public virtual ICollection<Organizer> Organizers { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
         public virtual ICollection<Inspiration> Media { get; set; }
+        public virtual ICollection<Evaluation> Evaluation { get; set; }
 
         [ForeignKey("TargetCity")]
         public int TargetCityId { get; set; }
+
         [ForeignKey("TargetCountry")]
         public int TargetCountryId { get; set; }
+
         [ForeignKey("Image")]
-        public int ImageId { get; set; }
+        public int? ImageId { get; set; }
     }
 }

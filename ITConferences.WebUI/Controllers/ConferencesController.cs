@@ -9,6 +9,7 @@ using ITConferences.Domain.Abstract;
 using ITConferences.Domain.Concrete;
 using ITConferences.Domain.Entities;
 using ITConferences.WebUI.Abstract.Helpers;
+using ITConferences.WebUI.Helpers;
 using WebGrease.Css.Extensions;
 
 namespace ITConferences.WebUI.Controllers
@@ -90,11 +91,14 @@ namespace ITConferences.WebUI.Controllers
         }
 
         //TODO: unit tests!
-        public PartialViewResult GetConferences(string nameFilter, string locationFilter, string[] selectedTagsIds, int? page)
+        public PartialViewResult GetConferences(string nameFilter, string locationFilter, string[] selectedTagsIds, DateFilter? dateFilter, int? page)
         {
+            _conferenceFilter.Conferences = Conferences;
             _conferenceFilter.FilterByName(ViewData, nameFilter);
             _conferenceFilter.FilterByLocation(ViewData, locationFilter);
             _conferenceFilter.FilterByTags(ViewData, selectedTagsIds, Tags);
+            if (dateFilter != null)
+                _conferenceFilter.FilterByTime(ViewData,dateFilter.Value);
 
             var pageId = page ?? 0;
             var pageSize = GetPageSize(pageId);

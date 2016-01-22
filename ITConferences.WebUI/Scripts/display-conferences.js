@@ -28,6 +28,8 @@ $m(document).ready(function () {
         selectedList: 4
     }).multiselectfilter();
 
+    var page = 0;
+
     //pass parameters to filter conferences
     $m("#submitButton").click(function () {
 
@@ -38,7 +40,7 @@ $m(document).ready(function () {
             url: '/Conferences/GetConferences/',
             type: "POST",
             dataType: "HTML",
-            data: { selectedTagsIds: $m("#tags").val(), locationFilter: $m("#location").val(), nameFilter: $m("#name").val() },
+            data: { selectedTagsIds: $m("#tags").val(), locationFilter: $m("#location").val(), nameFilter: $m("#name").val(), dateFilter: $m("#dateFilter").val() },
             success: function (data) {
                 $m("#conferences").html(data);
 
@@ -46,6 +48,7 @@ $m(document).ready(function () {
             complete: function () {
                 $m("#loading").hide();
                 $m("#conferences").show();
+                page = 0;
             }
         });
 
@@ -55,7 +58,7 @@ $m(document).ready(function () {
 
     //paging site by scrolling
     var lastScrollTop = 0;
-    var page = 0;
+   
     var inCallback = false;
 
     function loadConferences() {
@@ -73,6 +76,9 @@ $m(document).ready(function () {
                     } else {
                         page = -1;
                     }
+                    
+                },
+                complete: function () {
                     inCallback = false;
                 }
                 

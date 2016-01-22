@@ -195,6 +195,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\Helpers\ISortingHelper.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -212,8 +213,10 @@
     </Compile>
     <Compile Include="Helpers\Alert.cs" />
     <Compile Include="Helpers\AlertStyles.cs" />
+    <Compile Include="Helpers\DateFilter.cs" />
     <Compile Include="Helpers\FilterHelper.cs" />
     <Compile Include="Abstract\Helpers\IFilterConferenceHelper.cs" />
+    <Compile Include="Helpers\SortingHelper.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\LocationViewModel.cs" />

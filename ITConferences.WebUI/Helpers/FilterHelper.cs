@@ -77,5 +77,20 @@ namespace ITConferences.WebUI.Helpers
                 Conferences = tempConferences;
             }
         }
+
+        //TODO: unit tests!
+        public void FilterByTime(ViewDataDictionary viewData, DateFilter dateFilter)
+        {
+            switch (dateFilter)
+            {
+                case DateFilter.Upcoming:
+                    Conferences = Conferences.TakeWhile(e => e.Date >= DateTime.Today);
+                    break;
+
+                case DateFilter.Past:
+                    Conferences = Conferences.TakeWhile(e => e.Date < DateTime.Today);
+                    break;
+            }
+        }
     }
 }

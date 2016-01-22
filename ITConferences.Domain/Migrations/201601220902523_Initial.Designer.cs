@@ -7,13 +7,13 @@ namespace ITConferences.Domain.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class ImageForConference : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ImageForConference));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "201512140000198_ImageForConference"; }
+            get { return "201601220902523_Initial"; }
         }
         
         string IMigrationMetadata.Source
