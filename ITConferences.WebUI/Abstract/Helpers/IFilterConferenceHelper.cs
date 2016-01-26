@@ -11,7 +11,7 @@ namespace ITConferences.WebUI.Abstract.Helpers
 
         void FilterByName(ViewDataDictionary viewData, string nameFilter);
         void FilterByLocation(ViewDataDictionary viewData, string locationFilter);
-        void FilterByTags(ViewDataDictionary viewData, string[] selectedTagsIds, IEnumerable<Tag> tags);
-        void FilterByTime(ViewDataDictionary viewData, DateFilter dateFilter);
+        void FilterByTags(ViewDataDictionary viewData, int[] selectedTagsIds, IEnumerable<Tag> tags);
+        void FilterByTime(ViewDataDictionary viewData, DateFilter dateFilter, IEnumerable<Conference> conferences);
     }
 }

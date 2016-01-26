@@ -10,22 +10,16 @@ namespace ITConferences.Domain.Entities
 {
     public class Attendee : IdentityUser
     {
-        //[Key]
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        //public int AttendeeID { get; set; }
 
-        //[Required]
-        //[StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
-        //[Display(Name = "User name")]
-        //public string Name { get; set; }
+        public virtual Image Image { get; set; }
 
-        //////[Required]
-        ////[Display(Name = "Email")]
-        ////[EmailAddress(ErrorMessage = "Invalid email")]
-        ////public string Email { get; set; }
+        [ForeignKey("Image")]
+        public int? ImageId { get; set; }
 
         public virtual ICollection<Attendee> Friends { get; set; }
         public virtual ICollection<Conference> FavouriteConferences { get; set; }
+
+        public virtual ICollection<Conference> AttendantConferences { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<Attendee> manager)
         {

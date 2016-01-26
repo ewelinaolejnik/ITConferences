@@ -1,61 +1,194 @@
 ﻿@model ITConferences.Domain.Entities.Conference
 
+<style>
+    .btn-twitter {
+        background: #00acee;
+        border-radius: 0;
+        color: #fff;
+    }
+
+        .btn-twitter:link, .btn-twitter:visited {
+            color: #fff;
+        }
+
+        .btn-twitter:active, .btn-twitter:hover {
+            background: #0087bd;
+            color: #fff;
+        }
+
+    .btn-facebook {
+        background: #3b5998;
+        border-radius: 0;
+        color: #fff;
+    }
+
+        .btn-facebook:link, .btn-facebook:visited {
+            color: #fff;
+        }
+
+        .btn-facebook:active, .btn-facebook:hover {
+            background: #30477a;
+            color: #fff;
+        }
+
+    .btn-googleplus {
+        background: #e93f2e;
+        border-radius: 0;
+        color: #fff;
+    }
+
+        .btn-googleplus:link, .btn-googleplus:visited {
+            color: #fff;
+        }
+
+        .btn-googleplus:active, .btn-googleplus:hover {
+            background: #ba3225;
+            color: #fff;
+        }
+
+    .btn-linkedin {
+        background: #0e76a8;
+        border-radius: 0;
+        color: #fff;
+    }
+
+        .btn-linkedin:link, .btn-linkedin:visited {
+            color: #fff;
+        }
+
+        .btn-linkedin:active, .btn-linkedin:hover {
+            background: #0b6087;
+            color: #fff;
+        }
+
+
+        .buffer { margin-top:30px;margin-bottom: 30px;margin-right: 20px; }
+</style>
+
 
 <div class="container">
-    <h4>Conference</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.TargetCity.Name)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.TargetCity.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.TargetCountry.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TargetCountry.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
+    <div class="row buffer">
+        <div class="col-md-4 col-xs-4">
+            <div class="breadcrumb">
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        </div>
+    </div>
+    <div class="row buffer text-success">
+        <h1>
             @Html.DisplayFor(model => model.Name)
-        </dd>
+        </h1>
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
+    <div class="row buffer">
+        <div class="col-md-4 col-xs-4">
+            <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Date)
-        </dd>
+        <div class="col-md-8 col-xs-8">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.TargetCity.Name)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Url)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.TargetCity.Name)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Url)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.TargetCountry.Name)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IsPaid)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.TargetCountry.Name)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Date)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.IsPaid)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Date)
+                </dd>
 
-    </dl>
-    <p>
-        @Html.ActionLink("Back to List", "Index")
-    </p>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Url)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Url)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsPaid)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IsPaid)
+                </dd>
+
+                <dt>
+                    Topics:
+                </dt>
+
+                <dd>
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <a id="tagFilter">@tag.Name</a>
+
+                    }
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Organizers)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Organizers)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Speakers)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Speakers)
+                </dd>
+
+            </dl>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <p class="pull-left">
+            Evaluations:
+        </p>
+        <div class="col-md-4 col-xs-4 pull-right">
+            <!-- Twitter -->
+            <a href="http://twitter.com/home?status=" title="Share on Twitter" target="_blank" class="btn btn-twitter"><i class="fa fa-twitter"></i> Twitter</a>
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/sharer/sharer.php?u=" title="Share on Facebook" target="_blank" class="btn btn-facebook"><i class="fa fa-facebook"></i> Facebook</a>
+            <!-- Google+ -->
+            <a href="https://plus.google.com/share?url=" title="Share on Google+" target="_blank" class="btn btn-googleplus"><i class="fa fa-google-plus"></i> Google+</a>
+            <!-- LinkedIn -->
+            <a href="http://www.linkedin.com/shareArticle?mini=true&url=&title=&summary=" title="Share on LinkedIn" target="_blank" class="btn btn-linkedin"><i class="fa fa-linkedin"></i> LinkedIn</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="well">
+            @if (Model.Evaluation != null)
+            {
+                foreach (var eval in Model.Evaluation)
+                {
+                    <div class="thumbnail-inline">
+                        @eval.Comment
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
 </div>
 

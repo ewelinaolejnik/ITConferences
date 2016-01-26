@@ -21,6 +21,7 @@ namespace ITConferences.Domain.Concrete
         {
             return base.SaveChanges();
         }
+        
 
         public IDbSet<Conference> Conferences { get; set; }
         public IDbSet<Attendee> Attendees { get; set; }
@@ -46,5 +47,7 @@ namespace ITConferences.Domain.Concrete
         {
             return new DataContext();
         }
+
+        public System.Data.Entity.DbSet<ITConferences.Domain.Entities.Image> Images { get; set; }
     }
 }

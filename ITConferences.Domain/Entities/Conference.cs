@@ -40,7 +40,9 @@ namespace ITConferences.Domain.Entities
         public virtual Image Image { get; set; }
         public virtual ICollection<Attendee> Attendees { get; set; }
         public virtual ICollection<Speaker> Speakers { get; set; }
-        public virtual ICollection<Organizer> Organizers { get; set; }
+
+        [Display(Name = "Organizer:")]
+        public virtual Organizer Organizer { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
         public virtual ICollection<Inspiration> Media { get; set; }
         public virtual ICollection<Evaluation> Evaluation { get; set; }
@@ -53,5 +55,8 @@ namespace ITConferences.Domain.Entities
 
         [ForeignKey("Image")]
         public int? ImageId { get; set; }
+
+        [ForeignKey("Organizer")]
+        public int OrganizerId { get; set; }
     }
 }

@@ -33,6 +33,7 @@ namespace ITConferences.WebUI.Infrastructure
             _kernel.Bind<IGenericRepository<Organizer>>().To<GenericRepository<Organizer>>();
             _kernel.Bind<IGenericRepository<Speaker>>().To<GenericRepository<Speaker>>();
             _kernel.Bind<IGenericRepository<Tag>>().To<GenericRepository<Tag>>();
+            _kernel.Bind<IGenericRepository<Image>>().To<GenericRepository<Image>>();
             _kernel.Bind<IFilterConferenceHelper>().To<FilterHelper>();
         }
 

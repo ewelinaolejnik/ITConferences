@@ -50,19 +50,17 @@ namespace ITConferences.WebUI.Helpers
             }
         }
 
-        public void FilterByTags(ViewDataDictionary viewData, string[] selectedTagsIds, IEnumerable<Tag> tags)
+        public void FilterByTags(ViewDataDictionary viewData, int[] selectedTagsIds, IEnumerable<Tag> tags)
         {
-            if (selectedTagsIds != null && !string.IsNullOrEmpty(selectedTagsIds[0]))
+            if (selectedTagsIds != null && selectedTagsIds[0] != 0)
             {
-                var selectedTagsInt = new List<int>();
-                selectedTagsIds.ForEach(e => selectedTagsInt.Add(int.Parse(e)));
-                var selectedTags = tags.Where(e => selectedTagsInt.Contains(e.TagID)).ToList();
+                var selectedTags = tags.Where(e => selectedTagsIds.Contains(e.TagID)).ToList();
                 viewData["TagsFilter"] = new MultiSelectList(tags, "TagID", "Name", selectedTags);
 
                 var tempConferences = new List<Conference>();
                 foreach (var conference in Conferences)
                 {
-                    foreach (var selectedTagId in selectedTagsInt)
+                    foreach (var selectedTagId in selectedTagsIds)
                     {
                         if (conference.Tags.Any(e => e.TagID == selectedTagId))
                         {
@@ -79,16 +77,19 @@ namespace ITConferences.WebUI.Helpers
         }
 
         //TODO: unit tests!
-        public void FilterByTime(ViewDataDictionary viewData, DateFilter dateFilter)
+        public void FilterByTime(ViewDataDictionary viewData, DateFilter dateFilter, IEnumerable<Conference> conferences)
         {
             switch (dateFilter)
             {
                 case DateFilter.Upcoming:
-                    Conferences = Conferences.TakeWhile(e => e.Date >= DateTime.Today);
+                    Conferences = Conferences.Where(e => e.Date >= DateTime.Today).ToList();
                     break;
 
                 case DateFilter.Past:
-                    Conferences = Conferences.TakeWhile(e => e.Date < DateTime.Today);
+                    Conferences = Conferences.Where(e => e.Date < DateTime.Today).ToList();
+                    break;
+                case DateFilter.All:
+                    Conferences = conferences;
                     break;
             }
         }

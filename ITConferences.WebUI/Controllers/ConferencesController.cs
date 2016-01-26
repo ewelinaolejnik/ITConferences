@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using ITConferences.Domain.Abstract;
 using ITConferences.Domain.Concrete;
@@ -11,6 +12,7 @@ using ITConferences.Domain.Entities;
 using ITConferences.WebUI.Abstract.Helpers;
 using ITConferences.WebUI.Helpers;
 using WebGrease.Css.Extensions;
+using ITConferences.WebUI.Extensions;
 
 namespace ITConferences.WebUI.Controllers
 {
@@ -23,6 +25,7 @@ namespace ITConferences.WebUI.Controllers
         private IGenericRepository<Country> _countryRepository;
         private IGenericRepository<Tag> _tagRepository;
         private IGenericRepository<City> _cityRepository;
+        private IGenericRepository<Image> _imageRepository;
         private IFilterConferenceHelper _conferenceFilter;
 
         public IEnumerable<Conference> Conferences { get; private set; }
@@ -40,9 +43,11 @@ namespace ITConferences.WebUI.Controllers
         #endregion
 
         #region Ctor
-        public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository, IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository, IFilterConferenceHelper conferenceFilter)
+        public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository,
+            IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository,
+            IFilterConferenceHelper conferenceFilter, IGenericRepository<Image> imageRepository)
         {
-            if (conferenceRepository == null || countryRepository == null || tagRepository == null || cityRepository == null)
+            if (conferenceRepository == null || countryRepository == null || tagRepository == null || cityRepository == null || imageRepository == null)
             {
                 throw new ArgumentNullException("Some repository does not exist!");
             }
@@ -55,6 +60,7 @@ namespace ITConferences.WebUI.Controllers
             _countryRepository = countryRepository;
             _tagRepository = tagRepository;
             _cityRepository = cityRepository;
+            _imageRepository = imageRepository;
             Conferences = _conferenceRepository.GetAll().ToList();
             _conferenceFilter = conferenceFilter;
             _conferenceFilter.Conferences = Conferences;
@@ -91,14 +97,14 @@ namespace ITConferences.WebUI.Controllers
         }
 
         //TODO: unit tests!
-        public PartialViewResult GetConferences(string nameFilter, string locationFilter, string[] selectedTagsIds, DateFilter? dateFilter, int? page)
+        public PartialViewResult GetConferences(string nameFilter, string locationFilter, int[] selectedTagsIds, DateFilter? dateFilter, int? page)
         {
             _conferenceFilter.Conferences = Conferences;
             _conferenceFilter.FilterByName(ViewData, nameFilter);
             _conferenceFilter.FilterByLocation(ViewData, locationFilter);
             _conferenceFilter.FilterByTags(ViewData, selectedTagsIds, Tags);
             if (dateFilter != null)
-                _conferenceFilter.FilterByTime(ViewData,dateFilter.Value);
+                _conferenceFilter.FilterByTime(ViewData, dateFilter.Value, Conferences);
 
             var pageId = page ?? 0;
             var pageSize = GetPageSize(pageId);
@@ -110,7 +116,7 @@ namespace ITConferences.WebUI.Controllers
 
             var pagedConfs =
                  _conferenceFilter.Conferences.ToList().GetRange(pageId * PageSize, pageSize);
-            return PartialView("_ConferencesView", pagedConfs);
+            return PartialView("_ConferencesView", pagedConfs.OrderBy(e => e.Date).ToList());
         }
 
         //TODO: unit tests!
@@ -140,6 +146,7 @@ namespace ITConferences.WebUI.Controllers
         }
 
         #region Create
+        //TODO: unit tests!
         // GET: Conferences/Create
         public ActionResult Create()
         {
@@ -150,26 +157,58 @@ namespace ITConferences.WebUI.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name");
+            ViewData["TargetCountryId"] = new SelectList(Countries, "CountryID", "Name");
+            ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name");
             return View();
         }
 
+        //TODO: unit tests!
         // POST: Conferences/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ConferenceID,Name,Date,Url,IsPaid,TargetCityId,TargetCountryId")] Conference conference)
+        public ActionResult Create(int[] tags, Conference conference, HttpPostedFileBase image)
         {
+            ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name");
+            ViewData["TargetCountryId"] = new SelectList(Countries, "CountryID", "Name");
 
-            if (ModelState.IsValid)
+            try
             {
                 _conferenceRepository.InsertAndSubmit(conference);
-                return RedirectToAction("Index");
+                if (tags != null)
+                {
+                    var selectedTags = Tags.Where(e => tags.Contains(e.TagID)).ToList();
+                    conference.Tags.ToList().AddRange(selectedTags);
+                }
+                var img = new Image()
+                {
+                    ConcreteImage = image.InputStream.ToByteArray()
+                };
+                _imageRepository.InsertAndSubmit(img);
+                conference.Image = img;
+                _conferenceRepository.UpdateAndSubmit(conference);
+                Success("Great job, You added the event!", true);
+                return View(conference);
+            }
+            catch (Exception exception)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                return View();
+            }
+        }
+
+        [HttpPost]
+        public ActionResult UploadImage(HttpPostedFileBase image)
+        {
+            if (System.Web.HttpContext.Current.Request.Files.AllKeys.Any())
+            {
+                var pic = System.Web.HttpContext.Current.Request.Files["HelpSectionImages"];
+
+
+                return View("Create");
             }
 
-            ViewBag.TargetCountryId = new SelectList(_countryRepository.GetAll(), "CountryID", "Name", conference.TargetCountryId);
-            return View(conference);
+            return View("Create");
         }
 
         public JsonResult GetSelectedCities(int countryId)

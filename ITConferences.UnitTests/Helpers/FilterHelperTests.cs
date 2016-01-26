@@ -160,7 +160,7 @@ namespace ITConferences.UnitTests.Helpers
         public void FilterHelper_FilterByTags_assign_view_data_with_selected_tags()
         {
             //Arrange
-            sut.FilterByTags(viewData, new string[] { "1", "4" }, _tagRepositoryMock.Object.GetAll());
+            sut.FilterByTags(viewData, new int[] { 1, 4 }, _tagRepositoryMock.Object.GetAll());
 
             //Assign
             var actualViewData = ((MultiSelectList)viewData["TagsFilter"]);

@@ -213,7 +213,7 @@ namespace ITConferences.UnitTests.Controllers
         public void ConferencesController_Index_call_filters_methods()
         {
             //Arrange
-           // sut.GetConferences("test", "test", new string[] {"1", "4"});
+            sut.GetConferences("test", "test", new int[] {1, 4}, null, null);
 
             //Assign
 
@@ -221,7 +221,7 @@ namespace ITConferences.UnitTests.Controllers
             //Assert
             _filterHelperMock.Verify(e => e.FilterByName(sut.ViewData, "test"), Times.Once);
             _filterHelperMock.Verify(e => e.FilterByLocation(sut.ViewData, "test"), Times.Once);
-            _filterHelperMock.Verify(e => e.FilterByTags(sut.ViewData, new string[] { "1", "4" }, sut.Tags), Times.Once);
+            _filterHelperMock.Verify(e => e.FilterByTags(sut.ViewData, new int[] { 1, 4 }, sut.Tags), Times.Once);
         }
         #endregion
     }

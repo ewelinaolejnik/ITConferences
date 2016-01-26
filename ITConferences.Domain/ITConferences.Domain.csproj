@@ -103,13 +103,9 @@
     <Compile Include="Entities\Organizer.cs" />
     <Compile Include="Entities\Speaker.cs" />
     <Compile Include="Entities\Tag.cs" />
-    <Compile Include="Migrations\201601220902523_Initial.cs" />
-    <Compile Include="Migrations\201601220902523_Initial.Designer.cs">
-      <DependentUpon>201601220902523_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201601220910146_OptionalImage.cs" />
-    <Compile Include="Migrations\201601220910146_OptionalImage.Designer.cs">
-      <DependentUpon>201601220910146_OptionalImage.cs</DependentUpon>
+    <Compile Include="Migrations\201601260035162_Shit.cs" />
+    <Compile Include="Migrations\201601260035162_Shit.Designer.cs">
+      <DependentUpon>201601260035162_Shit.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -119,11 +115,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201601220902523_Initial.resx">
-      <DependentUpon>201601220902523_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201601220910146_OptionalImage.resx">
-      <DependentUpon>201601220910146_OptionalImage.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201601260035162_Shit.resx">
+      <DependentUpon>201601260035162_Shit.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

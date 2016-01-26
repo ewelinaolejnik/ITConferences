@@ -1,0 +1,26 @@
+﻿@model IEnumerable<ITConferences.Domain.Entities.Speaker>
+
+
+@{
+    Layout = null;
+}
+
+<div id="loading" style="display: none">
+    <img src="~/img/ajax-loader.gif" class="img-responsive center-block" alt="Loading image" />
+</div>
+
+<div class="form-group" id="conferences">
+
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 col-xs-4 btn thumbnail-inline">
+            <a href="@Url.Action("Details", "Speakers", new {id = item.SpeakerID})" class="link-format">
+                <div class="row conference-name ">@Html.DisplayFor(modelItem => item.User.UserName)</div>
+                <div class="row">
+                    <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
+                </div>
+            </a>
+        </div>
+
+    }
+</div>

@@ -21,14 +21,14 @@ namespace ITConferences.Domain.Entities
         public string Comment { get; set; }
 
        
-        public virtual Conference Conference { get; set; }
-        //TODO: speaker evaluation
-       // public virtual Speaker Speaker { get; set; }
+       // public virtual Conference Conference { get; set; }
+       // //TODO: speaker evaluation
+       //// public virtual Speaker Speaker { get; set; }
 
-        [ForeignKey("Conference")]
-        public int? ConferenceRefId { get; set; }
+       // [ForeignKey("Conference")]
+       // public int? ConferenceRefId { get; set; }
 
-        //[ForeignKey("Speaker")]
-        //public int SpeakerRefId { get; set; }
+       // //[ForeignKey("Speaker")]
+       // //public int SpeakerRefId { get; set; }
     }
 }

@@ -42,6 +42,7 @@ $m(document).ready(function () {
             dataType: "HTML",
             data: { selectedTagsIds: $m("#tags").val(), locationFilter: $m("#location").val(), nameFilter: $m("#name").val(), dateFilter: $m("#dateFilter").val() },
             success: function (data) {
+                $m("#conferences").empty();
                 $m("#conferences").html(data);
 
             },
@@ -69,7 +70,7 @@ $m(document).ready(function () {
                 url: '/Conferences/GetConferences/',
                 type: "POST",
                 dataType: "HTML",
-                data: { page: page },
+                data: { page: page, dateFilter: $m("#dateFilter").val() },
                 success: function (data) {
                     if (data != '') {
                         $m("#conferences").append(data);

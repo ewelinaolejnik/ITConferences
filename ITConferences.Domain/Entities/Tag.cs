@@ -13,6 +13,8 @@ namespace ITConferences.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TagID { get; set; }
+
+        [Display(Name = "Topics:")]
         public string Name { get; set; }
         public virtual ICollection<Conference> Conferences { get; set; }
     }
