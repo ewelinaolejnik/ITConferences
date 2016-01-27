@@ -1,6 +1,18 @@
 ﻿@model ITConferences.Domain.Entities.Conference
 
+<link rel="stylesheet" href="~/Content/bootstrap.css" />
+<link rel="stylesheet" href="~/Content/star-rating.min.css" />
+
+
+<script src="~/Scripts/jquery-2.2.0.min.js"></script>
+<script src="~/Scripts/star-rating.min.js"></script>
+
 <style>
+    #full {
+        width: 100%;
+        height: 100%;
+    }
+
     .btn-twitter {
         background: #00acee;
         border-radius: 0;
@@ -62,26 +74,29 @@
         }
 
 
-        .buffer { margin-top:30px;margin-bottom: 30px;margin-right: 20px; }
+    .buffer {
+        margin-top: 20px;
+        margin-bottom: 30px;
+        margin-right: 20px;
+    }
 </style>
 
 
-<div class="container">
+
+<div class="container" id="details">
 
     <div class="row buffer">
         <div class="col-md-4 col-xs-4">
-            <div class="breadcrumb">
-                @Html.ActionLink("Back to List", "Index")
-            </div>
+            @Html.ActionLink("Back to the conferences", "Index")
         </div>
     </div>
-    <div class="row buffer text-success">
+    <div class="row text-success">
         <h1>
             @Html.DisplayFor(model => model.Name)
         </h1>
     </div>
 
-    <div class="row buffer">
+    <div class="row">
         <div class="col-md-4 col-xs-4">
             <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
         </div>
@@ -128,23 +143,24 @@
                 </dd>
 
                 <dt>
-                    Topics:
+                    @Html.DisplayNameFor(model => model.Tags)
                 </dt>
 
                 <dd>
                     @foreach (var tag in Model.Tags)
                     {
-                        <a id="tagFilter">@tag.Name</a>
-
+                        @Html.ActionLink(tag.Name, "Index", new { tagsFilter = tag.TagID })@($"{", "}")
                     }
+
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.Organizers)
+                    @Html.DisplayNameFor(model => model.Organizer)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Organizers)
+                    @Html.ActionLink(Model.Organizer.User.UserName, "Details", "Organizers", new {id = Model.Organizer.OrganizerID}, null)
+                    @*@Html.DisplayFor(model => model.Organizer.User.UserName)*@
                 </dd>
 
                 <dt>
@@ -160,7 +176,7 @@
 
     </div>
 
-    <div class="row">
+    <div class="row buffer">
         <p class="pull-left">
             Evaluations:
         </p>
@@ -176,19 +192,75 @@
         </div>
     </div>
 
+
     <div class="row">
+
         <div class="well">
+
+            <div class="thumbnail row" style="overflow: hidden;">
+
+                <div class="col-md-7 col-xs-6">
+                    <input type="text" id="full" />
+                </div>
+                <div class="col-md-4 col-xs-3">
+                    <input id="input-id" type="number" class="rating pull-right" step="1" min=0 max=5 data-size="xs">
+                </div>
+                <div class="col-md-1 col-xs-1">
+                    <button id="submitButton" type="submit" value="Submit" class="btn btn-success btn-lg pull-right"><span class="glyphicon glyphicon-ok"></span></button>
+                </div>
+
+            </div>
+
+
             @if (Model.Evaluation != null)
             {
                 foreach (var eval in Model.Evaluation)
                 {
-                    <div class="thumbnail-inline">
-                        @eval.Comment
+                    <div class="thumbnail row" style="overflow: hidden;">
+                        <div class="col-md-1 col-xs-3">
+                            <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" width="80px" />
+                        </div>
+                        <div class="col-md-7 col-xs-6">
+                            @eval.Comment
+                        </div>
+                        <div class="col-md-4 col-xs-3">
+
+                            <input id="input-id" disabled="true" showClear="true" type="number" class="rating pull-right" step="1" min=0 max=5 data-size="xs" value=@eval.CountOfStars>
+
+                        </div>
                     </div>
                 }
             }
 
         </div>
     </div>
+
 </div>
+
+
+<script type="text/javascript">
+
+    //pass name filter to filter conferences
+    var conference =
+    {
+        "conferenceId": @Model.ConferenceID,
+    };
+
+    $("#submitButton").click(function () {
+
+        $.ajax({
+            url: '/Conferences/AddEvaluation/',
+            type: "POST",
+            dataType: "HTML",
+            data: { conferenceId: conference.conferenceId, countOfStars:  $("#input-id").val(), comment: $("#full").val() },
+            success: function (data) {
+                if (data != "") {
+                    $("#details").html(data);
+                }
+            }
+        });
+
+
+    });
+</script>
 

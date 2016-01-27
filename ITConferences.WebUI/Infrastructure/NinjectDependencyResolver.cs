@@ -35,6 +35,7 @@ namespace ITConferences.WebUI.Infrastructure
             _kernel.Bind<IGenericRepository<Tag>>().To<GenericRepository<Tag>>();
             _kernel.Bind<IGenericRepository<Image>>().To<GenericRepository<Image>>();
             _kernel.Bind<IFilterConferenceHelper>().To<FilterHelper>();
+            _kernel.Bind<IFilterSpeakerHelper>().To<FilterHelper>();
         }
 
         public object GetService(Type serviceType)

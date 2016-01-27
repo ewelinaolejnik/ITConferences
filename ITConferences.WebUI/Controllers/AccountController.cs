@@ -1,12 +1,16 @@
 ﻿using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.ModelBinding;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using ITConferences.Domain.Entities;
 using ITConferences.WebUI.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Ninject.Activation;
 
 namespace ITConferences.WebUI.Controllers
 {

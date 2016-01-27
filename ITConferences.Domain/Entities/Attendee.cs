@@ -30,5 +30,6 @@ namespace ITConferences.Domain.Entities
             return userIdentity;
         }
 
+
     }
 }

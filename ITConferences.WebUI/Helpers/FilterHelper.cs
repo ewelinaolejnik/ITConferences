@@ -9,9 +9,20 @@ using WebGrease.Css.Extensions;
 
 namespace ITConferences.WebUI.Helpers
 {
-    public class FilterHelper : IFilterConferenceHelper
+    public class FilterHelper : IFilterConferenceHelper, IFilterSpeakerHelper
     {
         public IEnumerable<Conference> Conferences { get; set; }
+
+        public IEnumerable<Speaker> Speakers { get; set; }
+
+        public void FilterBySpeakerName(ViewDataDictionary viewData, string nameFilter)
+        {
+            if (!string.IsNullOrEmpty(nameFilter))
+            {
+                viewData["NameFilter"] = nameFilter;
+                Speakers = Speakers.Where(e => e.User.UserName.ToLower().Contains(nameFilter.ToLower())).ToList();
+            }
+        }
 
         public void FilterByName(ViewDataDictionary viewData, string nameFilter)
         {

@@ -32,6 +32,7 @@ namespace ITConferences.Domain.Concrete
         public IDbSet<Country> Countries { get; set; }
         public IDbSet<City> Cities { get; set; }
         public IDbSet<Tag> Tags { get; set; }
+        public IDbSet<Image> Images { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -47,7 +48,5 @@ namespace ITConferences.Domain.Concrete
         {
             return new DataContext();
         }
-
-        public System.Data.Entity.DbSet<ITConferences.Domain.Entities.Image> Images { get; set; }
     }
 }

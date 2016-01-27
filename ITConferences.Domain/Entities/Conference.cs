@@ -57,6 +57,6 @@ namespace ITConferences.Domain.Entities
         public int? ImageId { get; set; }
 
         [ForeignKey("Organizer")]
-        public int OrganizerId { get; set; }
+        public int? OrganizerId { get; set; }
     }
 }

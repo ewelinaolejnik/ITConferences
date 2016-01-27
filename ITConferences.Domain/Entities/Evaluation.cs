@@ -14,7 +14,7 @@ namespace ITConferences.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EvaluationID { get; set; }
 
-        [Range(0, 5)]
+        [Range(1, 5)]
         public int CountOfStars { get; set; }
 
         [StringLength(100,MinimumLength = 3, ErrorMessage = "Comment cannot be longer than 100 characters.")]

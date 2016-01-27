@@ -51,13 +51,13 @@ namespace ITConferences.Domain
             //    clientId: "",
             //    clientSecret: "");
 
-            //app.UseTwitterAuthentication(
-            //   consumerKey: "",
-            //   consumerSecret: "");
+            app.UseTwitterAuthentication(
+               consumerKey: "0FjcRCvo7YPbiFTyh7CMhdcfd",
+               consumerSecret: "Y7VYusZtG5QWN78JPfq9IdNXcGP5agvjxPcyxDlcKmfFm6iEss");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "1122390707774006",
+               appSecret: "a6702aca2b47cc7d4966d54b52672470");
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{

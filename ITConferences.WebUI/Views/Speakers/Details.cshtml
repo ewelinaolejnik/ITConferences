@@ -1,42 +1,150 @@
 ﻿@model ITConferences.Domain.Entities.Speaker
 
-@{
-    Layout = null;
-}
+<link rel="stylesheet" href="~/Content/bootstrap.css" />
+<link rel="stylesheet" href="~/Content/star-rating.min.css" />
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
-    <div>
-        <h4>Speaker</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Email)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Email)
-            </dd>
-    
-        </dl>
+<script src="~/Scripts/jquery-2.2.0.min.js"></script>
+<script src="~/Scripts/star-rating.min.js"></script>
+
+<style>
+    #full {
+        width: 100%;
+        height: 100%;
+    }
+
+     .buffer {
+        margin-top: 20px;
+        margin-bottom: 30px;
+        margin-right: 20px;
+    }
+</style>
+
+
+
+<div class="container" id="details">
+
+    <div class="row buffer">
+        <div class="col-md-4 col-xs-4">
+            @Html.ActionLink("Back to the speakers", "Index")
+        </div>
     </div>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.AttendeeID }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-</body>
-</html>
+    <div class="row text-success">
+        <p class="text-danger text-uppercase">
+            Speaker
+        </p>
+        <h1>
+            @Html.DisplayFor(model => model.User.UserName)
+        </h1>
+    </div>
+
+    <div class="row buffer">
+        <div class="col-md-4 col-xs-4">
+            <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
+        </div>
+
+        <div class="col-md-8 col-xs-8">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.User.Email)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.User.Email)
+                </dd>
+
+                <dt>
+                   @Html.DisplayNameFor(model => model.SpokenConferences)
+                </dt>
+
+                <dd>
+                    @foreach (var conf in Model.SpokenConferences)
+                    {
+                        @Html.ActionLink(conf.Name, "Details", "Conferences", new { id = conf.ConferenceID }, null)@($"{", "}")
+                    }
+
+                </dd>
+
+
+            </dl>
+        </div>
+
+    </div>
+
+    <div class="row buffer">
+        <p class="pull-left">
+            Evaluations:
+        </p>
+    </div>
+
+
+    <div class="row">
+
+        <div class="well">
+
+            <div class="thumbnail row" style="overflow: hidden;">
+
+                <div class="col-md-7 col-xs-6">
+                    <input type="text" id="full" />
+                </div>
+                <div class="col-md-4 col-xs-3">
+                    <input id="input-id" type="number" class="rating pull-right" step="1" min=0 max=5 data-size="xs">
+                </div>
+                <div class="col-md-1 col-xs-1">
+                    <button id="submitButton" type="submit" value="Submit" class="btn btn-success btn-lg pull-right"><span class="glyphicon glyphicon-ok"></span></button>
+                </div>
+
+            </div>
+
+
+            @if (Model.Evaluations != null)
+            {
+                foreach (var eval in Model.Evaluations)
+                {
+                    <div class="thumbnail row" style="overflow: hidden;">
+                        <div class="col-md-1 col-xs-3">
+                            <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" width="80px" />
+                        </div>
+                        <div class="col-md-7 col-xs-6">
+                            @eval.Comment
+                        </div>
+                        <div class="col-md-4 col-xs-3">
+
+                            <input id="input-id" disabled="true" showClear="true" type="number" class="rating pull-right" step="1" min=0 max=5 data-size="xs" value=@eval.CountOfStars>
+
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+    //pass name filter to filter conferences
+    var conference =
+    {
+        "conferenceId": @Model.SpeakerID,
+    };
+
+    $("#submitButton").click(function () {
+
+        $.ajax({
+            url: '/Speakers/AddEvaluation/',
+            type: "POST",
+            dataType: "HTML",
+            data: { conferenceId: conference.conferenceId, countOfStars:  $("#input-id").val(), comment: $("#full").val() },
+            success: function (data) {
+                if (data != "") {
+                    $("#details").html(data);
+                }
+            }
+        });
+
+
+    });
+</script>

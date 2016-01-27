@@ -107,6 +107,10 @@
     <Compile Include="Migrations\201601260035162_Shit.Designer.cs">
       <DependentUpon>201601260035162_Shit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601261104265_NullableOrginizer.cs" />
+    <Compile Include="Migrations\201601261104265_NullableOrginizer.Designer.cs">
+      <DependentUpon>201601261104265_NullableOrginizer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -117,6 +121,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201601260035162_Shit.resx">
       <DependentUpon>201601260035162_Shit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601261104265_NullableOrginizer.resx">
+      <DependentUpon>201601261104265_NullableOrginizer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

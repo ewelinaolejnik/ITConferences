@@ -22,6 +22,7 @@ namespace ITConferences.UnitTests.Controllers
         private Mock<IGenericRepository<Country>> _countryRepositoryMock;
         private Mock<IGenericRepository<City>> _cityRepositoryMock;
         private Mock<IGenericRepository<Tag>> _tagRepositoryMock;
+        private Mock<IGenericRepository<Image>> _imageRepositoryMock;
         private Mock<IFilterConferenceHelper> _filterHelperMock;
         private Country country1;
         private Conference[] conferences;
@@ -33,6 +34,7 @@ namespace ITConferences.UnitTests.Controllers
             _countryRepositoryMock = new Mock<IGenericRepository<Country>>();
             _cityRepositoryMock = new Mock<IGenericRepository<City>>();
             _tagRepositoryMock = new Mock<IGenericRepository<Tag>>();
+            _imageRepositoryMock = new Mock<IGenericRepository<Image>>();
             _filterHelperMock = new Mock<IFilterConferenceHelper>();
             var city1 = new City() {Name = "Asd", CityID = 1, Country = new Country() {Name = "Asd"}};
             country1 = new Country() {Name = "Asd", CountryID = 1, Cities = new City[] {city1}};
@@ -73,7 +75,8 @@ namespace ITConferences.UnitTests.Controllers
             _tagRepositoryMock.Setup(e => e.GetAll()).Returns(new[] {tag1, tag2, tag3});
 
             sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object,
-                _tagRepositoryMock.Object, _cityRepositoryMock.Object, _filterHelperMock.Object);
+                _tagRepositoryMock.Object, _cityRepositoryMock.Object, _filterHelperMock.Object,
+                _imageRepositoryMock.Object);
         }
 
         [TestCleanup]
@@ -94,7 +97,7 @@ namespace ITConferences.UnitTests.Controllers
         [ExpectedException(typeof(ArgumentNullException))]
         public void ConferencesController_Ctor_throws_exception_if_conference_repository_is_null()
         {
-            sut = new ConferencesController(null, _countryRepositoryMock.Object, _tagRepositoryMock.Object, _cityRepositoryMock.Object, _filterHelperMock.Object);
+            sut = new ConferencesController(null, _countryRepositoryMock.Object, _tagRepositoryMock.Object, _cityRepositoryMock.Object, _filterHelperMock.Object, _imageRepositoryMock.Object);
         }
 
 
@@ -104,7 +107,7 @@ namespace ITConferences.UnitTests.Controllers
         [ExpectedException(typeof(ArgumentNullException))]
         public void ConferencesController_Ctor_throws_exception_if_country_repository_is_null()
         {
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, null, _tagRepositoryMock.Object, _cityRepositoryMock.Object, _filterHelperMock.Object);
+            sut = new ConferencesController(_conferenceRepositoryMock.Object, null, _tagRepositoryMock.Object, _cityRepositoryMock.Object, _filterHelperMock.Object, _imageRepositoryMock.Object);
         }
 
         [TestMethod]
@@ -113,7 +116,7 @@ namespace ITConferences.UnitTests.Controllers
         [ExpectedException(typeof(ArgumentNullException))]
         public void ConferencesController_Ctor_throws_exception_if_tag_repository_is_null()
         {
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, null, _cityRepositoryMock.Object, _filterHelperMock.Object);
+            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, null, _cityRepositoryMock.Object, _filterHelperMock.Object, _imageRepositoryMock.Object);
         }
 
         [TestMethod]
@@ -122,7 +125,7 @@ namespace ITConferences.UnitTests.Controllers
         [ExpectedException(typeof(ArgumentNullException))]
         public void ConferencesController_Ctor_throws_exception_if_city_repository_is_null()
         {
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, _tagRepositoryMock.Object, null, _filterHelperMock.Object);
+            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, _tagRepositoryMock.Object, null, _filterHelperMock.Object, _imageRepositoryMock.Object);
         }
 
         [TestMethod]
@@ -131,7 +134,7 @@ namespace ITConferences.UnitTests.Controllers
         [ExpectedException(typeof(ArgumentNullException))]
         public void ConferencesController_Ctor_throws_exception_if_filter_helper_is_null()
         {
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, _tagRepositoryMock.Object, _cityRepositoryMock.Object, null);
+            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, _tagRepositoryMock.Object, _cityRepositoryMock.Object, null, _imageRepositoryMock.Object);
         }
         #endregion
 
@@ -142,7 +145,7 @@ namespace ITConferences.UnitTests.Controllers
         public void ConferencesController_Index_assign_tags_filter_view_data()
         {
             //Arrange
-            sut.Index(null);
+            sut.Index(null,null);
 
             //Assign
             var viewData = ((MultiSelectList)sut.ViewData["TagsFilter"]).ToList();
@@ -158,7 +161,7 @@ namespace ITConferences.UnitTests.Controllers
         public void ConferencesController_Index_call_filter_by_name()
         {
             //Arrange
-            sut.Index("test");
+            sut.Index("test",null);
 
             //Assign
            

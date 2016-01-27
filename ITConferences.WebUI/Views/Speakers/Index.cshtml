@@ -26,25 +26,27 @@
     .body {
         overflow-scrolling: touch;
     }
+
+    .buffer {
+        margin-top: 50px;
+    }
 </style>
 
+<script src="~/Scripts/jquery-2.2.0.min.js"></script>
+<script src="~/Scripts/display-speakers.js"></script>
+
 <div class="container">
-    <div class="jumbotron">
-        <div class="row">
-            <div class="form-group  center-block">
-                <div class="col-md-3 col-xs-4">
-                    @Html.TextBox("NameFilter", ViewData["NameFilter"], new { @id = "name", @type = "text", @class = "form-control", @placeholder = "Event name" })
-                </div>
+
+    <div class="row buffer">
+        <form class="form-inline" role="form">
+            <div class="form-group">
+                @Html.TextBox("NameFilter", null, new { @id = "name", @type = "text", @class = "form-control input-lg", @placeholder = "Name" })
+                <button id="submitButton" type="submit" value="Submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search"></span></button>
             </div>
-        </div>
-
-        <div class="row">
-            <button id="submitButton" type="submit" value="Submit" class="btn btn-success btn-lg pull-right"><span class="glyphicon glyphicon-search"></span></button>
-        </div>
-
+        </form>
     </div>
 
-    <div class="row">
-        @Html.Partial("_ConferencesView")
+    <div class="row buffer">
+        @Html.Partial("_SpeakersView")
     </div>
 </div>

@@ -70,10 +70,11 @@ namespace ITConferences.WebUI.Controllers
         #region Index
         //TODO: unit tests!
         // GET: Conferences
-        public ActionResult Index(string nameFilter)
+        public ActionResult Index(string nameFilter, int? tagsFilter)
         {
             ViewData["TagsFilter"] = new MultiSelectList(_tagRepository.GetAll(), "TagID", "Name");
             _conferenceFilter.FilterByName(ViewData, nameFilter);
+            _conferenceFilter.FilterByTags(ViewData, new int[] { tagsFilter ?? 0 }, Tags);
 
             var pageSize = GetPageSize(0);
             var pagedConfs =
@@ -128,6 +129,7 @@ namespace ITConferences.WebUI.Controllers
         }
         #endregion
 
+        #region Details
         // GET: Conferences/Details/5
         public ActionResult Details(int? id)
         {
@@ -144,6 +146,38 @@ namespace ITConferences.WebUI.Controllers
             }
             return View(conference);
         }
+
+        public ActionResult AddEvaluation(int conferenceId, int countOfStars, string comment)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                Danger("Log in to add evaluation, please", true);
+
+                return RedirectToAction("Login", "Account");
+            }
+
+            Conference conference = _conferenceRepository.GetById(conferenceId);
+
+            if (string.IsNullOrWhiteSpace(comment))
+            {
+                Information("Write a comment to add evaluation, please", true);
+
+                return View("Details", conference);
+            }
+
+            var eval = new Evaluation()
+            {
+                Comment = comment,
+                CountOfStars = countOfStars
+            };
+        
+            conference.Evaluation.Add(eval);
+            _conferenceRepository.UpdateAndSubmit(conference);
+
+            return View("Details", conference);
+        }
+
+        #endregion
 
         #region Create
         //TODO: unit tests!
@@ -196,20 +230,7 @@ namespace ITConferences.WebUI.Controllers
                 return View();
             }
         }
-
-        [HttpPost]
-        public ActionResult UploadImage(HttpPostedFileBase image)
-        {
-            if (System.Web.HttpContext.Current.Request.Files.AllKeys.Any())
-            {
-                var pic = System.Web.HttpContext.Current.Request.Files["HelpSectionImages"];
-
-
-                return View("Create");
-            }
-
-            return View("Create");
-        }
+        
 
         public JsonResult GetSelectedCities(int countryId)
         {
