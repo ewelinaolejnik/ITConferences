@@ -17,7 +17,14 @@
             <a href="@Url.Action("Details", "Speakers", new {id = item.SpeakerID})" class="link-format">
                 <div class="row conference-name ">@Html.DisplayFor(modelItem => item.User.UserName)</div>
                 <div class="row">
-                    <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Speaker image" />
+                    @if (item.User.Image != null)
+                    {
+                        <img src="@Url.Action("GetImage","Speakers", new {speakerId = item.SpeakerID}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
+                    }
+                    else
+                    {
+                        <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
+                    }
                 </div>
             </a>
         </div>

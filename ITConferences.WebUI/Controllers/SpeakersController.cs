@@ -68,6 +68,13 @@ namespace ITConferences.WebUI.Controllers
             return PartialView("_SpeakersView", pagedSpeakers);
         }
 
+        public FileContentResult GetImage(int? speakerId)
+        {
+            var speaker = _speakerRepository.GetById(speakerId);
+            var image = speaker.User.Image;
+            return File(image.ImageData, image.ImageMimeType);
+        }
+
         private int GetPageSize(int pageId)
         {
             return (PageSize * pageId) + PageSize < _speakersFilter.Speakers.Count()
@@ -117,7 +124,7 @@ namespace ITConferences.WebUI.Controllers
             };
 
             speaker.Evaluations.Add(eval);
-            _speakerRepository.UpdateAndSubmit(speaker);
+            _speakerRepository.UpdateAndSubmit();
 
             return View("Details", speaker);
         }

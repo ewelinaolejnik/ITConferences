@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -22,6 +24,8 @@ namespace ITConferences.WebUI.Controllers
         private const int PageSize = 15;
 
         private IGenericRepository<Conference> _conferenceRepository;
+        private IGenericRepository<Attendee> _attendeeRepository;
+        private IGenericRepository<Organizer> _organizerRepository;
         private IGenericRepository<Country> _countryRepository;
         private IGenericRepository<Tag> _tagRepository;
         private IGenericRepository<City> _cityRepository;
@@ -44,10 +48,11 @@ namespace ITConferences.WebUI.Controllers
 
         #region Ctor
         public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository,
-            IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository,
-            IFilterConferenceHelper conferenceFilter, IGenericRepository<Image> imageRepository)
+            IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository, IGenericRepository<Organizer> organizerRepository,
+            IFilterConferenceHelper conferenceFilter, IGenericRepository<Image> imageRepository, IGenericRepository<Attendee> attendeeRepository)
         {
-            if (conferenceRepository == null || countryRepository == null || tagRepository == null || cityRepository == null || imageRepository == null)
+            if (conferenceRepository == null || countryRepository == null || tagRepository == null ||
+                cityRepository == null || imageRepository == null || attendeeRepository == null || organizerRepository == null)
             {
                 throw new ArgumentNullException("Some repository does not exist!");
             }
@@ -64,6 +69,8 @@ namespace ITConferences.WebUI.Controllers
             Conferences = _conferenceRepository.GetAll().ToList();
             _conferenceFilter = conferenceFilter;
             _conferenceFilter.Conferences = Conferences;
+            _attendeeRepository = attendeeRepository;
+            _organizerRepository = organizerRepository;
         }
         #endregion
 
@@ -100,12 +107,12 @@ namespace ITConferences.WebUI.Controllers
         //TODO: unit tests!
         public PartialViewResult GetConferences(string nameFilter, string locationFilter, int[] selectedTagsIds, DateFilter? dateFilter, int? page)
         {
-            _conferenceFilter.Conferences = Conferences;
+            _conferenceFilter.Conferences = Conferences.OrderBy(e => e.Date);
             _conferenceFilter.FilterByName(ViewData, nameFilter);
             _conferenceFilter.FilterByLocation(ViewData, locationFilter);
             _conferenceFilter.FilterByTags(ViewData, selectedTagsIds, Tags);
             if (dateFilter != null)
-                _conferenceFilter.FilterByTime(ViewData, dateFilter.Value, Conferences);
+                _conferenceFilter.FilterByTime(ViewData, dateFilter.Value, _conferenceFilter.Conferences);
 
             var pageId = page ?? 0;
             var pageSize = GetPageSize(pageId);
@@ -117,7 +124,7 @@ namespace ITConferences.WebUI.Controllers
 
             var pagedConfs =
                  _conferenceFilter.Conferences.ToList().GetRange(pageId * PageSize, pageSize);
-            return PartialView("_ConferencesView", pagedConfs.OrderBy(e => e.Date).ToList());
+            return PartialView("_ConferencesView", pagedConfs.ToList());
         }
 
         //TODO: unit tests!
@@ -147,7 +154,7 @@ namespace ITConferences.WebUI.Controllers
             return View(conference);
         }
 
-        public ActionResult AddEvaluation(int conferenceId, int countOfStars, string comment)
+        public ActionResult AddEvaluation(int conferenceId, int countOfStars, string comment, string ownerId)
         {
             if (!Request.IsAuthenticated)
             {
@@ -165,14 +172,16 @@ namespace ITConferences.WebUI.Controllers
                 return View("Details", conference);
             }
 
+            var owner = _attendeeRepository.GetById(null, ownerId);
             var eval = new Evaluation()
             {
                 Comment = comment,
-                CountOfStars = countOfStars
+                CountOfStars = countOfStars,
+                Owner = owner
             };
-        
+            
             conference.Evaluation.Add(eval);
-            _conferenceRepository.UpdateAndSubmit(conference);
+            _conferenceRepository.UpdateAndSubmit();
 
             return View("Details", conference);
         }
@@ -201,36 +210,74 @@ namespace ITConferences.WebUI.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create(int[] tags, Conference conference, HttpPostedFileBase image)
+        public ActionResult Create(string tags, Conference conference, HttpPostedFileBase image, string userId)
         {
             ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name");
             ViewData["TargetCountryId"] = new SelectList(Countries, "CountryID", "Name");
 
             try
             {
-                _conferenceRepository.InsertAndSubmit(conference);
-                if (tags != null)
+                if (image != null)
                 {
-                    var selectedTags = Tags.Where(e => tags.Contains(e.TagID)).ToList();
-                    conference.Tags.ToList().AddRange(selectedTags);
+                    var img = new Image()
+                    {
+                        ImageData = image.InputStream.ToByteArray(),
+                        ImageMimeType = image.ContentType
+
+                    };
+                    conference.Image = img;
                 }
-                var img = new Image()
+
+                if (!string.IsNullOrWhiteSpace(userId))
                 {
-                    ConcreteImage = image.InputStream.ToByteArray()
-                };
-                _imageRepository.InsertAndSubmit(img);
-                conference.Image = img;
-                _conferenceRepository.UpdateAndSubmit(conference);
+                    var attendee = _attendeeRepository.GetById(null, userId);
+                    var organizer = new Organizer()
+                    {
+                        UserId = userId
+                    };
+                    conference.Organizer = organizer;
+                }
+
+                _conferenceRepository.InsertAndSubmit(conference);
+
+                if (tags != "null")
+                {
+                    var stringTags = tags.Split(',');
+                    var intTag = stringTags.Select(e => int.Parse(e)).ToList();
+                    var selectedTags = Tags.Where(e => intTag.Contains(e.TagID));
+                    Tags.Where(e => intTag.Contains(e.TagID))
+                        .ForEach(e => e.Conferences.Add(conference));
+                    _tagRepository.UpdateAndSubmit();
+                }
+
+                
+
                 Success("Great job, You added the event!", true);
                 return View(conference);
             }
-            catch (Exception exception)
+            catch (DbEntityValidationException dbEx)
             {
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                foreach (var validationErrors in dbEx.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        Trace.TraceInformation("Property: {0} Error: {1}",
+                                                validationError.PropertyName,
+                                                validationError.ErrorMessage);
+                    }
+                }
+                // ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
                 return View();
             }
         }
-        
+
+        public FileContentResult GetImage(int? imageId)
+        {
+            var image = _imageRepository.GetById(imageId); //change for conference
+            return File(image.ImageData, image.ImageMimeType);
+        }
+
+
 
         public JsonResult GetSelectedCities(int countryId)
         {

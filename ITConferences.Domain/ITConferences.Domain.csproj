@@ -111,6 +111,34 @@
     <Compile Include="Migrations\201601261104265_NullableOrginizer.Designer.cs">
       <DependentUpon>201601261104265_NullableOrginizer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601271921238_TypeForImage.cs" />
+    <Compile Include="Migrations\201601271921238_TypeForImage.Designer.cs">
+      <DependentUpon>201601271921238_TypeForImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601272238563_OrganizerForAttendee.cs" />
+    <Compile Include="Migrations\201601272238563_OrganizerForAttendee.Designer.cs">
+      <DependentUpon>201601272238563_OrganizerForAttendee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601272255190_OrganizerForAttendeeeee.cs" />
+    <Compile Include="Migrations\201601272255190_OrganizerForAttendeeeee.Designer.cs">
+      <DependentUpon>201601272255190_OrganizerForAttendeeeee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601272259076_AddColumns.cs" />
+    <Compile Include="Migrations\201601272259076_AddColumns.Designer.cs">
+      <DependentUpon>201601272259076_AddColumns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601281306150_NotRequiredAttendee.cs" />
+    <Compile Include="Migrations\201601281306150_NotRequiredAttendee.Designer.cs">
+      <DependentUpon>201601281306150_NotRequiredAttendee.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601282114299_IsPaidFalse.cs" />
+    <Compile Include="Migrations\201601282114299_IsPaidFalse.Designer.cs">
+      <DependentUpon>201601282114299_IsPaidFalse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201601282210368_EvalOwner.cs" />
+    <Compile Include="Migrations\201601282210368_EvalOwner.Designer.cs">
+      <DependentUpon>201601282210368_EvalOwner.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -124,6 +152,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201601261104265_NullableOrginizer.resx">
       <DependentUpon>201601261104265_NullableOrginizer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601271921238_TypeForImage.resx">
+      <DependentUpon>201601271921238_TypeForImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601272238563_OrganizerForAttendee.resx">
+      <DependentUpon>201601272238563_OrganizerForAttendee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601272255190_OrganizerForAttendeeeee.resx">
+      <DependentUpon>201601272255190_OrganizerForAttendeeeee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601272259076_AddColumns.resx">
+      <DependentUpon>201601272259076_AddColumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601281306150_NotRequiredAttendee.resx">
+      <DependentUpon>201601281306150_NotRequiredAttendee.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601282114299_IsPaidFalse.resx">
+      <DependentUpon>201601282114299_IsPaidFalse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601282210368_EvalOwner.resx">
+      <DependentUpon>201601282210368_EvalOwner.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

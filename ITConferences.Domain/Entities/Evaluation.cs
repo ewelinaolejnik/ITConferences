@@ -23,12 +23,12 @@ namespace ITConferences.Domain.Entities
        
        // public virtual Conference Conference { get; set; }
        // //TODO: speaker evaluation
-       //// public virtual Speaker Speaker { get; set; }
+       public virtual Attendee Owner { get; set; }
 
-       // [ForeignKey("Conference")]
-       // public int? ConferenceRefId { get; set; }
+        // [ForeignKey("Conference")]
+        // public int? ConferenceRefId { get; set; }
 
-       // //[ForeignKey("Speaker")]
-       // //public int SpeakerRefId { get; set; }
+        [ForeignKey("Owner")]
+        public string OwnerId { get; set; }
     }
 }

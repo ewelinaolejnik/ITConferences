@@ -73,11 +73,25 @@ $m(document).ready(function () {
             tags: $m("#tags").val(), image: $m("#image").get(0).files[0]
         }
 
+        var formData = new FormData();
+        formData.append("image", $m("#image").prop('files')[0]);
+        formData.append("tags", $m("#tags").val());
+        formData.append("Name", $m("#Name").val());
+        formData.append("TargetCityId", $m("#TargetCityId").val());
+        formData.append("Date", $m("#Date").val());
+        formData.append("Url", $m("#Url").val());
+        formData.append("IsPaid", $m('#IsPaid').prop('checked'));
+        formData.append("TargetCountryId", $m("#TargetCountryId").val());
+        if ($("#userId").is(':checked'))
+            formData.append("userId", $m("#userId").val());
+
         $m.ajax({
             url: '/Conferences/Create/',
             type: "POST",
             dataType: "HTML",
-            data: dataConf,
+            processData: false,
+            contentType: false,
+            data: formData,
             success: function (data) {
                 $m("#conferences").html(data);
             }

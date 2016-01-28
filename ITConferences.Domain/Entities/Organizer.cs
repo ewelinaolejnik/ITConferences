@@ -15,8 +15,7 @@ namespace ITConferences.Domain.Entities
         public int OrganizerID { get; set; }
 
         public virtual ICollection<Conference> OrganizedConferences { get; set; }
-
-        [Required]
+      
         public virtual Attendee User { get; set; }
 
         [ForeignKey("User")]

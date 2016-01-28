@@ -41,7 +41,14 @@ namespace ITConferences.WebUI.Controllers
             return View(organizer);
         }
 
-        
+        public FileContentResult GetImage(int? organizerId)
+        {
+            var organizer = _organizerRepository.GetById(organizerId);
+            var image = organizer.User.Image;
+            return File(image.ImageData, image.ImageMimeType);
+        }
+
+
 
         protected override void Dispose(bool disposing)
         {

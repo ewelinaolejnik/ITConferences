@@ -16,6 +16,8 @@ namespace ITConferences.Domain.Entities
 
         [Required]
         [Display(Name = "Image:")]
-        public byte[] ConcreteImage { get; set; }
+        public byte[] ImageData { get; set; }
+
+        public string ImageMimeType { get; set; }
     }
 }

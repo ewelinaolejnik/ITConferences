@@ -32,7 +32,17 @@ $m(document).ready(function () {
 
     //pass parameters to filter conferences
     $m("#submitButton").click(function () {
+        updateConferences();
+    });
 
+    //pass parameters to filter conferences by click enter
+    $('.submit').keypress(function (e) {
+        if (e.which == 13) {
+            updateConferences();
+        }
+    });
+
+    function updateConferences() {
         $m("#loading").show();
         $("#conferences").hide();
 
@@ -52,9 +62,7 @@ $m(document).ready(function () {
                 page = 0;
             }
         });
-
-
-    });
+    }
 
 
     //paging site by scrolling

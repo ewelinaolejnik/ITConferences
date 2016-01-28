@@ -1,5 +1,6 @@
-﻿@model ITConferences.Domain.Entities.Conference
-@using Microsoft.AspNet.Identity
+﻿@using Microsoft.AspNet.Identity
+@model ITConferences.Domain.Entities.Conference
+
 
 @{
     ViewBag.Title = "Add an event";
@@ -84,17 +85,21 @@
         </div>
     </div>
 
-    <div class="form-group">
+    <form method="post" enctype="multipart/form-data" class="form-group">
         @Html.LabelFor(model => model.Image, htmlAttributes: new {@class = "control-label col-md-2"})
         <div class="col-md-10">
             <input type="file" name="image" id="image"/>
         </div>
+    </form>
+
+    <div class="form-group">
+        @Html.Label("Are you an organizer?", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+           @*@Html.CheckBox(@User.Identity.GetUserId(), htmlAttributes: new { @id = "organizer" })*@
+                <input id="userId" name="userId" type="checkbox" value="@User.Identity.GetUserId()" />
+           
+        </div>
     </div>
-    @if (Request.IsAuthenticated)
-    {
-        <p>User</p>
-    }
-   
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">

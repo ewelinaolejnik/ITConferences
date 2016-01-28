@@ -33,6 +33,7 @@ namespace ITConferences.Domain.Entities
         public string Url { get; set; }
 
         [Display(Name = "Paid?")]
+        [DefaultValue(false)]
         public bool IsPaid { get; set; }
 
         public virtual City TargetCity { get; set; }

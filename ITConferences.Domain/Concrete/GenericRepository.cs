@@ -1,6 +1,7 @@
 ﻿using ITConferences.Domain.Abstract;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,8 +25,12 @@ namespace ITConferences.Domain.Concrete
             return _dataContext.Set<T>();
         }
 
-        public T GetById(int? id)
+        public T GetById(int? id, string idStr = null)
         {
+            if (idStr != null)
+            {
+                return _dataContext.Set<T>().Find(idStr);
+            }
             return _dataContext.Set<T>().Find(id);
         }
 
@@ -35,7 +40,7 @@ namespace ITConferences.Domain.Concrete
             _dataContext.SaveChanges();
         }
 
-        public void UpdateAndSubmit(T entity)
+        public void UpdateAndSubmit()
         {
             _dataContext.SaveChanges();
         }
