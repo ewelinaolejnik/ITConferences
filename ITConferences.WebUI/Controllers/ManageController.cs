@@ -2,14 +2,14 @@
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using ITConferences.Domain.Abstract;
+using ITConferences.Domain.Entities;
+using ITConferences.WebUI.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using ITConferences.WebUI.Models;
-using ITConferences.WebUI;
-using ITConferences.WebUI.Controllers;
 
-namespace ITConferences.Domain.Controllers
+namespace ITConferences.WebUI.Controllers
 {
     [Authorize]
     public class ManageController : BaseController
@@ -21,7 +21,7 @@ namespace ITConferences.Domain.Controllers
         {
         }
 
-        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IGenericRepository<Attendee> attendeeRepository)
         {
             UserManager = userManager;
             SignInManager = signInManager;

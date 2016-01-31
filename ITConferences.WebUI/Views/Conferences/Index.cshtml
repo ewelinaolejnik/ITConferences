@@ -48,17 +48,17 @@
             <div class="form-group center-block submit">
 
                 <div class="col-md-3 col-xs-4">
-                    @Html.TextBox("NameFilter", ViewData["NameFilter"], new { @id = "name", @type = "text", @class = "form-control", @placeholder = "Event name" })
+                    @Html.TextBox("NameFilter", ViewData["NameFilter"], new {@id = "name", @type = "text", @class = "form-control", @placeholder = "Event name"})
                 </div>
                 <div class="col-md-3 col-xs-4">
-                    @Html.TextBox("LocationFilter", ViewData["LocationFilter"], new { @id = "location", @type = "text", @class = "form-control", @placeholder = "Location" })
+                    @Html.TextBox("LocationFilter", ViewData["LocationFilter"], new {@id = "location", @type = "text", @class = "form-control", @placeholder = "Location"})
                 </div>
                 <div class="col-md-3 col-xs-4">
-                    @Html.ListBox("TagsFilter", ViewData["TagsFilter"] as MultiSelectList, htmlAttributes: new { @id = "tags", @class = "hide" })
+                    @Html.ListBox("TagsFilter", ViewData["TagsFilter"] as MultiSelectList, htmlAttributes: new {@id = "tags", @class = "hide"})
                 </div>
                 <div class="col-md-2 col-xs-4">
-                    @Html.DropDownList("DateFilter", EnumHelper.GetSelectList(typeof(DateFilter)), htmlAttributes: new { @id= "dateFilter", @class = "form-control" })
-              </div>
+                    @Html.DropDownList("DateFilter", EnumHelper.GetSelectList(typeof (DateFilter)), htmlAttributes: new {@id = "dateFilter", @class = "form-control"})
+                </div>
             </div>
         </div>
 

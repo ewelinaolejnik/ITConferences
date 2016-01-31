@@ -4,11 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ITConferences.Domain.Abstract;
+using ITConferences.Domain.Entities;
+using Microsoft.AspNet.Identity;
+using Ninject;
 
 namespace ITConferences.WebUI.Controllers
 {
     public class BaseController : Controller
     {
+
+        public BaseController()
+        {
+        }
+
         public void Success(string message, bool dismissable = false)
         {
             AddAlert(AlertStyles.Success, message, dismissable);

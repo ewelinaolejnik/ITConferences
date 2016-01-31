@@ -1,4 +1,28 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using System.IdentityModel.Claims
+@using Facebook
+@using ITConferences.Domain.Concrete
+@using ITConferences.Domain.Entities
+@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework
+@using Microsoft.Owin.Security
+
+
+<style>
+    .profile-img {
+        margin-right: 5px;
+        margin-left: 5px;
+        /*margin-top: 5px;*/
+        margin-bottom: 5px;
+        width: 40px;
+        height: 40px;
+    }
+
+    #dropdownMenu1 {
+        background: none;
+        border: none;
+        box-shadow: none;
+    }
+</style>
 
 
 @if (Request.IsAuthenticated)
@@ -6,23 +30,54 @@
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
         @Html.AntiForgeryToken()
+        var manager = new UserManager<Attendee>(new UserStore<Attendee>(new DataContext()));
+        var currentUser = manager.FindById(User.Identity.GetUserId());
+        //var externalIdentity = HttpContext.Current.GetOwinContext().Authentication.GetExternalIdentityAsync(DefaultAuthenticationTypes.ExternalCookie);
+        //if (externalIdentity.Result != null)
+        //{
+        //    var id = externalIdentity.Result.Claims.FirstOrDefault(c => c.Type == "urn:facebook:id").Value;
+        //}
+
 
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                @Html.ActionLink("Hello " + User.Identity.Name + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-            </li>
-            @*@if (Model != null)
-                {
-                    <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="@User.Identity.Name" />
-                }
-                else
-                {
-                    <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="@User.Identity.Name" />
+            @if (currentUser.Image == null)
+            {
+                <li class="profile-img">
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-menu-left" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <img src="../../img/profile-picture.ico" class="profile-img" alt="No image"/> 
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li>@Html.ActionLink("Settings", "Index", "Manage")</li>
+                            <li><a href="#">Favourites conferenes</a></li>
+                            <li><a href="#">Spoken conferences</a></li>
+                            <li><a href="#">Organized conferences</a></li>
+                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                        </ul>
+                    </div>
+                </li>
+            }
+            else
+            {
+                var base64 = Convert.ToBase64String(currentUser.Image.ImageData);
+                var dataType = currentUser.Image.ImageMimeType;
+                var imgSrc = String.Format("data:{0};base64,{1}", dataType, base64);
 
-                }*@
-            <li>
-                <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
-            </li>
+                <li>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-menu-left" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <img src="@imgSrc" class="profile-img" alt="No image" />
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li>@Html.ActionLink("Settings", "Index", "Manage")</li>
+                            <li><a href="#">Favourites conferenes</a></li>
+                            <li><a href="#">Spoken conferences</a></li>
+                            <li><a href="#">Organized conferences</a></li>
+                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                        </ul>
+                    </div>
+                </li>
+            }
         </ul>
     }
 }

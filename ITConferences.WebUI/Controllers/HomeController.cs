@@ -1,4 +1,6 @@
 ﻿using System.Web.Mvc;
+using ITConferences.Domain.Abstract;
+using ITConferences.Domain.Entities;
 
 namespace ITConferences.WebUI.Controllers
 {
@@ -11,6 +13,7 @@ namespace ITConferences.WebUI.Controllers
             {
                 return RedirectToAction("Index", "Conferences", new { nameFilter = nameFilter });
             }
+            
             return View();
         }
 

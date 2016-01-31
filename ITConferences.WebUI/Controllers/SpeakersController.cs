@@ -15,14 +15,16 @@ namespace ITConferences.WebUI.Controllers
         private const int PageSize = 6;
 
         private IGenericRepository<Speaker> _speakerRepository;
+        private IGenericRepository<Attendee> _attendeeRepository;
+        private IGenericRepository<Image> _imageRepository;
         private IFilterSpeakerHelper _speakersFilter;
 
         public IEnumerable<Speaker> Speakers { get; private set; }
 
         #region Ctor
-        public SpeakersController(IGenericRepository<Speaker> speakerRepository, IFilterSpeakerHelper speakersFilter)
+        public SpeakersController(IGenericRepository<Speaker> speakerRepository, IFilterSpeakerHelper speakersFilter, IGenericRepository<Attendee> attendeeRepository, IGenericRepository<Image> imageRepository)
         {
-            if (speakerRepository == null)
+            if (speakerRepository == null || attendeeRepository == null || imageRepository == null)
             {
                 throw new ArgumentNullException("Some repository does not exist!");
             }
@@ -35,6 +37,8 @@ namespace ITConferences.WebUI.Controllers
             _speakerRepository = speakerRepository;
             _speakersFilter = speakersFilter;
             Speakers = _speakerRepository.GetAll().ToList();
+            _attendeeRepository = attendeeRepository;
+            _imageRepository = imageRepository;
         }
         #endregion
 
@@ -44,16 +48,35 @@ namespace ITConferences.WebUI.Controllers
             _speakersFilter.Speakers = Speakers;
             _speakersFilter.FilterBySpeakerName(ViewData, nameFilter);
 
+            ViewData["ResultsCount"] = _speakersFilter.Speakers.Count() == 1 
+                ? _speakersFilter.Speakers.Count().ToString() + " result" : _speakersFilter.Speakers.Count().ToString() + " results";
+
+
             var pageSize = GetPageSize(0);
             var pagedSpeakers =
                 _speakersFilter.Speakers.ToList().GetRange(0, pageSize);
             return View(pagedSpeakers);
         }
 
-        public PartialViewResult GetSpeakers(string nameFilter, int? page)
+        public PartialViewResult GetSpeakers(string nameFilter, int? page, bool filter = false)
         {
             _speakersFilter.Speakers = Speakers;
             _speakersFilter.FilterBySpeakerName(ViewData, nameFilter);
+
+
+            if (_speakersFilter.Speakers.Count() == 0)
+            {
+                return PartialView("_NoResuls");
+            }
+
+            if (filter)
+            {
+                ViewData["ResultsCount"] = _speakersFilter.Speakers.Count() == 1 ? _speakersFilter.Speakers.Count().ToString() + " result" : _speakersFilter.Speakers.Count().ToString() + " results";
+            }
+            else
+            {
+                ViewData["ResultsCount"] = string.Empty;
+            }
 
             var pageId = page ?? 0;
             var pageSize = GetPageSize(pageId);
@@ -68,10 +91,9 @@ namespace ITConferences.WebUI.Controllers
             return PartialView("_SpeakersView", pagedSpeakers);
         }
 
-        public FileContentResult GetImage(int? speakerId)
+        public FileContentResult GetImage(int? imageId)
         {
-            var speaker = _speakerRepository.GetById(speakerId);
-            var image = speaker.User.Image;
+            var image = _imageRepository.GetById(imageId);
             return File(image.ImageData, image.ImageMimeType);
         }
 
@@ -99,7 +121,7 @@ namespace ITConferences.WebUI.Controllers
             return View(speaker);
         }
 
-        public ActionResult AddEvaluation(int conferenceId, int countOfStars, string comment)
+        public ActionResult AddEvaluation(int conferenceId, int countOfStars, string comment, string ownerId)
         {
             if (!Request.IsAuthenticated)
             {
@@ -117,10 +139,12 @@ namespace ITConferences.WebUI.Controllers
                 return View("Details", speaker);
             }
 
+            var owner = _attendeeRepository.GetById(null, ownerId);
             var eval = new Evaluation()
             {
                 Comment = comment,
-                CountOfStars = countOfStars
+                CountOfStars = countOfStars,
+                Owner = owner
             };
 
             speaker.Evaluations.Add(eval);

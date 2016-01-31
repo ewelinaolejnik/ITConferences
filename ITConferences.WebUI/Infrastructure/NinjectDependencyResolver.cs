@@ -23,7 +23,7 @@ namespace ITConferences.WebUI.Infrastructure
 
         private void AddBindings()
         {
-            _kernel.Bind<IDataContext>().To<DataContext>();
+            _kernel.Bind<IDataContext>().To<DataContext>().InRequestScope();
             _kernel.Bind<IGenericRepository<Attendee>>().To<GenericRepository<Attendee>>();
             _kernel.Bind<IGenericRepository<City>>().To<GenericRepository<City>>();
             _kernel.Bind<IGenericRepository<Conference>>().To<GenericRepository<Conference>>();

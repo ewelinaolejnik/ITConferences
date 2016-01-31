@@ -8,7 +8,7 @@
 <style>
     .buffer {
         margin-top: 30px;
-}
+    }
 </style>
 
 
@@ -17,32 +17,33 @@
 </div>
 
 <div class="form-group" id="conferences">
+    <div class="row">
+        <label class="pull-left">@ViewData["ResultsCount"]</label>
+    </div>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 col-xs-1 btn buffer">
+                <a href="@Url.Action("Details", "Conferences", new {id = item.ConferenceID})" class="link-format">
+                    <div class="col-md-4 col-xs-6">
+                        @if (item.Image != null)
+                        {
+                            <img src="@Url.Action("GetImage", "Conferences", new {imageId = item.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image"/>
+                        }
+                        else
+                        {
+                            <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image"/>
+                        }
+                    </div>
 
-    @foreach (var item in Model)
-    {
-        <div class="col-md-4 col-xs-1 btn buffer">
-            <a href="@Url.Action("Details", "Conferences", new {id = item.ConferenceID})" class="link-format">
-                <div class="col-md-4 col-xs-6">
-                    @if (item.Image != null)
-                    {
-                        <img src="@Url.Action("GetImage","Conferences", new {imageId = item.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
-                    }
-                    else
-                    {
-                        <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
-                    }
-                </div>
-
-                <div class="col-md-8 col-xs-6 text-left">
-                    <div class="row conference-name">@Html.DisplayFor(modelItem => item.Name)</div>
-                    <div class="row">@Html.DisplayFor(modelItem => item.TargetCountry.Name), @Html.DisplayFor(modelItem => item.TargetCity.Name)</div>
-                    <div class="row">@Html.DisplayFor(modelItem => item.Date)</div>
-                    <div class="row">@Html.DisplayFor(modelItem => item.Url)</div>
-                </div>
-            </a>
-        </div>
-    }
+                    <div class="col-md-8 col-xs-6 text-left">
+                        <div class="row conference-name">@Html.DisplayFor(modelItem => item.Name)</div>
+                        <div class="row">@Html.DisplayFor(modelItem => item.TargetCountry.Name), @Html.DisplayFor(modelItem => item.TargetCity.Name)</div>
+                        <div class="row">@Html.DisplayFor(modelItem => item.Date)</div>
+                        <div class="row">@Html.DisplayFor(modelItem => item.Url)</div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
 </div>
-
-
-

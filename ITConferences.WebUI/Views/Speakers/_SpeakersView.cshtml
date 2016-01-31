@@ -6,27 +6,32 @@
 }
 
 <div id="loading" style="display: none">
-    <img src="~/img/ajax-loader.gif" class="img-responsive center-block" alt="Loading image" />
+    <img src="~/img/ajax-loader.gif" class="img-responsive center-block" alt="Loading image"/>
 </div>
 
 <div class="form-group" id="speakers">
+    <div class="row">
+        <label class="pull-left">@ViewData["ResultsCount"]</label>
+    </div>
+    <div class="row">
 
-    @foreach (var item in Model)
-    {
-        <div class="col-md-4 col-xs-4 btn jumbotron">
-            <a href="@Url.Action("Details", "Speakers", new {id = item.SpeakerID})" class="link-format">
-                <div class="row conference-name ">@Html.DisplayFor(modelItem => item.User.UserName)</div>
-                <div class="row">
-                    @if (item.User.Image != null)
-                    {
-                        <img src="@Url.Action("GetImage","Speakers", new {speakerId = item.SpeakerID}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
-                    }
-                    else
-                    {
-                        <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
-                    }
-                </div>
-            </a>
-        </div>
-    }
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 col-xs-4 btn jumbotron">
+                <a href="@Url.Action("Details", "Speakers", new {id = item.SpeakerID})" class="link-format">
+                    <div class="row conference-name ">@Html.DisplayFor(modelItem => item.User.UserName)</div>
+                    <div class="row">
+                        @if (item.User.Image != null)
+                        {
+                            <img src="@Url.Action("GetImage", "Speakers", new {imageId = item.User.Image.ImageID}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
+                        }
+                        else
+                        {
+                            <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Speaker image" />
+                        }
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
 </div>

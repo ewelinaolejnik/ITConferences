@@ -37,13 +37,6 @@ namespace ITConferences.Domain.Concrete
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            //modelBuilder.Entity<Attendee>()
-            //    .HasKey(t => t.OrganizerId);
-
-            //modelBuilder.Entity<Organizer>()
-            //    .HasRequired(t => t.User)
-            //    .WithRequiredPrincipal(t => t.Organizer);
         }
 
         public void ExecuteCommand(string command, params object[] parameters)

@@ -37,15 +37,16 @@
 
 <div class="container">
 
-    <div class="row buffer">
-        <form class="form-inline" role="form">
-            <div class="form-group">
-                @Html.TextBox("NameFilter", null, new { @id = "name", @type = "text", @class = "form-control input-lg", @placeholder = "Name" })
-                <button id="submitButton" type="submit" value="Submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search"></span></button>
+    <div>
+        <div class="row buffer">
+            <div class="form-inline">
+                <div class="form-group submit">
+                    @Html.TextBox("NameFilter", null, new { @id = "name", @type = "text", @class = "form-control input-lg", @placeholder = "Name" })
+                    <button id="submitButton" type="submit" value="Submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search"></span></button>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
-
     <div class="row buffer">
         @Html.Partial("_SpeakersView")
     </div>

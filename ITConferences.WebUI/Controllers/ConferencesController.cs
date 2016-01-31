@@ -25,7 +25,7 @@ namespace ITConferences.WebUI.Controllers
 
         private IGenericRepository<Conference> _conferenceRepository;
         private IGenericRepository<Attendee> _attendeeRepository;
-        private IGenericRepository<Organizer> _organizerRepository;
+        private IGenericRepository<Evaluation> _evaluationRepository;
         private IGenericRepository<Country> _countryRepository;
         private IGenericRepository<Tag> _tagRepository;
         private IGenericRepository<City> _cityRepository;
@@ -48,11 +48,11 @@ namespace ITConferences.WebUI.Controllers
 
         #region Ctor
         public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository,
-            IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository, IGenericRepository<Organizer> organizerRepository,
+            IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository, IGenericRepository<Evaluation> evaluationRepository,
             IFilterConferenceHelper conferenceFilter, IGenericRepository<Image> imageRepository, IGenericRepository<Attendee> attendeeRepository)
         {
             if (conferenceRepository == null || countryRepository == null || tagRepository == null ||
-                cityRepository == null || imageRepository == null || attendeeRepository == null || organizerRepository == null)
+                cityRepository == null || imageRepository == null || attendeeRepository == null || evaluationRepository == null)
             {
                 throw new ArgumentNullException("Some repository does not exist!");
             }
@@ -70,7 +70,7 @@ namespace ITConferences.WebUI.Controllers
             _conferenceFilter = conferenceFilter;
             _conferenceFilter.Conferences = Conferences;
             _attendeeRepository = attendeeRepository;
-            _organizerRepository = organizerRepository;
+            _evaluationRepository = evaluationRepository;
         }
         #endregion
 
@@ -83,9 +83,12 @@ namespace ITConferences.WebUI.Controllers
             _conferenceFilter.FilterByName(ViewData, nameFilter);
             _conferenceFilter.FilterByTags(ViewData, new int[] { tagsFilter ?? 0 }, Tags);
 
+            ViewData["ResultsCount"] = _conferenceFilter.Conferences.Count() == 1 ? _conferenceFilter.Conferences.Count().ToString() + " result" : _conferenceFilter.Conferences.Count().ToString() + " results";
+
             var pageSize = GetPageSize(0);
             var pagedConfs =
                 _conferenceFilter.Conferences.ToList().GetRange(0, pageSize);
+            
             return View(pagedConfs);
         }
 
@@ -105,7 +108,7 @@ namespace ITConferences.WebUI.Controllers
         }
 
         //TODO: unit tests!
-        public PartialViewResult GetConferences(string nameFilter, string locationFilter, int[] selectedTagsIds, DateFilter? dateFilter, int? page)
+        public PartialViewResult GetConferences(string nameFilter, string locationFilter, int[] selectedTagsIds, DateFilter? dateFilter, int? page, bool filter = false)
         {
             _conferenceFilter.Conferences = Conferences.OrderBy(e => e.Date);
             _conferenceFilter.FilterByName(ViewData, nameFilter);
@@ -113,6 +116,22 @@ namespace ITConferences.WebUI.Controllers
             _conferenceFilter.FilterByTags(ViewData, selectedTagsIds, Tags);
             if (dateFilter != null)
                 _conferenceFilter.FilterByTime(ViewData, dateFilter.Value, _conferenceFilter.Conferences);
+
+            if (_conferenceFilter.Conferences.Count() == 0)
+            {
+                return PartialView("_NoResuls");
+            }
+
+            if (filter)
+            {
+                ViewData["ResultsCount"] = _conferenceFilter.Conferences.Count() == 1 ? _conferenceFilter.Conferences.Count().ToString() + " result" : _conferenceFilter.Conferences.Count().ToString() + " results";
+            }
+            else
+            {
+                ViewData["ResultsCount"] = string.Empty;
+            }
+
+            
 
             var pageId = page ?? 0;
             var pageSize = GetPageSize(pageId);
@@ -179,7 +198,6 @@ namespace ITConferences.WebUI.Controllers
                 CountOfStars = countOfStars,
                 Owner = owner
             };
-            
             conference.Evaluation.Add(eval);
             _conferenceRepository.UpdateAndSubmit();
 
@@ -273,7 +291,7 @@ namespace ITConferences.WebUI.Controllers
 
         public FileContentResult GetImage(int? imageId)
         {
-            var image = _imageRepository.GetById(imageId); //change for conference
+            var image = _imageRepository.GetById(imageId);
             return File(image.ImageData, image.ImageMimeType);
         }
 

@@ -6,6 +6,8 @@ using System.Web;
 using System.Web.ModelBinding;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using ITConferences.Domain.Abstract;
+using ITConferences.Domain.Concrete;
 using ITConferences.Domain.Entities;
 using ITConferences.WebUI.Models;
 using Microsoft.AspNet.Identity;
@@ -22,14 +24,13 @@ namespace ITConferences.WebUI.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+
         public AccountController()
         {
         }
-        
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
-        {
-            UserManager = userManager;
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IGenericRepository<Attendee> attendeeRepository)
+        {   UserManager = userManager;
             SignInManager = signInManager;
         }
 
@@ -56,6 +57,8 @@ namespace ITConferences.WebUI.Controllers
                 _userManager = value;
             }
         }
+
+       
 
         //
         // GET: /Account/Login

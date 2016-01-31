@@ -45,12 +45,13 @@ $m(document).ready(function () {
     function updateConferences() {
         $m("#loading").show();
         $("#conferences").hide();
+        var filterTrue = true;
 
         $m.ajax({
             url: '/Conferences/GetConferences/',
             type: "POST",
             dataType: "HTML",
-            data: { selectedTagsIds: $m("#tags").val(), locationFilter: $m("#location").val(), nameFilter: $m("#name").val(), dateFilter: $m("#dateFilter").val() },
+            data: { selectedTagsIds: $m("#tags").val(), locationFilter: $m("#location").val(), nameFilter: $m("#name").val(), dateFilter: $m("#dateFilter").val(), filter: filterTrue },
             success: function (data) {
                 $m("#conferences").empty();
                 $m("#conferences").html(data);
@@ -67,7 +68,6 @@ $m(document).ready(function () {
 
     //paging site by scrolling
     var lastScrollTop = 0;
-   
     var inCallback = false;
 
     function loadConferences() {
@@ -99,7 +99,9 @@ $m(document).ready(function () {
 
     $m(window).scroll(function () {
         var st = $(this).scrollTop();
-        if (($m(window).scrollTop() == $m(document).height() - $m(window).height()) && (st > lastScrollTop)) {
+        var docHeight = $m(document).height();
+        var windowHeight = $m(window).height();
+        if ((st <= docHeight - windowHeight) && (st > lastScrollTop)) {
             loadConferences();
         }
         lastScrollTop = st;
