@@ -13,9 +13,33 @@ namespace ITConferences.WebUI.Controllers
 {
     public class BaseController : Controller
     {
+        private IGenericRepository<Image> _imageRepository;
 
-        public BaseController()
+        public BaseController(IGenericRepository<Image> imageRepository)
         {
+            if (imageRepository == null)
+            {
+                throw new ArgumentNullException("Some repository does not exist!");
+            }
+            _imageRepository = imageRepository;
+        }
+
+        public FileContentResult GetImage(int? imageId)
+        {
+            var image = _imageRepository.GetById(imageId);
+            return File(image.ImageData, image.ImageMimeType);
+        }
+
+        public ActionResult GetLoginMessage()
+        {
+            Danger("Log in to add evaluation, please", true);
+            return RedirectToAction("Login", "Account");
+        }
+
+        public ActionResult GetCommentMessage(Speaker speaker)
+        {
+            Information("Write a comment to add evaluation, please", true);
+            return View("Details", speaker);
         }
 
         public void Success(string message, bool dismissable = false)

@@ -15,30 +15,29 @@ namespace ITConferences.WebUI.Controllers
         private const int PageSize = 6;
 
         private IGenericRepository<Speaker> _speakerRepository;
-        private IGenericRepository<Attendee> _attendeeRepository;
-        private IGenericRepository<Image> _imageRepository;
         private IFilterSpeakerHelper _speakersFilter;
+        private IControllerHelper _controllerHelper;
 
         public IEnumerable<Speaker> Speakers { get; private set; }
 
         #region Ctor
-        public SpeakersController(IGenericRepository<Speaker> speakerRepository, IFilterSpeakerHelper speakersFilter, IGenericRepository<Attendee> attendeeRepository, IGenericRepository<Image> imageRepository)
+        public SpeakersController(IGenericRepository<Speaker> speakerRepository, IFilterSpeakerHelper speakersFilter, IControllerHelper controllerHelper, IGenericRepository<Image> imageRepository) 
+            : base(imageRepository)
         {
-            if (speakerRepository == null || attendeeRepository == null || imageRepository == null)
+            if (speakerRepository == null)
             {
                 throw new ArgumentNullException("Some repository does not exist!");
             }
 
-            if (speakersFilter == null)
+            if (speakersFilter == null || controllerHelper == null)
             {
-                throw new ArgumentNullException("Filter does not exist!");
+                throw new ArgumentNullException("Filter or controllerHelper does not exist!");
             }
 
             _speakerRepository = speakerRepository;
             _speakersFilter = speakersFilter;
             Speakers = _speakerRepository.GetAll().ToList();
-            _attendeeRepository = attendeeRepository;
-            _imageRepository = imageRepository;
+            _controllerHelper = controllerHelper;
         }
         #endregion
 
@@ -48,11 +47,10 @@ namespace ITConferences.WebUI.Controllers
             _speakersFilter.Speakers = Speakers;
             _speakersFilter.FilterBySpeakerName(ViewData, nameFilter);
 
-            ViewData["ResultsCount"] = _speakersFilter.Speakers.Count() == 1 
-                ? _speakersFilter.Speakers.Count().ToString() + " result" : _speakersFilter.Speakers.Count().ToString() + " results";
+            ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_speakersFilter.Speakers.Count());
 
 
-            var pageSize = GetPageSize(0);
+            var pageSize = _controllerHelper.GetPageSize(0, PageSize, _speakersFilter.Speakers.Count());
             var pagedSpeakers =
                 _speakersFilter.Speakers.ToList().GetRange(0, pageSize);
             return View(pagedSpeakers);
@@ -69,17 +67,10 @@ namespace ITConferences.WebUI.Controllers
                 return PartialView("_NoResuls");
             }
 
-            if (filter)
-            {
-                ViewData["ResultsCount"] = _speakersFilter.Speakers.Count() == 1 ? _speakersFilter.Speakers.Count().ToString() + " result" : _speakersFilter.Speakers.Count().ToString() + " results";
-            }
-            else
-            {
-                ViewData["ResultsCount"] = string.Empty;
-            }
+            ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_speakersFilter.Speakers.Count(), !filter);
 
             var pageId = page ?? 0;
-            var pageSize = GetPageSize(pageId);
+            var pageSize = _controllerHelper.GetPageSize(pageId, PageSize, _speakersFilter.Speakers.Count());
 
             if (pageId * PageSize >= _speakersFilter.Speakers.Count())
             {
@@ -91,19 +82,7 @@ namespace ITConferences.WebUI.Controllers
             return PartialView("_SpeakersView", pagedSpeakers);
         }
 
-        public FileContentResult GetImage(int? imageId)
-        {
-            var image = _imageRepository.GetById(imageId);
-            return File(image.ImageData, image.ImageMimeType);
-        }
-
-        private int GetPageSize(int pageId)
-        {
-            return (PageSize * pageId) + PageSize < _speakersFilter.Speakers.Count()
-               ? PageSize
-               : Math.Abs(_speakersFilter.Speakers.Count() - (PageSize * pageId));
-        }
-
+        #region Details
         // GET: Speakers/Details/5
         public ActionResult Details(int? id)
         {
@@ -124,35 +103,18 @@ namespace ITConferences.WebUI.Controllers
         public ActionResult AddEvaluation(int conferenceId, int countOfStars, string comment, string ownerId)
         {
             if (!Request.IsAuthenticated)
-            {
-                Danger("Log in to add evaluation, please", true);
-
-                return RedirectToAction("Login", "Account");
-            }
+                GetLoginMessage();
 
             Speaker speaker = _speakerRepository.GetById(conferenceId);
 
             if (string.IsNullOrWhiteSpace(comment))
-            {
-                Information("Write a comment to add evaluation, please", true);
+                GetCommentMessage(speaker);
 
-                return View("Details", speaker);
-            }
-
-            var owner = _attendeeRepository.GetById(null, ownerId);
-            var eval = new Evaluation()
-            {
-                Comment = comment,
-                CountOfStars = countOfStars,
-                Owner = owner
-            };
-
-            speaker.Evaluations.Add(eval);
-            _speakerRepository.UpdateAndSubmit();
+            _controllerHelper.AssignSpeaker(ownerId, comment, countOfStars, speaker, _speakerRepository);
 
             return View("Details", speaker);
         }
-
+        #endregion
 
         protected override void Dispose(bool disposing)
         {

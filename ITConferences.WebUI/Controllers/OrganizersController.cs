@@ -7,12 +7,13 @@ using ITConferences.Domain.Entities;
 
 namespace ITConferences.WebUI.Controllers
 {
-    public class OrganizersController : Controller
+    public class OrganizersController : BaseController
     {
         private IGenericRepository<Organizer> _organizerRepository;
 
         #region Ctor
-        public OrganizersController(IGenericRepository<Organizer> organizerRepository)
+        public OrganizersController(IGenericRepository<Organizer> organizerRepository, , IGenericRepository<Image> imageRepository)
+            : base(imageRepository)
         {
             if (organizerRepository == null)
             {
@@ -39,13 +40,6 @@ namespace ITConferences.WebUI.Controllers
                 return HttpNotFound();
             }
             return View(organizer);
-        }
-
-        public FileContentResult GetImage(int? organizerId)
-        {
-            var organizer = _organizerRepository.GetById(organizerId);
-            var image = organizer.User.Image;
-            return File(image.ImageData, image.ImageMimeType);
         }
 
 
