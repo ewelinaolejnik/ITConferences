@@ -9,6 +9,11 @@ body {
     
 }
 
+.logo-img {
+        
+    margin-top: 10px;
+}
+
 .navbar-custom { background-color: #FFFFFF;}
 
 .body-content {

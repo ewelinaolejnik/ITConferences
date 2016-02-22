@@ -45,13 +45,12 @@ $m(document).ready(function () {
     function updateConferences() {
         $m("#loading").show();
         $("#conferences").hide();
-        var filterTrue = true;
 
         $m.ajax({
             url: '/Conferences/GetConferences/',
             type: "POST",
             dataType: "HTML",
-            data: { selectedTagsIds: $m("#tags").val(), locationFilter: $m("#location").val(), nameFilter: $m("#name").val(), dateFilter: $m("#dateFilter").val(), filter: filterTrue },
+            data: { selectedTagsIds: $m("#tags").val(), locationFilter: $m("#location").val(), nameFilter: $m("#name").val(), dateFilter: $m("#dateFilter").val(), filter: true },
             success: function (data) {
                 $m("#conferences").empty();
                 $m("#conferences").html(data);
@@ -78,7 +77,7 @@ $m(document).ready(function () {
                 url: '/Conferences/GetConferences/',
                 type: "POST",
                 dataType: "HTML",
-                data: { page: page, dateFilter: $m("#dateFilter").val() },
+                data: { page: page, dateFilter: $m("#dateFilter").val(), selectedTagsIds: $m("#tags").val(), locationFilter: $m("#location").val(), nameFilter: $m("#name").val() },
                 success: function (data) {
                     if (data != '') {
                         $m("#conferences").append(data);

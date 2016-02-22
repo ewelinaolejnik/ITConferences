@@ -131,13 +131,13 @@
     <Compile Include="Migrations\201601281306150_NotRequiredAttendee.Designer.cs">
       <DependentUpon>201601281306150_NotRequiredAttendee.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201601282114299_IsPaidFalse.cs" />
-    <Compile Include="Migrations\201601282114299_IsPaidFalse.Designer.cs">
-      <DependentUpon>201601282114299_IsPaidFalse.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201601282210368_EvalOwner.cs" />
     <Compile Include="Migrations\201601282210368_EvalOwner.Designer.cs">
       <DependentUpon>201601282210368_EvalOwner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602221743429_SpeakerOrganizer.cs" />
+    <Compile Include="Migrations\201602221743429_SpeakerOrganizer.Designer.cs">
+      <DependentUpon>201602221743429_SpeakerOrganizer.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -168,11 +168,11 @@
     <EmbeddedResource Include="Migrations\201601281306150_NotRequiredAttendee.resx">
       <DependentUpon>201601281306150_NotRequiredAttendee.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201601282114299_IsPaidFalse.resx">
-      <DependentUpon>201601282114299_IsPaidFalse.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201601282210368_EvalOwner.resx">
       <DependentUpon>201601282210368_EvalOwner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602221743429_SpeakerOrganizer.resx">
+      <DependentUpon>201602221743429_SpeakerOrganizer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

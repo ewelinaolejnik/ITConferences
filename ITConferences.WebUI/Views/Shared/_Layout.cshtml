@@ -23,7 +23,8 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-5">
                     <span class="sr-only">Toggle navigation</span>
                 </button>
-                @Html.ActionLink("IT Conferences", "Index", "Home", new { area = "" }, new { @class = "navbar-brand navbar-left" })
+                @Html.Raw(@Html.ActionLink("[replacetext]", "Index", "Home").ToHtmlString().Replace("[replacetext]", "<img class=\"logo-img\" src=\"../../img/Logo.png\" ... />"))
+                @*@Html.ActionLink("IT Conferences", "Index", "Home", new { area = "" }, new { @class = "navbar-brand navbar-left" })*@
             </div>
             <div class="nav navbar-nav navbar-right" id="#navbar-collapse-5">
                 <div class="navbar-form navbar-left">

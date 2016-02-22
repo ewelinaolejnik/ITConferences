@@ -49,7 +49,7 @@ namespace ITConferences.WebUI.Controllers
         #region Ctor
         public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository,
             IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository, IGenericRepository<Evaluation> evaluationRepository,
-            IFilterConferenceHelper conferenceFilter, IGenericRepository<Image> imageRepository, IGenericRepository<Attendee> attendeeRepository)
+            IFilterConferenceHelper conferenceFilter, IGenericRepository<Image> imageRepository, IGenericRepository<Attendee> attendeeRepository) :base(imageRepository)
         {
             if (conferenceRepository == null || countryRepository == null || tagRepository == null ||
                 cityRepository == null || imageRepository == null || attendeeRepository == null || evaluationRepository == null)
@@ -207,7 +207,6 @@ namespace ITConferences.WebUI.Controllers
         #endregion
 
         #region Create
-        //TODO: unit tests!
         // GET: Conferences/Create
         public ActionResult Create()
         {
@@ -222,8 +221,7 @@ namespace ITConferences.WebUI.Controllers
             ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name");
             return View();
         }
-
-        //TODO: unit tests!
+        
         // POST: Conferences/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -251,7 +249,7 @@ namespace ITConferences.WebUI.Controllers
                     var attendee = _attendeeRepository.GetById(null, userId);
                     var organizer = new Organizer()
                     {
-                        UserId = userId
+                        User = attendee
                     };
                     conference.Organizer = organizer;
                 }
@@ -273,27 +271,18 @@ namespace ITConferences.WebUI.Controllers
                 Success("Great job, You added the event!", true);
                 return View(conference);
             }
-            catch (DbEntityValidationException dbEx)
+            catch (Exception dbEx)
             {
-                foreach (var validationErrors in dbEx.EntityValidationErrors)
-                {
-                    foreach (var validationError in validationErrors.ValidationErrors)
-                    {
-                        Trace.TraceInformation("Property: {0} Error: {1}",
-                                                validationError.PropertyName,
-                                                validationError.ErrorMessage);
-                    }
-                }
-                // ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
                 return View();
             }
         }
 
-        public FileContentResult GetImage(int? imageId)
-        {
-            var image = _imageRepository.GetById(imageId);
-            return File(image.ImageData, image.ImageMimeType);
-        }
+        //public FileContentResult GetImage(int? imageId)
+        //{
+        //    var image = _imageRepository.GetById(imageId);
+        //    return File(image.ImageData, image.ImageMimeType);
+        //}
 
 
 

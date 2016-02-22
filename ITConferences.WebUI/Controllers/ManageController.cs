@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using ITConferences.Domain.Abstract;
 using ITConferences.Domain.Entities;
+using ITConferences.WebUI.Extensions;
 using ITConferences.WebUI.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -12,19 +13,27 @@ using Microsoft.Owin.Security;
 namespace ITConferences.WebUI.Controllers
 {
     [Authorize]
-    public class ManageController : BaseController
+    public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private IGenericRepository<Attendee> _attendeeRepository;
 
-        public ManageController()
+        public Attendee ActualUser
         {
+            get { return _attendeeRepository.GetById(null, User.Identity.GetUserId()); }
         }
 
-        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IGenericRepository<Attendee> attendeeRepository)
+        public ManageController(IGenericRepository<Attendee> attendeeRepository)
+        {
+            _attendeeRepository = attendeeRepository;
+        }
+
+        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+           
         }
 
         public ApplicationSignInManager SignInManager
@@ -76,6 +85,25 @@ namespace ITConferences.WebUI.Controllers
             return View(model);
         }
 
+
+        public ActionResult SpokenConferences()
+        {
+            if (ActualUser.Speaker != null)
+            {
+                return View(ActualUser.Speaker.SpokenConferences);
+            }
+            return View();
+        }
+
+        public ActionResult OrganizedConferences()
+        {
+            if (ActualUser.Organizer != null)
+            {
+                return View(ActualUser.Organizer.OrganizedConferences);
+            }
+            return View();
+        }
+
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]
@@ -100,117 +128,8 @@ namespace ITConferences.WebUI.Controllers
             return RedirectToAction("ManageLogins", new { Message = message });
         }
 
-        //
-        // GET: /Manage/AddPhoneNumber
-        public ActionResult AddPhoneNumber()
-        {
-            return View();
-        }
-
-        //
-        // POST: /Manage/AddPhoneNumber
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            // Generate the token and send it
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), model.Number);
-            if (UserManager.SmsService != null)
-            {
-                var message = new IdentityMessage
-                {
-                    Destination = model.Number,
-                    Body = "Your security code is: " + code
-                };
-                await UserManager.SmsService.SendAsync(message);
-            }
-            return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
-        }
-
-        //
-        // POST: /Manage/EnableTwoFactorAuthentication
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EnableTwoFactorAuthentication()
-        {
-            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), true);
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            if (user != null)
-            {
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-            }
-            return RedirectToAction("Index", "Manage");
-        }
-
-        //
-        // POST: /Manage/DisableTwoFactorAuthentication
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DisableTwoFactorAuthentication()
-        {
-            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), false);
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            if (user != null)
-            {
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-            }
-            return RedirectToAction("Index", "Manage");
-        }
-
-        //
-        // GET: /Manage/VerifyPhoneNumber
-        public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
-        {
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);
-            // Send an SMS through the SMS provider to verify the phone number
-            return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
-        }
-
-        //
-        // POST: /Manage/VerifyPhoneNumber
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            var result = await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId(), model.PhoneNumber, model.Code);
-            if (result.Succeeded)
-            {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                if (user != null)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                }
-                return RedirectToAction("Index", new { Message = ManageMessageId.AddPhoneSuccess });
-            }
-            // If we got this far, something failed, redisplay form
-            ModelState.AddModelError("", "Failed to verify phone");
-            return View(model);
-        }
-
-        //
-        // GET: /Manage/RemovePhoneNumber
-        public async Task<ActionResult> RemovePhoneNumber()
-        {
-            var result = await UserManager.SetPhoneNumberAsync(User.Identity.GetUserId(), null);
-            if (!result.Succeeded)
-            {
-                return RedirectToAction("Index", new { Message = ManageMessageId.Error });
-            }
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            if (user != null)
-            {
-                await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-            }
-            return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
-        }
+        
+       
 
         //
         // GET: /Manage/ChangePassword
@@ -321,6 +240,28 @@ namespace ITConferences.WebUI.Controllers
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
 
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public PartialViewResult SetImage(HttpPostedFileBase image)
+        {
+            var attendee = _attendeeRepository.GetById(null, User.Identity.GetUserId());
+            if (image != null)
+            {
+                var img = new Image()
+                {
+                    ImageData = image.InputStream.ToByteArray(),
+                    ImageMimeType = image.ContentType
+
+                };
+                attendee.Image = img;
+                _attendeeRepository.UpdateAndSubmit();
+            }
+            return PartialView("_LoginPartial");
+        }
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)
@@ -332,7 +273,7 @@ namespace ITConferences.WebUI.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 

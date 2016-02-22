@@ -32,14 +32,8 @@
         @Html.AntiForgeryToken()
         var manager = new UserManager<Attendee>(new UserStore<Attendee>(new DataContext()));
         var currentUser = manager.FindById(User.Identity.GetUserId());
-        //var externalIdentity = HttpContext.Current.GetOwinContext().Authentication.GetExternalIdentityAsync(DefaultAuthenticationTypes.ExternalCookie);
-        //if (externalIdentity.Result != null)
-        //{
-        //    var id = externalIdentity.Result.Claims.FirstOrDefault(c => c.Type == "urn:facebook:id").Value;
-        //}
 
-
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right" id="main_nav">
             @if (currentUser.Image == null)
             {
                 <li class="profile-img">
@@ -49,9 +43,14 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li>@Html.ActionLink("Settings", "Index", "Manage")</li>
-                            <li><a href="#">Favourites conferenes</a></li>
-                            <li><a href="#">Spoken conferences</a></li>
-                            <li><a href="#">Organized conferences</a></li>
+                            @if (currentUser.Speaker != null)
+                            {
+                                <li>@Html.ActionLink("Spoken conferences", "SpokenConferences", "Manage")</li>
+                            }
+                            @if (currentUser.Organizer != null)
+                            {
+                                <li>@Html.ActionLink("Organized conferences", "OrganizedConferences", "Manage")</li>
+                            } 
                             <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
                         </ul>
                     </div>
@@ -70,9 +69,14 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li>@Html.ActionLink("Settings", "Index", "Manage")</li>
-                            <li><a href="#">Favourites conferenes</a></li>
-                            <li><a href="#">Spoken conferences</a></li>
-                            <li><a href="#">Organized conferences</a></li>
+                            @if (currentUser.Speaker != null)
+                            {
+                                <li>@Html.ActionLink("Spoken conferences", "SpokenConferences", "Manage")</li>
+                            }
+                            @if (currentUser.Organizer != null)
+                            {
+                                <li>@Html.ActionLink("Organized conferences", "OrganizedConferences", "Manage")</li>
+                            }
                             <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
                         </ul>
                     </div>

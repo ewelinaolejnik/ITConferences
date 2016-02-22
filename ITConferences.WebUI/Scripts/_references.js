@@ -45,6 +45,7 @@
 /// <reference path="jquery-2.2.0.min.js" />
 /// <reference path="jquery-ui.js" />
 /// <reference path="leaflet-0.7.3.min.js" />
+/// <reference path="manage.js" />
 /// <reference path="modal-form.js" />
 /// <reference path="modernizr-2.8.3.js" />
 /// <reference path="moment.min.js" />

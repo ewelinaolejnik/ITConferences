@@ -20,7 +20,7 @@ namespace ITConferences.Domain.Entities
         [Required]
         public virtual Attendee User { get; set; }
 
-        [ForeignKey("User")]
-        public string UserId { get; set; }
+        //[ForeignKey("User")]
+        //public string UserId { get; set; }
     }
 }

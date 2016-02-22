@@ -12,7 +12,7 @@ namespace ITConferences.WebUI.Controllers
         private IGenericRepository<Organizer> _organizerRepository;
 
         #region Ctor
-        public OrganizersController(IGenericRepository<Organizer> organizerRepository, , IGenericRepository<Image> imageRepository)
+        public OrganizersController(IGenericRepository<Organizer> organizerRepository, IGenericRepository<Image> imageRepository)
             : base(imageRepository)
         {
             if (organizerRepository == null)

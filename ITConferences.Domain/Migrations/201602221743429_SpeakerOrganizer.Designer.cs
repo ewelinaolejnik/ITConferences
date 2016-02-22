@@ -7,13 +7,13 @@ namespace ITConferences.Domain.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class IsPaidFalse : IMigrationMetadata
+    public sealed partial class SpeakerOrganizer : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(IsPaidFalse));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(SpeakerOrganizer));
         
         string IMigrationMetadata.Id
         {
-            get { return "201601282114299_IsPaidFalse"; }
+            get { return "201602221743429_SpeakerOrganizer"; }
         }
         
         string IMigrationMetadata.Source

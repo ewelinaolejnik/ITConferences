@@ -5,7 +5,7 @@ using ITConferences.Domain.Entities;
 namespace ITConferences.WebUI.Controllers
 {
     [RequireHttps]
-    public class HomeController : BaseController
+    public class HomeController : Controller
     {
         public ActionResult Index(string nameFilter)
         {

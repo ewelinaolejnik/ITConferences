@@ -200,6 +200,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\Helpers\IControllerHelper.cs" />
     <Compile Include="Abstract\Helpers\IFilterSpeakerHelper.cs" />
     <Compile Include="Abstract\Helpers\ISortingHelper.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -220,6 +221,7 @@
     </Compile>
     <Compile Include="Helpers\Alert.cs" />
     <Compile Include="Helpers\AlertStyles.cs" />
+    <Compile Include="Helpers\ControllerHelper.cs" />
     <Compile Include="Helpers\DateFilter.cs" />
     <Compile Include="Helpers\FilterHelper.cs" />
     <Compile Include="Abstract\Helpers\IFilterConferenceHelper.cs" />
@@ -308,6 +310,7 @@
     <Content Include="img\default.jpg" />
     <Content Include="img\glyphicons-halflings-white.png" />
     <Content Include="img\glyphicons-halflings.png" />
+    <Content Include="img\Logo.png" />
     <Content Include="img\profile-picture.ico" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -501,6 +504,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\leaflet-0.7.3.js" />
     <Content Include="Scripts\leaflet-0.7.3.min.js" />
+    <Content Include="Scripts\manage.js" />
     <Content Include="Scripts\modal-form.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\moment-with-locales.js" />
@@ -538,12 +542,10 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
     <Content Include="Views\Account\VerifyCode.cshtml" />
-    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
     <Content Include="Views\Manage\ChangePassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Manage\ManageLogins.cshtml" />
     <Content Include="Views\Manage\SetPassword.cshtml" />
-    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Conferences\Create.cshtml" />
@@ -562,6 +564,8 @@
     <Content Include="Views\Speakers\_SpeakersView.cshtml" />
     <Content Include="Views\Organizers\Details.cshtml" />
     <Content Include="Views\Shared\_NoResuls.cshtml" />
+    <Content Include="Views\Manage\SpokenConferences.cshtml" />
+    <Content Include="Views\Manage\OrganizedConferences.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
