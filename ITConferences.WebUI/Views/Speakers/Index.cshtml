@@ -26,10 +26,7 @@
     .body {
         overflow-scrolling: touch;
     }
-
-    .buffer {
-        margin-top: 50px;
-    }
+   
 </style>
 
 <script src="~/Scripts/jquery-2.2.0.min.js"></script>
@@ -38,7 +35,7 @@
 <div class="container">
 
     <div>
-        <div class="row buffer">
+        <div class="row jumbotron">
             <div class="form-inline">
                 <div class="form-group submit">
                     @Html.TextBox("NameFilter", null, new { @id = "name", @type = "text", @class = "form-control input-lg", @placeholder = "Name" })
@@ -47,7 +44,7 @@
             </div>
         </div>
     </div>
-    <div class="row buffer">
+    <div class="row">
         @Html.Partial("_SpeakersView")
     </div>
 </div>

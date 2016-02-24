@@ -14,6 +14,7 @@ namespace ITConferences.WebUI.Controllers
     public class BaseController : Controller
     {
         private IGenericRepository<Image> _imageRepository;
+        public Dictionary<string, object> ViewDataDictionary { get; set; }
 
         public BaseController(IGenericRepository<Image> imageRepository)
         {
@@ -30,16 +31,24 @@ namespace ITConferences.WebUI.Controllers
             return File(image.ImageData, image.ImageMimeType);
         }
 
-        public ActionResult GetLoginMessage()
+        protected ActionResult GetLoginMessage(string message)
         {
-            Danger("Log in to add evaluation, please", true);
+            Danger(message, true);
             return RedirectToAction("Login", "Account");
         }
 
-        public ActionResult GetCommentMessage(Speaker speaker)
+        protected ActionResult GetCommentMessage<T>(T item)
         {
             Information("Write a comment to add evaluation, please", true);
-            return View("Details", speaker);
+            return View("Details", item);
+        }
+
+        protected void AssignViewData()
+        {
+            foreach (var oneViewData in ViewDataDictionary)
+            {
+                ViewData[oneViewData.Key] = oneViewData.Value;
+            }
         }
 
         public void Success(string message, bool dismissable = false)

@@ -24,7 +24,6 @@
                     <span class="sr-only">Toggle navigation</span>
                 </button>
                 @Html.Raw(@Html.ActionLink("[replacetext]", "Index", "Home").ToHtmlString().Replace("[replacetext]", "<img class=\"logo-img\" src=\"../../img/Logo.png\" ... />"))
-                @*@Html.ActionLink("IT Conferences", "Index", "Home", new { area = "" }, new { @class = "navbar-brand navbar-left" })*@
             </div>
             <div class="nav navbar-nav navbar-right" id="#navbar-collapse-5">
                 <div class="navbar-form navbar-left">
@@ -49,7 +48,7 @@
 
     <script src="~/Scripts/jquery-2.2.0.min.js"></script>
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    @*@Scripts.Render("~/bundles/bootstrap")*@
     @RenderSection("scripts", required: false)
 </body>
 </html>

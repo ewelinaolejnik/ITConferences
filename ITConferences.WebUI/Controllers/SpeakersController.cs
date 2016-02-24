@@ -41,6 +41,7 @@ namespace ITConferences.WebUI.Controllers
         }
         #endregion
 
+        #region Index
         // GET: Speakers
         public ActionResult Index(string nameFilter)
         {
@@ -60,57 +61,50 @@ namespace ITConferences.WebUI.Controllers
         {
             _speakersFilter.Speakers = Speakers;
             _speakersFilter.FilterBySpeakerName(ViewData, nameFilter);
-
-
+            
             if (_speakersFilter.Speakers.Count() == 0)
-            {
                 return PartialView("_NoResuls");
-            }
+
+            if ((page ?? 0) * PageSize >= _speakersFilter.Speakers.Count())
+                return null;
 
             ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_speakersFilter.Speakers.Count(), !filter);
-
-            var pageId = page ?? 0;
-            var pageSize = _controllerHelper.GetPageSize(pageId, PageSize, _speakersFilter.Speakers.Count());
-
-            if (pageId * PageSize >= _speakersFilter.Speakers.Count())
-            {
-                return null;
-            }
-
+           
+            var pageSize = _controllerHelper.GetPageSize((page ?? 0), PageSize, _speakersFilter.Speakers.Count());
             var pagedSpeakers =
-                 _speakersFilter.Speakers.ToList().GetRange(pageId * PageSize, pageSize);
+                 _speakersFilter.Speakers.ToList().GetRange((page ?? 0) * PageSize, pageSize);
             return PartialView("_SpeakersView", pagedSpeakers);
         }
+        #endregion
 
         #region Details
         // GET: Speakers/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
 
             Speaker speaker = _speakerRepository.GetById(id);
 
             if (speaker == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(speaker);
         }
 
         public ActionResult AddEvaluation(int conferenceId, int countOfStars, string comment, string ownerId)
         {
             if (!Request.IsAuthenticated)
-                GetLoginMessage();
+                GetLoginMessage("Log in to add evaluation, please");
 
             Speaker speaker = _speakerRepository.GetById(conferenceId);
 
             if (string.IsNullOrWhiteSpace(comment))
                 GetCommentMessage(speaker);
 
-            _controllerHelper.AssignSpeaker(ownerId, comment, countOfStars, speaker, _speakerRepository);
+            var eval = _controllerHelper.GetEvaluation(ownerId, comment, countOfStars);
+            speaker.Evaluations.Add(eval);
+            _speakerRepository.UpdateAndSubmit();
 
             return View("Details", speaker);
         }

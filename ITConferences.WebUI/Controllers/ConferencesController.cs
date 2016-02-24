@@ -14,7 +14,7 @@ using ITConferences.Domain.Entities;
 using ITConferences.WebUI.Abstract.Helpers;
 using ITConferences.WebUI.Helpers;
 using WebGrease.Css.Extensions;
-using ITConferences.WebUI.Extensions;
+
 
 namespace ITConferences.WebUI.Controllers
 {
@@ -24,15 +24,14 @@ namespace ITConferences.WebUI.Controllers
         private const int PageSize = 15;
 
         private IGenericRepository<Conference> _conferenceRepository;
-        private IGenericRepository<Attendee> _attendeeRepository;
-        private IGenericRepository<Evaluation> _evaluationRepository;
         private IGenericRepository<Country> _countryRepository;
         private IGenericRepository<Tag> _tagRepository;
         private IGenericRepository<City> _cityRepository;
-        private IGenericRepository<Image> _imageRepository;
         private IFilterConferenceHelper _conferenceFilter;
+        private IControllerHelper _controllerHelper;
 
         public IEnumerable<Conference> Conferences { get; private set; }
+        public IEnumerable<Conference> PagedConferences { get; private set; }
 
         public IEnumerable<Country> Countries
         {
@@ -48,48 +47,45 @@ namespace ITConferences.WebUI.Controllers
 
         #region Ctor
         public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository,
-            IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository, IGenericRepository<Evaluation> evaluationRepository,
-            IFilterConferenceHelper conferenceFilter, IGenericRepository<Image> imageRepository, IGenericRepository<Attendee> attendeeRepository) :base(imageRepository)
+            IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository, IFilterConferenceHelper conferenceFilter, 
+            IGenericRepository<Image> imageRepository, IControllerHelper controllerHelper) :base(imageRepository)
         {
             if (conferenceRepository == null || countryRepository == null || tagRepository == null ||
-                cityRepository == null || imageRepository == null || attendeeRepository == null || evaluationRepository == null)
+                cityRepository == null || imageRepository == null)
             {
                 throw new ArgumentNullException("Some repository does not exist!");
             }
-            if (conferenceFilter == null)
+            if (conferenceFilter == null || controllerHelper == null)
             {
-                throw new ArgumentNullException("Conference filter is null!");
+                throw new ArgumentNullException("Some helper is null!");
             }
 
             _conferenceRepository = conferenceRepository;
             _countryRepository = countryRepository;
             _tagRepository = tagRepository;
             _cityRepository = cityRepository;
-            _imageRepository = imageRepository;
-            Conferences = _conferenceRepository.GetAll().ToList();
             _conferenceFilter = conferenceFilter;
-            _conferenceFilter.Conferences = Conferences;
-            _attendeeRepository = attendeeRepository;
-            _evaluationRepository = evaluationRepository;
+            _controllerHelper = controllerHelper;
+
+            Conferences = _conferenceRepository.GetAll().ToList();
+            _conferenceFilter.Conferences = Conferences.OrderBy(e => e.Date);
         }
         #endregion
 
         #region Index
-        //TODO: unit tests!
         // GET: Conferences
         public ActionResult Index(string nameFilter, int? tagsFilter)
         {
-            ViewData["TagsFilter"] = new MultiSelectList(_tagRepository.GetAll(), "TagID", "Name");
             _conferenceFilter.FilterByName(ViewData, nameFilter);
-            _conferenceFilter.FilterByTags(ViewData, new int[] { tagsFilter ?? 0 }, Tags);
+            _conferenceFilter.FilterByTags(ViewData, new int[] { tagsFilter ?? 0 }, Tags); //TODO: filter by tags
 
-            ViewData["ResultsCount"] = _conferenceFilter.Conferences.Count() == 1 ? _conferenceFilter.Conferences.Count().ToString() + " result" : _conferenceFilter.Conferences.Count().ToString() + " results";
+            ViewData["TagsFilter"] = new MultiSelectList(_tagRepository.GetAll(), "TagID", "Name");
+            ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_conferenceFilter.Conferences.Count());
 
-            var pageSize = GetPageSize(0);
-            var pagedConfs =
+            var pageSize = _controllerHelper.GetPageSize(0, PageSize, _conferenceFilter.Conferences.Count());
+            PagedConferences =
                 _conferenceFilter.Conferences.ToList().GetRange(0, pageSize);
-            
-            return View(pagedConfs);
+            return View(PagedConferences);
         }
 
         public JsonResult GetLocations(string locationFilter)
@@ -106,8 +102,7 @@ namespace ITConferences.WebUI.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-
-        //TODO: unit tests!
+        
         public PartialViewResult GetConferences(string nameFilter, string locationFilter, int[] selectedTagsIds, DateFilter? dateFilter, int? page, bool filter = false)
         {
             _conferenceFilter.Conferences = Conferences.OrderBy(e => e.Date);
@@ -118,41 +113,19 @@ namespace ITConferences.WebUI.Controllers
                 _conferenceFilter.FilterByTime(ViewData, dateFilter.Value, _conferenceFilter.Conferences);
 
             if (_conferenceFilter.Conferences.Count() == 0)
-            {
                 return PartialView("_NoResuls");
-            }
 
-            if (filter)
-            {
-                ViewData["ResultsCount"] = _conferenceFilter.Conferences.Count() == 1 ? _conferenceFilter.Conferences.Count().ToString() + " result" : _conferenceFilter.Conferences.Count().ToString() + " results";
-            }
-            else
-            {
-                ViewData["ResultsCount"] = string.Empty;
-            }
-
-            
-
-            var pageId = page ?? 0;
-            var pageSize = GetPageSize(pageId);
-
-            if (pageId * PageSize >= _conferenceFilter.Conferences.Count())
-            {
+            if ((page ?? 0) * PageSize >= _conferenceFilter.Conferences.Count())
                 return null;
-            }
 
-            var pagedConfs =
-                 _conferenceFilter.Conferences.ToList().GetRange(pageId * PageSize, pageSize);
-            return PartialView("_ConferencesView", pagedConfs.ToList());
+            ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_conferenceFilter.Conferences.Count(), !filter);
+            
+            var pageSize = _controllerHelper.GetPageSize(page ?? 0, PageSize, _conferenceFilter.Conferences.Count());
+            PagedConferences =
+                 _conferenceFilter.Conferences.ToList().GetRange((page ?? 0) * PageSize, pageSize);
+            return PartialView("_ConferencesView", PagedConferences.ToList());
         }
-
-        //TODO: unit tests!
-        private int GetPageSize(int pageId)
-        {
-            return (PageSize * pageId) + PageSize < _conferenceFilter.Conferences.Count()
-               ? PageSize
-               : Math.Abs(_conferenceFilter.Conferences.Count() - (PageSize * pageId));
-        }
+        
         #endregion
 
         #region Details
@@ -160,44 +133,30 @@ namespace ITConferences.WebUI.Controllers
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
 
             Conference conference = _conferenceRepository.GetById(id);
 
             if (conference == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(conference);
         }
 
         public ActionResult AddEvaluation(int conferenceId, int countOfStars, string comment, string ownerId)
         {
             if (!Request.IsAuthenticated)
-            {
-                Danger("Log in to add evaluation, please", true);
-
-                return RedirectToAction("Login", "Account");
-            }
+                GetLoginMessage("Log in to add evaluation, please");
 
             Conference conference = _conferenceRepository.GetById(conferenceId);
 
+            if (conference == null)
+                return HttpNotFound();
+
             if (string.IsNullOrWhiteSpace(comment))
-            {
-                Information("Write a comment to add evaluation, please", true);
+                GetCommentMessage(conference);
 
-                return View("Details", conference);
-            }
-
-            var owner = _attendeeRepository.GetById(null, ownerId);
-            var eval = new Evaluation()
-            {
-                Comment = comment,
-                CountOfStars = countOfStars,
-                Owner = owner
-            };
+            var eval = _controllerHelper.GetEvaluation(ownerId, comment, countOfStars);
             conference.Evaluation.Add(eval);
             _conferenceRepository.UpdateAndSubmit();
 
@@ -211,11 +170,7 @@ namespace ITConferences.WebUI.Controllers
         public ActionResult Create()
         {
             if (!Request.IsAuthenticated)
-            {
-                Danger("Log in to add an event, please", true);
-
-                return RedirectToAction("Login", "Account");
-            }
+                GetLoginMessage("Log in to add an event, please");
 
             ViewData["TargetCountryId"] = new SelectList(Countries, "CountryID", "Name");
             ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name");
@@ -234,57 +189,25 @@ namespace ITConferences.WebUI.Controllers
             try
             {
                 if (image != null)
-                {
-                    var img = new Image()
-                    {
-                        ImageData = image.InputStream.ToByteArray(),
-                        ImageMimeType = image.ContentType
-
-                    };
-                    conference.Image = img;
-                }
+                    _controllerHelper.AssignImage(image, conference);
 
                 if (!string.IsNullOrWhiteSpace(userId))
-                {
-                    var attendee = _attendeeRepository.GetById(null, userId);
-                    var organizer = new Organizer()
-                    {
-                        User = attendee
-                    };
-                    conference.Organizer = organizer;
-                }
+                    _controllerHelper.AssignOrganizer(userId, conference);
 
                 _conferenceRepository.InsertAndSubmit(conference);
 
                 if (tags != "null")
-                {
-                    var stringTags = tags.Split(',');
-                    var intTag = stringTags.Select(e => int.Parse(e)).ToList();
-                    var selectedTags = Tags.Where(e => intTag.Contains(e.TagID));
-                    Tags.Where(e => intTag.Contains(e.TagID))
-                        .ForEach(e => e.Conferences.Add(conference));
-                    _tagRepository.UpdateAndSubmit();
-                }
-
-                
+                    _controllerHelper.AssignTags(tags, Tags, _tagRepository, conference);
 
                 Success("Great job, You added the event!", true);
                 return View(conference);
             }
             catch (Exception dbEx)
             {
-                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
                 return View();
             }
         }
-
-        //public FileContentResult GetImage(int? imageId)
-        //{
-        //    var image = _imageRepository.GetById(imageId);
-        //    return File(image.ImageData, image.ImageMimeType);
-        //}
-
-
 
         public JsonResult GetSelectedCities(int countryId)
         {

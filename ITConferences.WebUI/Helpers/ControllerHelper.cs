@@ -5,6 +5,7 @@ using System.Web;
 using ITConferences.Domain.Abstract;
 using ITConferences.Domain.Entities;
 using ITConferences.WebUI.Abstract.Helpers;
+using ITConferences.WebUI.Extensions;
 
 namespace ITConferences.WebUI.Helpers
 {
@@ -32,8 +33,7 @@ namespace ITConferences.WebUI.Helpers
                 : Math.Abs(itemsCount) - (pageSize * pageId);
         }
 
-        public void AssignSpeaker(string ownerId, string comment, int countOfStars, Speaker speaker,
-            IGenericRepository<Speaker> speakerRepository)
+        public Evaluation GetEvaluation(string ownerId, string comment, int countOfStars)
         {
             var owner = _attendeeRepository.GetById(null, ownerId);
             var eval = new Evaluation()
@@ -43,8 +43,38 @@ namespace ITConferences.WebUI.Helpers
                 Owner = owner
             };
 
-            speaker.Evaluations.Add(eval);
-            speakerRepository.UpdateAndSubmit();
+            return eval;
+        }
+
+        public void AssignImage(HttpPostedFileBase image, Conference conference)
+        {
+            var img = new Image()
+            {
+                ImageData = image.InputStream.ToByteArray(),
+                ImageMimeType = image.ContentType
+
+            };
+            conference.Image = img;
+        }
+
+        public void AssignOrganizer(string userId, Conference conference)
+        {
+            var attendee = _attendeeRepository.GetById(null, userId);
+            var organizer = new Organizer()
+            {
+                User = attendee
+            };
+            conference.Organizer = organizer;
+        }
+
+        public void AssignTags(string tags, IEnumerable<Tag> tagsList, IGenericRepository<Tag> tagRepository, Conference conference)
+        {
+            var stringTags = tags.Split(',');
+            var intTag = stringTags.Select(e => int.Parse(e)).ToList();
+            var selectedTags = tagsList.Where(e => intTag.Contains(e.TagID));
+            tagsList.Where(e => intTag.Contains(e.TagID)).ToList()
+                .ForEach(e => e.Conferences.Add(conference));
+            tagRepository.UpdateAndSubmit();
         }
     }
 }

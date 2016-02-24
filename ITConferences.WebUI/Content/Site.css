@@ -14,10 +14,11 @@ body {
     margin-top: 10px;
 }
 
+
 .navbar-custom { background-color: #FFFFFF;}
 
 .body-content {
-    padding-top: 0px;
+    padding-top: 20px;
     padding-bottom: 0px;
     padding-left: 0px;
     padding-right: 0px;

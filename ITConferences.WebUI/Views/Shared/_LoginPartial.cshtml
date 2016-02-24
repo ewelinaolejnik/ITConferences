@@ -11,7 +11,6 @@
     .profile-img {
         margin-right: 5px;
         margin-left: 5px;
-        /*margin-top: 5px;*/
         margin-bottom: 5px;
         width: 40px;
         height: 40px;
@@ -69,11 +68,11 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li>@Html.ActionLink("Settings", "Index", "Manage")</li>
-                            @if (currentUser.Speaker != null)
+                            @if (currentUser.Speaker != null && currentUser.Speaker.SpokenConferences != null && currentUser.Speaker.SpokenConferences.Count != 0)
                             {
                                 <li>@Html.ActionLink("Spoken conferences", "SpokenConferences", "Manage")</li>
                             }
-                            @if (currentUser.Organizer != null)
+                            @if (currentUser.Organizer != null && currentUser.Organizer.OrganizedConferences != null && currentUser.Organizer.OrganizedConferences.Count != 0)
                             {
                                 <li>@Html.ActionLink("Organized conferences", "OrganizedConferences", "Manage")</li>
                             }
