@@ -17,6 +17,11 @@ namespace ITConferences.WebUI.Helpers
             _attendeeRepository = attendeeRepository;
         }
 
+        public IEnumerable<Attendee> AllUsers
+        {
+            get { return _attendeeRepository.GetAll(); }
+        }
+
         public string GetResultsCount(int itemsCount, bool empty = false)
         {
             return empty
@@ -60,18 +65,20 @@ namespace ITConferences.WebUI.Helpers
         public void AssignOrganizer(string userId, Conference conference)
         {
             var attendee = _attendeeRepository.GetById(null, userId);
-            var organizer = new Organizer()
+            var organizer = attendee.Organizer ?? new Organizer()
             {
                 User = attendee
             };
+            
+
             conference.Organizer = organizer;
         }
 
         public void AssignTags(string tags, IEnumerable<Tag> tagsList, IGenericRepository<Tag> tagRepository, Conference conference)
         {
+            conference.Tags = new List<Tag>();
             var stringTags = tags.Split(',');
             var intTag = stringTags.Select(e => int.Parse(e)).ToList();
-            var selectedTags = tagsList.Where(e => intTag.Contains(e.TagID));
             tagsList.Where(e => intTag.Contains(e.TagID)).ToList()
                 .ForEach(e => e.Conferences.Add(conference));
             tagRepository.UpdateAndSubmit();

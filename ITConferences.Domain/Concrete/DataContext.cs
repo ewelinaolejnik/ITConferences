@@ -27,7 +27,6 @@ namespace ITConferences.Domain.Concrete
         public IDbSet<Attendee> Attendees { get; set; }
         public IDbSet<Organizer> Organizers { get; set; }
         public IDbSet<Speaker> Speakers { get; set; }
-        public IDbSet<Inspiration> Media { get; set; }
         public IDbSet<Evaluation> Evaluations { get; set; }
         public IDbSet<Country> Countries { get; set; }
         public IDbSet<City> Cities { get; set; }

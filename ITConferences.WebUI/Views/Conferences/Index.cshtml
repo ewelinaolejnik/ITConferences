@@ -6,41 +6,7 @@
     ViewBag.Title = "Conferences";
 }
 
-<style>
-    .btn:active {
-        box-shadow: none;
-    }
-
-    .link-format {
-        color: lightseagreen;
-    }
-
-        .link-format:hover {
-            color: lightseagreen;
-            text-decoration: none;
-        }
-
-    .conference-name {
-        font-weight: bold;
-    }
-    .body {
-        overflow-scrolling: touch;
-    }
-
-</style>
-
-
-<link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
-<link href="~/Content/multi-select.css" rel="stylesheet" />
-<link href="~/Content/jquery.multiselect.filter.css" rel="stylesheet"/>
-
-<script src="~/Scripts/jquery-2.2.0.min.js"></script>
-<script src="~/Scripts/jquery-ui.min.js"></script>
-<script src="~/Scripts/jquery.multi-select.js"></script>
-<script src="~/Scripts/jquery.multiselect.filter.js"></script>
-<script src="~/Scripts/display-conferences.js"></script>
-
-
+@Styles.Render("~/Content/create-conference");
 
 <div class="container">
     <div class="jumbotron">
@@ -72,3 +38,5 @@
         @Html.Partial("_ConferencesView")
     </div>
 </div>
+
+@Scripts.Render("~/bundles/conference")

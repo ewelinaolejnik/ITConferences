@@ -21,7 +21,7 @@ namespace ITConferences.WebUI.Controllers
     public class ConferencesController : BaseController
     {
         #region Fields
-        private const int PageSize = 15;
+        private const int PageSize = 21;
 
         private IGenericRepository<Conference> _conferenceRepository;
         private IGenericRepository<Country> _countryRepository;
@@ -47,8 +47,8 @@ namespace ITConferences.WebUI.Controllers
 
         #region Ctor
         public ConferencesController(IGenericRepository<Conference> conferenceRepository, IGenericRepository<Country> countryRepository,
-            IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository, IFilterConferenceHelper conferenceFilter, 
-            IGenericRepository<Image> imageRepository, IControllerHelper controllerHelper) :base(imageRepository)
+            IGenericRepository<Tag> tagRepository, IGenericRepository<City> cityRepository, IFilterConferenceHelper conferenceFilter,
+            IGenericRepository<Image> imageRepository, IControllerHelper controllerHelper) : base(imageRepository)
         {
             if (conferenceRepository == null || countryRepository == null || tagRepository == null ||
                 cityRepository == null || imageRepository == null)
@@ -68,7 +68,7 @@ namespace ITConferences.WebUI.Controllers
             _controllerHelper = controllerHelper;
 
             Conferences = _conferenceRepository.GetAll().ToList();
-            _conferenceFilter.Conferences = Conferences.OrderBy(e => e.Date);
+            _conferenceFilter.Conferences = Conferences.OrderBy(e => e.StartDate);
         }
         #endregion
 
@@ -102,10 +102,10 @@ namespace ITConferences.WebUI.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-        
+
         public PartialViewResult GetConferences(string nameFilter, string locationFilter, int[] selectedTagsIds, DateFilter? dateFilter, int? page, bool filter = false)
         {
-            _conferenceFilter.Conferences = Conferences.OrderBy(e => e.Date);
+            _conferenceFilter.Conferences = Conferences.OrderBy(e => e.StartDate);
             _conferenceFilter.FilterByName(ViewData, nameFilter);
             _conferenceFilter.FilterByLocation(ViewData, locationFilter);
             _conferenceFilter.FilterByTags(ViewData, selectedTagsIds, Tags);
@@ -119,13 +119,13 @@ namespace ITConferences.WebUI.Controllers
                 return null;
 
             ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_conferenceFilter.Conferences.Count(), !filter);
-            
+
             var pageSize = _controllerHelper.GetPageSize(page ?? 0, PageSize, _conferenceFilter.Conferences.Count());
             PagedConferences =
                  _conferenceFilter.Conferences.ToList().GetRange((page ?? 0) * PageSize, pageSize);
             return PartialView("_ConferencesView", PagedConferences.ToList());
         }
-        
+
         #endregion
 
         #region Details
@@ -146,7 +146,7 @@ namespace ITConferences.WebUI.Controllers
         public ActionResult AddEvaluation(int conferenceId, int countOfStars, string comment, string ownerId)
         {
             if (!Request.IsAuthenticated)
-                GetLoginMessage("Log in to add evaluation, please");
+                return GetLoginMessage("Log in to add evaluation, please");
 
             Conference conference = _conferenceRepository.GetById(conferenceId);
 
@@ -154,7 +154,7 @@ namespace ITConferences.WebUI.Controllers
                 return HttpNotFound();
 
             if (string.IsNullOrWhiteSpace(comment))
-                GetCommentMessage(conference);
+                return GetCommentMessage(conference);
 
             var eval = _controllerHelper.GetEvaluation(ownerId, comment, countOfStars);
             conference.Evaluation.Add(eval);
@@ -170,13 +170,13 @@ namespace ITConferences.WebUI.Controllers
         public ActionResult Create()
         {
             if (!Request.IsAuthenticated)
-                GetLoginMessage("Log in to add an event, please");
+                return GetLoginMessage("Log in to add an event, please");
 
             ViewData["TargetCountryId"] = new SelectList(Countries, "CountryID", "Name");
             ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name");
             return View();
         }
-        
+
         // POST: Conferences/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -204,7 +204,7 @@ namespace ITConferences.WebUI.Controllers
             }
             catch (Exception dbEx)
             {
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                Danger("Unable to save changes. Try again, and if the problem persists see your system administrator.", true);
                 return View();
             }
         }
@@ -219,6 +219,53 @@ namespace ITConferences.WebUI.Controllers
             });
 
             return Json(selectedCities, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+        #region Manage
+        [HttpGet]
+        public ActionResult Manage(int? id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            Conference conference = _conferenceRepository.GetById(id);
+
+
+            if (conference == null)
+                return HttpNotFound();
+
+            ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName");
+            ViewData["TargetCountryId"] = new SelectList(Countries, "CountryID", "Name");
+            ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", conference.Tags);
+            return View(conference);
+        }
+
+        [HttpPost]
+        public ActionResult Manage(string tags, Conference conference, HttpPostedFileBase image)
+        {
+            ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", conference.Tags);
+            ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName");
+            ViewData["TargetCountryId"] = new SelectList(Countries, "CountryID", "Name");
+
+            try
+            {
+                if (image != null)
+                    _controllerHelper.AssignImage(image, conference);
+
+                _conferenceRepository.UpdateAndSubmit();
+
+                if (tags != "null")
+                    _controllerHelper.AssignTags(tags, Tags, _tagRepository, conference);
+
+                Success("Great job, You change the event!", true);
+                return View(conference);
+            }
+            catch (Exception dbEx)
+            {
+                Danger("Unable to save changes. Try again, and if the problem persists see your system administrator.", true);
+                return View();
+            }
         }
         #endregion
 

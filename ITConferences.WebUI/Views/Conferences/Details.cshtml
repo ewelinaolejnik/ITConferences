@@ -1,87 +1,11 @@
 ﻿@model ITConferences.Domain.Entities.Conference
 @using Microsoft.AspNet.Identity
 
-<link rel="stylesheet" href="~/Content/bootstrap.css" />
-<link rel="stylesheet" href="~/Content/star-rating.min.css" />
+@Styles.Render("~/Content/details");
 
 
-<script src="~/Scripts/jquery-2.2.0.min.js"></script>
+<script src="~/Scripts/jquery-2.2.1.min.js"></script>
 <script src="~/Scripts/star-rating.min.js"></script>
-
-<style>
-    #full {
-        width: 100%;
-        height: 100%;
-    }
-
-    .btn-twitter {
-        background: #00acee;
-        border-radius: 0;
-        color: #fff;
-    }
-
-        .btn-twitter:link, .btn-twitter:visited {
-            color: #fff;
-        }
-
-        .btn-twitter:active, .btn-twitter:hover {
-            background: #0087bd;
-            color: #fff;
-        }
-
-    .btn-facebook {
-        background: #3b5998;
-        border-radius: 0;
-        color: #fff;
-    }
-
-        .btn-facebook:link, .btn-facebook:visited {
-            color: #fff;
-        }
-
-        .btn-facebook:active, .btn-facebook:hover {
-            background: #30477a;
-            color: #fff;
-        }
-
-    .btn-googleplus {
-        background: #e93f2e;
-        border-radius: 0;
-        color: #fff;
-    }
-
-        .btn-googleplus:link, .btn-googleplus:visited {
-            color: #fff;
-        }
-
-        .btn-googleplus:active, .btn-googleplus:hover {
-            background: #ba3225;
-            color: #fff;
-        }
-
-    .btn-linkedin {
-        background: #0e76a8;
-        border-radius: 0;
-        color: #fff;
-    }
-
-        .btn-linkedin:link, .btn-linkedin:visited {
-            color: #fff;
-        }
-
-        .btn-linkedin:active, .btn-linkedin:hover {
-            background: #0b6087;
-            color: #fff;
-        }
-
-
-    .buffer {
-        margin-top: 20px;
-        margin-bottom: 30px;
-        margin-right: 20px;
-    }
-</style>
-
 
 
 <div class="container" id="details">
@@ -127,11 +51,19 @@
                     @Html.DisplayFor(model => model.TargetCountry.Name)
                 </dd>
                 <dt>
-                    @Html.DisplayNameFor(model => model.Date)
+                    @Html.DisplayNameFor(model => model.StartDate)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.Date)
+                    @Html.DisplayFor(model => model.StartDate)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.EndDate)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.EndDate)
                 </dd>
 
                 <dt>
@@ -147,20 +79,23 @@
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.IsPaid)
+                    @(Model.IsPaid ? "Yes" : "No")
                 </dd>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.Tags)
-                </dt>
+                @if (Model.Tags != null && Model.Tags.Count != 0)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Tags)
+                    </dt>
 
-                <dd>
-                    @foreach (var tag in Model.Tags)
-                    {
-                        @Html.ActionLink(tag.Name, "Index", new { tagsFilter = tag.TagID })@($"{", "}")
-                    }
+                    <dd>
+                        @foreach (var tag in Model.Tags)
+                        {
+                            @Html.ActionLink(tag.Name, "Index", new { tagsFilter = tag.TagID })@($"{", "}")
+                        }
+                    </dd>
+                }
 
-                </dd>
                 @if (Model.Organizer != null)
                 {
                     <dt>
@@ -171,14 +106,19 @@
                         @Html.ActionLink(Model.Organizer.User.UserName, "Details", "Organizers", new { id = Model.Organizer.OrganizerID }, null)
                     </dd>
                 }
+                @if (Model.Speakers != null && Model.Speakers.Count != 0)
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Speakers)
+                    </dt>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.Speakers)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Speakers)
-                </dd>
+                    <dd>
+                        @foreach (var speaker in Model.Speakers)
+                        {
+                            @Html.ActionLink(speaker.User.UserName, "Details", "Speakers", new { id = speaker.SpeakerID })@($"{", "}")
+                        }
+                    </dd>
+                }
 
             </dl>
         </div>
@@ -186,24 +126,25 @@
     </div>
 
     <div class="row buffer">
-        <p class="pull-left">
-            Evaluations:
-        </p>
+
         <div class="col-md-4 col-xs-4 pull-right">
             <!-- Twitter -->
-            <a href="http://twitter.com/home?status=" title="Share on Twitter" target="_blank" class="btn btn-twitter"><i class="fa fa-twitter"></i> Twitter</a>
+            <a href="http://twitter.com/home?status=@Request.Url" title="Share on Twitter" target="_blank" class="btn btn-twitter"><i class="fa fa-twitter"></i> Twitter</a>
             <!-- Facebook -->
-            <a href="https://www.facebook.com/sharer/sharer.php?u=" title="Share on Facebook" target="_blank" class="btn btn-facebook"><i class="fa fa-facebook"></i> Facebook</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=@Request.Url" title="Share on Facebook" target="_blank" class="btn btn-facebook"><i class="fa fa-facebook"></i> Facebook</a>
             <!-- Google+ -->
-            <a href="https://plus.google.com/share?url=" title="Share on Google+" target="_blank" class="btn btn-googleplus"><i class="fa fa-google-plus"></i> Google+</a>
+            <a href="https://plus.google.com/share?url=@Request.Url" title="Share on Google+" target="_blank" class="btn btn-googleplus"><i class="fa fa-google-plus"></i> Google+</a>
             <!-- LinkedIn -->
-            <a href="http://www.linkedin.com/shareArticle?mini=true&url=&title=&summary=" title="Share on LinkedIn" target="_blank" class="btn btn-linkedin"><i class="fa fa-linkedin"></i> LinkedIn</a>
+            <a href="http://www.linkedin.com/shareArticle?mini=true&url=&title=&summary=@Request.Url" title="Share on LinkedIn" target="_blank" class="btn btn-linkedin"><i class="fa fa-linkedin"></i> LinkedIn</a>
         </div>
     </div>
 
 
     <div class="row">
-
+        <p class="pull-left">
+            Evaluations:
+        </p>
+        <br />
         <div class="well">
 
             <div class="thumbnail row" style="overflow: hidden;">
@@ -230,7 +171,7 @@
                             @if (Request.IsAuthenticated && eval.Owner.Image != null)
                             {
                                 <label>@eval.Owner.UserName</label>
-                                <img src="@Url.Action("GetImage","Conferences", new {imageId = eval.Owner.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
+                                <img src="@Url.Action(" GetImage","Conferences", new {imageId=eval.Owner.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
                             }
                             else
                             {

@@ -1,11 +1,12 @@
-﻿@{
+﻿@using Microsoft.AspNet.Identity;
+@{
     ViewBag.Title = "Home Page";
 }
 
 
 <link rel="stylesheet" href="~/Content/grayscale.css" />
 
-<script src="~/Scripts/jquery-2.2.0.min.js"></script>
+<script src="~/Scripts/jquery-2.2.1.min.js"></script>
 <script src="~/Scripts/home-page.js"></script>
 
 <header class="intro">
@@ -13,11 +14,18 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
-                    <h1 class="brand-heading">Are you IT conferences lover?</h1>
+                    @if (Request.IsAuthenticated)
+                    {
+                        <h1 class="brand-heading">Hello @User.Identity.Name!</h1>
+                    }
+                    else
+                    {
+                        <h1 class="brand-heading">Are you IT conferences lover?</h1>
+                    }
                     <p class="intro-text">Don't be shy, just search an event:</p>
                     <form class="form-inline" role="form">
                         <div class="form-group">
-                            @Html.TextBox("NameFilter", null, new { @class = "form-control input-lg", @placeholder = "Search..." })
+                            @Html.TextBox("NameFilter", null, new {@class = "form-control input-lg", @placeholder = "Search..."})
                             <button id="homeButton" type="submit" value="Submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search"></span></button>
                         </div>
                     </form>

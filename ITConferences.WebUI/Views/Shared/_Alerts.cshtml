@@ -4,13 +4,8 @@
                 ? (List<Alert>)TempData[Alert.TempDataKey]
                 : new List<Alert>();
 
-<style>
-    .alert{
-        position:absolute;
-        width:inherit;
-        z-index: 100;
-    }
-</style>
+
+    @Styles.Render("~/Content/alerts")
     foreach (var alert in alerts)
     {
         var dismissableClass = alert.Dismissable ? "alert-dismissable" : null;

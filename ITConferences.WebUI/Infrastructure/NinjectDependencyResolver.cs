@@ -29,7 +29,6 @@ namespace ITConferences.WebUI.Infrastructure
             _kernel.Bind<IGenericRepository<Conference>>().To<GenericRepository<Conference>>();
             _kernel.Bind<IGenericRepository<Country>>().To<GenericRepository<Country>>();
             _kernel.Bind<IGenericRepository<Evaluation>>().To<GenericRepository<Evaluation>>();
-            _kernel.Bind<IGenericRepository<Inspiration>>().To<GenericRepository<Inspiration>>();
             _kernel.Bind<IGenericRepository<Organizer>>().To<GenericRepository<Organizer>>();
             _kernel.Bind<IGenericRepository<Speaker>>().To<GenericRepository<Speaker>>();
             _kernel.Bind<IGenericRepository<Tag>>().To<GenericRepository<Tag>>();

@@ -12,7 +12,7 @@ namespace ITConferences.WebUI.Controllers
 {
     public class SpeakersController : BaseController
     {
-        private const int PageSize = 6;
+        private const int PageSize = 9;
 
         private IGenericRepository<Speaker> _speakerRepository;
         private IFilterSpeakerHelper _speakersFilter;
@@ -95,12 +95,12 @@ namespace ITConferences.WebUI.Controllers
         public ActionResult AddEvaluation(int conferenceId, int countOfStars, string comment, string ownerId)
         {
             if (!Request.IsAuthenticated)
-                GetLoginMessage("Log in to add evaluation, please");
+               return GetLoginMessage("Log in to add evaluation, please");
 
             Speaker speaker = _speakerRepository.GetById(conferenceId);
 
             if (string.IsNullOrWhiteSpace(comment))
-                GetCommentMessage(speaker);
+               return GetCommentMessage(speaker);
 
             var eval = _controllerHelper.GetEvaluation(ownerId, comment, countOfStars);
             speaker.Evaluations.Add(eval);

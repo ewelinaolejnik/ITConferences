@@ -1,0 +1,5 @@
+﻿.alert {
+    position: absolute;
+    width: inherit;
+    z-index: 100;
+}

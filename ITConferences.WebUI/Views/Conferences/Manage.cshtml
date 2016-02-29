@@ -1,0 +1,112 @@
+﻿@model ITConferences.Domain.Entities.Conference
+
+@Styles.Render("~/Content/create-conference");
+
+
+<div class="container" id="details">
+    <div class="row buffer">
+        <div class="col-md-4 col-xs-4">
+            @Html.ActionLink("Back to your conferences", "OrganizedConferences", "Manage")
+        </div>
+    </div>
+
+    <h4>Change the event</h4>
+    <hr/>
+
+    <div class="row">
+        <div class="col-md-4 col-xs-4 form-horizontal container">
+            @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "form-control success input-lg"}})
+            @if (Model.Image != null)
+            {
+                <img src="@Url.Action("GetImage", "Conferences", new {imageId = Model.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image"/>
+            }
+            else
+            {
+                <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image"/>
+            }
+
+            <form method="post" enctype="multipart/form-data" class="form-group row">
+                Change image:
+                <div class="col-md-10">
+                    <input type="file" name="image" id="image"/>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-8 col-xs-8 form-horizontal container">
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.TargetCountry.Name, htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.TargetCountryId, ViewData["TargetCountryId"] as SelectList, "Select country", htmlAttributes: new {@class = "form-control multiselect multiselect-info"})
+                    @Html.ValidationMessageFor(model => model.TargetCountryId, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.TargetCity.Name, htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.TargetCityId, new SelectList(string.Empty, "CityID", "Name"), "Select city", htmlAttributes: new {@class = "form-control"})
+                    @Html.ValidationMessageFor(model => model.TargetCityId, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.StartDate, htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.StartDate, new {htmlAttributes = new {@class = "form-control datetime"}})
+                    @Html.ValidationMessageFor(model => model.StartDate, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.EndDate, htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.EndDate, new {htmlAttributes = new {@class = "form-control datetime"}})
+                    @Html.ValidationMessageFor(model => model.EndDate, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Url, htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Url, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.Url, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsPaid, htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.IsPaid)
+                    @Html.ValidationMessageFor(model => model.IsPaid, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Change tags:", htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.ListBox("TagsSelector", ViewData["TagsSelector"] as MultiSelectList, htmlAttributes: new {@id = "tags", @class = "hide"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Add speakers:", htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.ListBox("SpeakersSelector", ViewData["SpeakersSelector"] as MultiSelectList, htmlAttributes: new {@id = "speakers", @class = "hide"})
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="pull-right">
+            <input type="submit" value="Save changes" class="btn btn-success" id="manageButton"/>
+        </div>
+    </div>
+
+</div>
+
+@Scripts.Render("~/bundles/conference")

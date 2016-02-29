@@ -6,15 +6,8 @@
     ViewBag.Title = "Add an event";
 }
 
-<link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
-<link href="~/Content/multi-select.css" rel="stylesheet" />
-<link href="~/Content/jquery.multiselect.filter.css" rel="stylesheet" />
+@Styles.Render("~/Content/create-conference");
 
-<script src="~/Scripts/jquery-2.2.0.min.js"></script>
-<script src="~/Scripts/jquery-ui.min.js"></script>
-<script src="~/Scripts/jquery.multi-select.js"></script>
-<script src="~/Scripts/jquery.multiselect.filter.js"></script>
-<script src="~/Scripts/create-conference.js" type="text/javascript"></script>
 
 <form id="__AjaxAntiForgeryForm" action="#" method="post">
     @Html.AntiForgeryToken()
@@ -22,59 +15,65 @@
 
 <div class="form-horizontal container" id="conferences">
     <h4>Add an event</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <hr/>
+    @Html.ValidationSummary(true, "", new {@class = "text-danger"})
     <div class="form-group">
-        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Name, htmlAttributes: new {@class = "control-label col-md-2"})
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.Name, new {htmlAttributes = new {@class = "form-control"}})
+            @Html.ValidationMessageFor(model => model.Name, "", new {@class = "text-danger"})
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.StartDate, htmlAttributes: new {@class = "control-label col-md-2"})
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control datepicker" } })
-            @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.StartDate, new {htmlAttributes = new {@class = "form-control datetime"}})
+            @Html.ValidationMessageFor(model => model.StartDate, "", new {@class = "text-danger"})
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Url, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.EndDate, htmlAttributes: new {@class = "control-label col-md-2"})
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.EndDate, new {htmlAttributes = new {@class = "form-control datetime"}})
+            @Html.ValidationMessageFor(model => model.EndDate, "", new {@class = "text-danger"})
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.IsPaid, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Url, htmlAttributes: new {@class = "control-label col-md-2"})
         <div class="col-md-10">
-            <div class="checkbox">
-                @Html.EditorFor(model => model.IsPaid)
-                @Html.ValidationMessageFor(model => model.IsPaid, "", new { @class = "text-danger" })
-            </div>
+            @Html.EditorFor(model => model.Url, new {htmlAttributes = new {@class = "form-control"}})
+            @Html.ValidationMessageFor(model => model.Url, "", new {@class = "text-danger"})
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.TargetCountry.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.IsPaid, htmlAttributes: new {@class = "control-label col-md-2"})
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.TargetCountryId, ViewData["TargetCountryId"] as SelectList, "Select country", htmlAttributes: new { @class = "form-control multiselect multiselect-info" })
-            @Html.ValidationMessageFor(model => model.TargetCountryId, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.IsPaid)
+            @Html.ValidationMessageFor(model => model.IsPaid, "", new {@class = "text-danger"})
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TargetCountry.Name, htmlAttributes: new {@class = "control-label col-md-2"})
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.TargetCountryId, ViewData["TargetCountryId"] as SelectList, "Select country", htmlAttributes: new {@class = "form-control multiselect multiselect-info"})
+            @Html.ValidationMessageFor(model => model.TargetCountryId, "", new {@class = "text-danger"})
         </div>
     </div>
 
     <div id="loading" style="display: none">
-        <img src="~/img/ajax-loader.gif" class="img-responsive center-block" alt="Loading image" />
+        <img src="~/img/ajax-loader.gif" class="img-responsive center-block" alt="Loading image"/>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.TargetCity.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.TargetCity.Name, htmlAttributes: new {@class = "control-label col-md-2"})
         <div class="col-md-10">
-            @Html.DropDownListFor(model => model.TargetCityId, new SelectList(string.Empty, "CityID", "Name"), "Select city", htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.TargetCityId, "", new { @class = "text-danger" })
+            @Html.DropDownListFor(model => model.TargetCityId, new SelectList(string.Empty, "CityID", "Name"), "Select city", htmlAttributes: new {@class = "form-control"})
+            @Html.ValidationMessageFor(model => model.TargetCityId, "", new {@class = "text-danger"})
         </div>
     </div>
 
@@ -93,17 +92,17 @@
     </form>
 
     <div class="form-group">
-        @Html.Label("Are you an organizer?", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.Label("Are you an organizer?", htmlAttributes: new {@class = "control-label col-md-2"})
         <div class="col-md-10">
-           @*@Html.CheckBox(@User.Identity.GetUserId(), htmlAttributes: new { @id = "organizer" })*@
-                <input id="userId" name="userId" type="checkbox" value="@User.Identity.GetUserId()" />
-           
+            <input id="userId" name="userId" type="checkbox" value="@User.Identity.GetUserId()"/>
         </div>
     </div>
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-default" id="submitButton" />
+            <input type="submit" value="Create" class="btn btn-success" id="submitButton"/>
         </div>
     </div>
 </div>
+
+@Scripts.Render("~/bundles/conference")

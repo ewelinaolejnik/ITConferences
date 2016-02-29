@@ -1,0 +1,56 @@
+﻿@model ITConferences.Domain.Entities.Organizer
+
+@Styles.Render("~/Content/details");
+
+<div class="container" id="details">
+    <div class="row text-success buffer">
+        <p class="text-danger text-uppercase">
+            <strong>
+                Organizer
+            </strong>
+        </p>
+        <h1>
+            @Html.DisplayFor(model => model.User.UserName)
+        </h1>
+    </div>
+
+    <div class="row buffer">
+        <div class="col-md-4 col-xs-4">
+            @if (Model.User.Image != null)
+            {
+                <img src="@Url.Action("GetImage","Organizers", new {imageId = Model.User.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
+            }
+            else
+            {
+                <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
+            }
+        </div>
+
+        <div class="col-md-8 col-xs-8">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.User.Email)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.User.Email)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.OrganizedConferences)
+                </dt>
+
+                <dd>
+                    @foreach (var conf in Model.OrganizedConferences)
+                    {
+                        @Html.ActionLink(conf.Name, "Details", "Conferences", new { id = conf.ConferenceID },null)@($"{", "}")
+                    }
+
+                </dd>
+
+
+            </dl>
+        </div>
+
+    </div>
+</div>

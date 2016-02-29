@@ -11,6 +11,7 @@ namespace ITConferences.WebUI.Abstract.Helpers
 {
     public interface IControllerHelper
     {
+        IEnumerable<Attendee> AllUsers { get; }
         string GetResultsCount(int itemsCount, bool empty = false);
         int GetPageSize(int pageId, int pageSize, int itemsCount);
         Evaluation GetEvaluation(string ownerId, string comment, int countOfStars);

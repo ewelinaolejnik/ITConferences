@@ -93,11 +93,11 @@ namespace ITConferences.WebUI.Helpers
             switch (dateFilter)
             {
                 case DateFilter.Upcoming:
-                    Conferences = Conferences.Where(e => e.Date >= DateTime.Today).ToList();
+                    Conferences = Conferences.Where(e => e.StartDate >= DateTime.Today).ToList();
                     break;
 
                 case DateFilter.Past:
-                    Conferences = Conferences.Where(e => e.Date < DateTime.Today).ToList();
+                    Conferences = Conferences.Where(e => e.StartDate < DateTime.Today).ToList();
                     break;
                 case DateFilter.All:
                     Conferences = conferences;

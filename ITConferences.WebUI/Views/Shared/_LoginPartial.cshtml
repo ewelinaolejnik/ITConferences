@@ -1,28 +1,10 @@
-﻿@using System.IdentityModel.Claims
-@using Facebook
-@using ITConferences.Domain.Concrete
+﻿@using ITConferences.Domain.Concrete
 @using ITConferences.Domain.Entities
 @using Microsoft.AspNet.Identity;
 @using Microsoft.AspNet.Identity.EntityFramework
-@using Microsoft.Owin.Security
 
 
-<style>
-    .profile-img {
-        margin-right: 5px;
-        margin-left: 5px;
-        margin-bottom: 5px;
-        width: 40px;
-        height: 40px;
-    }
-
-    #dropdownMenu1 {
-        background: none;
-        border: none;
-        box-shadow: none;
-    }
-</style>
-
+<link rel="stylesheet" href="~/Content/Custom/login.css" />
 
 @if (Request.IsAuthenticated)
 {
@@ -61,7 +43,7 @@
                 var dataType = currentUser.Image.ImageMimeType;
                 var imgSrc = String.Format("data:{0};base64,{1}", dataType, base64);
 
-                <li>
+                <li class="profile-img">
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-menu-left" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             <img src="@imgSrc" class="profile-img" alt="No image" />

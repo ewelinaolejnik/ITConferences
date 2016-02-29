@@ -5,11 +5,6 @@
     Layout = null;
 }
 
-<style>
-    .buffer {
-        margin-top: 30px;
-    }
-</style>
 
 
 <div id="loading" style="display: none">
@@ -39,7 +34,7 @@
                     <div class="col-md-8 col-xs-6 text-left">
                         <div class="row conference-name">@Html.DisplayFor(modelItem => item.Name)</div>
                         <div class="row">@Html.DisplayFor(modelItem => item.TargetCountry.Name), @Html.DisplayFor(modelItem => item.TargetCity.Name)</div>
-                        <div class="row">@Html.DisplayFor(modelItem => item.Date)</div>
+                        <div class="row">@Html.DisplayFor(modelItem => item.StartDate) - @Html.DisplayFor(modelItem => item.EndDate)</div>
                         <div class="row">@Html.DisplayFor(modelItem => item.Url)</div>
                     </div>
                 </a>

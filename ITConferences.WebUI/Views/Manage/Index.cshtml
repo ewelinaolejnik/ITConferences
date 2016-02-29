@@ -7,7 +7,6 @@
 <script src="~/Scripts/manage.js"></script>
 
 <div class="container" id="manage">
-    <h2>@ViewBag.Title.</h2>
 
     <p class="text-success">@ViewBag.StatusMessage</p>
     <h4>Change your account settings</h4>
@@ -24,12 +23,8 @@
                 @Html.ActionLink("Set password", "SetPassword")
             }
         </dd>
-        <dt>External Logins:</dt>
-        <dd>
-            @Html.ActionLink("Manage", "ManageLogins")
-        </dd>
+        <br />
         <dt>Change profile image: </dt>
-
         <dd>
             <form method="post" enctype="multipart/form-data" class="form-group">
                 <input type="file" name="image" id="image" />

@@ -24,8 +24,14 @@ namespace ITConferences.Domain.Entities
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        [Display(Name = "When: ")]
-        public DateTime Date { get; set; }
+        [Display(Name = "Start date: ")]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [Display(Name = "End date: ")]
+        public DateTime EndDate { get; set; }
 
         [Required]
         [Url(ErrorMessage = "Invalid URL!")]
@@ -36,8 +42,11 @@ namespace ITConferences.Domain.Entities
         [DefaultValue(false)]
         public bool IsPaid { get; set; }
 
+        [DisplayName("City:")]
         public virtual City TargetCity { get; set; }
+        [DisplayName("Country:")]
         public virtual Country TargetCountry { get; set; }
+        [DisplayName("Image:")]
         public virtual Image Image { get; set; }
         public virtual ICollection<Attendee> Attendees { get; set; }
         public virtual ICollection<Speaker> Speakers { get; set; }
@@ -45,7 +54,6 @@ namespace ITConferences.Domain.Entities
         [Display(Name = "Organizer:")]
         public virtual Organizer Organizer { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
-        public virtual ICollection<Inspiration> Media { get; set; }
         public virtual ICollection<Evaluation> Evaluation { get; set; }
 
         [ForeignKey("TargetCity")]

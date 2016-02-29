@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,13 +15,11 @@ namespace ITConferences.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SpeakerID { get; set; }
 
+        [DisplayName("Spoken conferences:")]
         public virtual ICollection<Conference> SpokenConferences { get; set; }
         public virtual ICollection<Evaluation> Evaluations { get; set; }
 
         [Required]
         public virtual Attendee User { get; set; }
-
-        //[ForeignKey("User")]
-        //public string UserId { get; set; }
     }
 }

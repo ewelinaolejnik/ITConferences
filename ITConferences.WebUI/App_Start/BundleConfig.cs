@@ -22,9 +22,33 @@ namespace ITConferences.WebUI
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/conference").Include(
+                      "~/Scripts/jquery-{version}.js",
+                      "~/Scripts/jquery-ui.min.js",
+                      "~/Scripts/jquery.multi-select.js",
+                      "~/Scripts/jquery.multiselect.filter.js",
+                      "~/Scripts/conference.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new StyleBundle("~/Content/create-conference").Include(
+                     "~/Content/metro-bootstrap.css",
+                     "~/Content/jquery-ui.min.css",
+                     "~/Content/multi-select.css",
+                     "~/Content/jquery.multiselect.filter.css",
+                     "~/Content/Custom/conference.css"));
+
+            bundles.Add(new StyleBundle("~/Content/details").Include(
+                     "~/Content/metro-bootstrap.css",
+                     "~/Content/star-rating.min.css",
+                     "~/Content/Custom/conference.css",
+                     "~/Content/Custom/user.css"));
+
+            bundles.Add(new StyleBundle("~/Content/alerts").Include(
+                     "~/Content/metro-bootstrap.css",
+                     "~/Content/Custom/alerts.css"));
         }
     }
 }
