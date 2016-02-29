@@ -3,7 +3,7 @@ namespace ITConferences.Domain.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Refactoring : DbMigration
+    public partial class Init : DbMigration
     {
         public override void Up()
         {

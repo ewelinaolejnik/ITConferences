@@ -4,6 +4,7 @@
     ViewBag.Title = "Log in";
 }
 
+
 <div class="container">
     <h2>@ViewBag.Title.</h2>
     <div class="row">
@@ -31,10 +32,8 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-                            <div class="checkbox">
-                                @Html.EditorFor(m => m.RememberMe)
-                                @Html.LabelFor(m => m.RememberMe)
-                            </div>
+                            @Html.EditorFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe)
                         </div>
                     </div>
                     <div class="form-group">

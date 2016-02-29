@@ -202,7 +202,6 @@
   <ItemGroup>
     <Compile Include="Abstract\Helpers\IControllerHelper.cs" />
     <Compile Include="Abstract\Helpers\IFilterSpeakerHelper.cs" />
-    <Compile Include="Abstract\Helpers\ISortingHelper.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -225,7 +224,6 @@
     <Compile Include="Helpers\DateFilter.cs" />
     <Compile Include="Helpers\FilterHelper.cs" />
     <Compile Include="Abstract\Helpers\IFilterConferenceHelper.cs" />
-    <Compile Include="Helpers\SortingHelper.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -455,7 +453,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />

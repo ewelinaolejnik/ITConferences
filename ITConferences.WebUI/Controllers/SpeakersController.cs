@@ -18,6 +18,8 @@ namespace ITConferences.WebUI.Controllers
         private IFilterSpeakerHelper _speakersFilter;
         private IControllerHelper _controllerHelper;
 
+        public List<Speaker> PagedSpeakers { get; private set; }
+
         public IEnumerable<Speaker> Speakers { get; private set; }
 
         #region Ctor
@@ -52,9 +54,9 @@ namespace ITConferences.WebUI.Controllers
 
 
             var pageSize = _controllerHelper.GetPageSize(0, PageSize, _speakersFilter.Speakers.Count());
-            var pagedSpeakers =
+            PagedSpeakers =
                 _speakersFilter.Speakers.ToList().GetRange(0, pageSize);
-            return View(pagedSpeakers);
+            return View(PagedSpeakers);
         }
 
         public PartialViewResult GetSpeakers(string nameFilter, int? page, bool filter = false)
@@ -71,9 +73,9 @@ namespace ITConferences.WebUI.Controllers
             ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_speakersFilter.Speakers.Count(), !filter);
            
             var pageSize = _controllerHelper.GetPageSize((page ?? 0), PageSize, _speakersFilter.Speakers.Count());
-            var pagedSpeakers =
+            PagedSpeakers =
                  _speakersFilter.Speakers.ToList().GetRange((page ?? 0) * PageSize, pageSize);
-            return PartialView("_SpeakersView", pagedSpeakers);
+            return PartialView("_SpeakersView", PagedSpeakers);
         }
         #endregion
 
@@ -92,12 +94,15 @@ namespace ITConferences.WebUI.Controllers
             return View(speaker);
         }
 
-        public ActionResult AddEvaluation(int conferenceId, int countOfStars, string comment, string ownerId)
+        public ActionResult AddEvaluation(int speakerId, int countOfStars, string comment, string ownerId)
         {
             if (!Request.IsAuthenticated)
                return GetLoginMessage("Log in to add evaluation, please");
 
-            Speaker speaker = _speakerRepository.GetById(conferenceId);
+            Speaker speaker = _speakerRepository.GetById(speakerId);
+
+            if (speaker == null)
+                return HttpNotFound();
 
             if (string.IsNullOrWhiteSpace(comment))
                return GetCommentMessage(speaker);

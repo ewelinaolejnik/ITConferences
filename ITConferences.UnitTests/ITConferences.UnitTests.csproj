@@ -117,7 +117,11 @@
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="Controllers\ConferencesControllerTests.cs" />
+    <Compile Include="Controllers\SpeakersControllerTests.cs" />
+    <Compile Include="Controllers\OrganizersControllerTests.cs" />
+    <Compile Include="Controllers\BaseControllerTests.cs" />
     <Compile Include="Helpers\FilterHelperTests.cs" />
+    <Compile Include="Helpers\UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -86,19 +86,24 @@ namespace ITConferences.UnitTests.Controllers
 
             _tagRepositoryMock.Setup(e => e.GetAll()).Returns(new[] { tag1, tag2, tag3 });
 
-            _controllerHelperMock.Setup(e => e.GetPageSize(0, 15, 2)).Returns(2);
-
             sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object,
                 _tagRepositoryMock.Object, _cityRepositoryMock.Object, _filterHelperMock.Object,
                 _imageRepositoryMock.Object, _controllerHelperMock.Object);
+
+            
+            _controllerHelperMock.Setup(e => e.GetPageSize(0, It.IsAny<int>(), 2)).Returns(2);
 
             requestMock.SetupGet(x => x.Headers).Returns(
                new System.Net.WebHeaderCollection {
                 {"X-Requested-With", "XMLHttpRequest"}
                });
+            requestMock.Setup(e => e.IsAuthenticated).Returns(true);
             var context = new Mock<HttpContextBase>();
             context.SetupGet(x => x.Request).Returns(requestMock.Object);
             sut.ControllerContext = new ControllerContext(context.Object, new RouteData(), sut);
+
+            _conferenceRepositoryMock.Setup(e => e.GetById(1, null)).Returns((Conference)null);
+            _conferenceRepositoryMock.Setup(e => e.GetById(2, null)).Returns(new Conference());
         }
 
         [TestCleanup]
@@ -231,7 +236,7 @@ namespace ITConferences.UnitTests.Controllers
 
 
             //Assert
-            _controllerHelperMock.Verify(e => e.GetPageSize(0, 15, 2), Times.Once);
+            _controllerHelperMock.Verify(e => e.GetPageSize(0, It.IsAny<int>(), 2), Times.Once);
         }
 
         [TestMethod]
@@ -380,7 +385,6 @@ namespace ITConferences.UnitTests.Controllers
         public void ConferencesController_Details_returns_http_not_found_if_conference_hasnt_been_found()
         {
             //Arrange
-            _conferenceRepositoryMock.Setup(e => e.GetById(1, null)).Returns((Conference)null);
             var result = sut.Details(1);
 
             //Assign
@@ -427,21 +431,121 @@ namespace ITConferences.UnitTests.Controllers
         #endregion
 
         #region | Create GET |
-        //[TestMethod]
-        //[TestCategory("ConferencesController")]
-        //[Owner("Ewelina Olejnik")]
-        //public void ConferencesController_Create_assign_view_data()
-        //{
-        //    //Arrange
-        //    sut.Create();
+        [TestMethod]
+        [TestCategory("ConferencesController")]
+        [Owner("Ewelina Olejnik")]
+        public void ConferencesController_Create_assign_view_data()
+        {
+            //Arrange
+            sut.Create();
 
-        //    //Assign
-        //    var viewData = ((MultiSelectList)sut.ViewData["TagsFilter"]).ToList();
-        //    var expectedData = new MultiSelectList(_tagRepositoryMock.Object.GetAll(), "TagID", "Name").ToList();
+            //Assign
+            var viewDataTag = ((MultiSelectList)sut.ViewData["TagsSelector"]).ToList();
+            var expectedDataTag = new MultiSelectList(_tagRepositoryMock.Object.GetAll(), "TagID", "Name").ToList();
 
-        //    //Assert
-        //    Assert.AreEqual(expectedData, viewData);
-        //}
+            var viewDataCountry = ((SelectList)sut.ViewData["TargetCountryId"]).ToList();
+            var expectedDataCountry = new SelectList(_countryRepositoryMock.Object.GetAll(), "CountryID", "Name").ToList();
+
+            //Assert
+            Assert.AreEqual(expectedDataTag.Count, viewDataTag.Count);
+            Assert.AreEqual(expectedDataCountry.Count, viewDataCountry.Count);
+        }
+
+        #endregion
+
+        #region | Create POST |
+        [TestMethod]
+        [TestCategory("ConferencesController")]
+        [Owner("Ewelina Olejnik")]
+        public void ConferencesController_Create_calls_controller_helper_methods_if_passed_parameters_arent_null()
+        {
+            //Arrange
+            sut.Create("1,3", conferences[0], null, "123");
+
+            //Assign
+
+
+            //Assert
+            _controllerHelperMock.Verify(e => e.AssignOrganizer("123",conferences[0]), Times.Once);
+            _controllerHelperMock.Verify(e => e.AssignTags("1,3", sut.Tags, It.IsAny<IGenericRepository<Tag>>(), conferences[0]), Times.Once);
+            _conferenceRepositoryMock.Verify(e => e.InsertAndSubmit(conferences[0]), Times.Once);
+        }
+
+        #endregion
+
+        #region | Manage GET |
+        [TestMethod]
+        [TestCategory("ConferencesController")]
+        [Owner("Ewelina Olejnik")]
+        public void ConferencesController_Manage_assign_view_data()
+        {
+            //Arrange
+            _controllerHelperMock.Setup(e => e.AllUsers).Returns(new List<Attendee>());
+            sut.Manage(2);
+
+            //Assign
+            var viewDataTag = ((MultiSelectList)sut.ViewData["TagsSelector"]).ToList();
+            var expectedDataTag = new MultiSelectList(_tagRepositoryMock.Object.GetAll(), "TagID", "Name").ToList();
+
+            var viewDataSpeaker = ((MultiSelectList)sut.ViewData["SpeakersSelector"]).ToList();
+            var expectedDataSpeaker = new MultiSelectList(_controllerHelperMock.Object.AllUsers, "TagID", "Name").ToList();
+
+            var viewDataCountry = ((SelectList)sut.ViewData["TargetCountryId"]).ToList();
+            var expectedDataCountry = new SelectList(_countryRepositoryMock.Object.GetAll(), "CountryID", "Name").ToList();
+
+            //Assert
+            Assert.AreEqual(expectedDataTag.Count, viewDataTag.Count);
+            Assert.AreEqual(expectedDataCountry.Count, viewDataCountry.Count);
+        }
+
+        [TestMethod]
+        [TestCategory("ConferencesController")]
+        [Owner("Ewelina Olejnik")]
+        public void ConferencesController_Manage_returns_bad_request_if_id_is_null()
+        {
+            //Arrange
+            var result = sut.Manage(null);
+
+            //Assign
+
+
+            //Assert
+            Assert.IsInstanceOfType(result, typeof(HttpStatusCodeResult));
+        }
+
+        [TestMethod]
+        [TestCategory("ConferencesController")]
+        [Owner("Ewelina Olejnik")]
+        public void ConferencesController_Manage_returns_http_not_found_if_conference_hasnt_been_found()
+        {
+            //Arrange
+            var result = sut.Manage(1);
+
+            //Assign
+
+
+            //Assert
+            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+        }
+
+        #endregion
+
+        #region | Manage POST |
+        [TestMethod]
+        [TestCategory("ConferencesController")]
+        [Owner("Ewelina Olejnik")]
+        public void ConferencesController_Manage_calls_controller_helper_methods_if_passed_parameters_arent_null()
+        {
+            //Arrange
+            sut.Manage("1,3", conferences[0], null);
+
+            //Assign
+
+
+            //Assert
+            _controllerHelperMock.Verify(e => e.AssignTags("1,3", sut.Tags, It.IsAny<IGenericRepository<Tag>>(), conferences[0]), Times.Once);
+            _conferenceRepositoryMock.Verify(e => e.UpdateAndSubmit(), Times.Once);
+        }
 
         #endregion
     }

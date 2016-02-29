@@ -7,13 +7,13 @@ namespace ITConferences.Domain.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Refactoring : IMigrationMetadata
+    public sealed partial class Init : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Refactoring));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Init));
         
         string IMigrationMetadata.Id
         {
-            get { return "201602281218126_Refactoring"; }
+            get { return "201602290825024_Init"; }
         }
         
         string IMigrationMetadata.Source

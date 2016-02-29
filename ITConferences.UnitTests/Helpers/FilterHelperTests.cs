@@ -59,7 +59,8 @@ namespace ITConferences.UnitTests.Helpers
 
             _tagRepositoryMock.Setup(e => e.GetAll()).Returns(new[] { tag1, tag2, tag3, new Tag() { TagID = 4 } });
 
-            sut = new FilterHelper {Conferences = _conferenceRepositoryMock.Object.GetAll()};
+            sut = new FilterHelper { Conferences = _conferenceRepositoryMock.Object.GetAll() };
+            sut.Speakers = new List<Speaker>() { new Speaker() { User = new Attendee() } };
         }
 
         [TestCleanup]
@@ -164,8 +165,8 @@ namespace ITConferences.UnitTests.Helpers
 
             //Assign
             var actualViewData = ((MultiSelectList)viewData["TagsFilter"]);
-            var selectedTags = new[] {tag1, new Tag() {TagID = 4} };
-            var filteredTags = new[] {tag1};
+            var selectedTags = new[] { tag1, new Tag() { TagID = 4 } };
+            var filteredTags = new[] { tag1 };
             var expectedData = new MultiSelectList(_tagRepositoryMock.Object.GetAll(), "TagID", "Name", selectedTags);
 
             //Assert

@@ -43,14 +43,6 @@ namespace ITConferences.WebUI.Controllers
             return View("Details", item);
         }
 
-        protected void AssignViewData()
-        {
-            foreach (var oneViewData in ViewDataDictionary)
-            {
-                ViewData[oneViewData.Key] = oneViewData.Value;
-            }
-        }
-
         public void Success(string message, bool dismissable = false)
         {
             AddAlert(AlertStyles.Success, message, dismissable);
