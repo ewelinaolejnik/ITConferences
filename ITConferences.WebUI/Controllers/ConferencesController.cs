@@ -158,7 +158,7 @@ namespace ITConferences.WebUI.Controllers
 
             var eval = _controllerHelper.GetEvaluation(ownerId, comment, countOfStars);
             conference.Evaluation.Add(eval);
-            _conferenceRepository.UpdateAndSubmit();
+            _conferenceRepository.UpdateAndSubmit(conference);
 
             return View("Details", conference);
         }
@@ -236,24 +236,26 @@ namespace ITConferences.WebUI.Controllers
                 return HttpNotFound();
 
             ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName");
-            ViewData["TargetCountryId"] = new SelectList(Countries, "CountryID", "Name");
-            ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", conference.Tags);
+            ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name", conference.TargetCountryId);
+            ViewData["Cities"] = new SelectList(conference.TargetCountry.Cities, "CityID", "Name", conference.TargetCity);
+            ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", conference.Tags.Select(e=>e.TagID));
             return View(conference);
         }
 
         [HttpPost]
         public ActionResult Manage(string tags, Conference conference, HttpPostedFileBase image)
         {
-            ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", conference.Tags);
             ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName");
-            ViewData["TargetCountryId"] = new SelectList(Countries, "CountryID", "Name");
+            ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name", conference.TargetCountry);
+            ViewData["Cities"] = new SelectList(conference.TargetCountry.Cities, "CityID", "Name", conference.TargetCity); //take cities from repository
+            ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", conference.Tags.Select(e => e.TagID));
 
             try
             {
                 if (image != null)
                     _controllerHelper.AssignImage(image, conference);
 
-                _conferenceRepository.UpdateAndSubmit();
+                _conferenceRepository.UpdateAndSubmit(conference);
 
                 if (tags != "null")
                     _controllerHelper.AssignTags(tags, Tags, _tagRepository, conference);

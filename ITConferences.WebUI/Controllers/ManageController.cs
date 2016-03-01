@@ -255,7 +255,7 @@ namespace ITConferences.WebUI.Controllers
 
                 };
                 attendee.Image = img;
-                _attendeeRepository.UpdateAndSubmit();
+                _attendeeRepository.UpdateAndSubmit(attendee);
             }
             return PartialView("_LoginPartial");
         }

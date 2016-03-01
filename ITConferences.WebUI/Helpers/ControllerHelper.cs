@@ -81,7 +81,7 @@ namespace ITConferences.WebUI.Helpers
             var intTag = stringTags.Select(e => int.Parse(e)).ToList();
             tagsList.Where(e => intTag.Contains(e.TagID)).ToList()
                 .ForEach(e => e.Conferences.Add(conference));
-            tagRepository.UpdateAndSubmit();
+            tagsList.ToList().ForEach(e => tagRepository.UpdateAndSubmit(e));
         }
     }
 }

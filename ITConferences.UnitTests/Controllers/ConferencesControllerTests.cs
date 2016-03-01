@@ -544,7 +544,7 @@ namespace ITConferences.UnitTests.Controllers
 
             //Assert
             _controllerHelperMock.Verify(e => e.AssignTags("1,3", sut.Tags, It.IsAny<IGenericRepository<Tag>>(), conferences[0]), Times.Once);
-            _conferenceRepositoryMock.Verify(e => e.UpdateAndSubmit(), Times.Once);
+            _conferenceRepositoryMock.Verify(e => e.UpdateAndSubmit(conferences[0]), Times.Once);
         }
 
         #endregion

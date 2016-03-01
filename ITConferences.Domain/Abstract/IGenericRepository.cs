@@ -11,7 +11,7 @@ namespace ITConferences.Domain.Abstract
         IEnumerable<T> GetAll();
         T GetById(int? id, string idStr = null);
         void InsertAndSubmit(T entity);
-        void UpdateAndSubmit();
+        void UpdateAndSubmit(T entity);
         void DeleteAndSubmit(T entity);
         void DisposeDataContext();
     }

@@ -13,8 +13,6 @@ namespace ITConferences.WebUI
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
@@ -28,6 +26,21 @@ namespace ITConferences.WebUI
                       "~/Scripts/jquery.multi-select.js",
                       "~/Scripts/jquery.multiselect.filter.js",
                       "~/Scripts/conference.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/rating").Include(
+                     "~/Scripts/jquery-{version}.js",
+                     "~/Scripts/star-rating.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/home").Include(
+                     "~/Scripts/jquery-{version}.js",
+                     "~/Scripts/home-page.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/manage").Include(
+                    "~/Scripts/jquery-{version}.js",
+                    "~/Scripts/manage.js"));
+
+
+
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

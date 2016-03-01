@@ -2,6 +2,7 @@
 using ITConferences.Domain.Entities;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace ITConferences.Domain.Concrete
 {
@@ -20,6 +21,11 @@ namespace ITConferences.Domain.Concrete
         public override int SaveChanges()
         {
             return base.SaveChanges();
+        }
+
+        public new DbEntityEntry<T> Entry<T>(T item) where T : class
+        {
+            return base.Entry(item);
         }
 
 

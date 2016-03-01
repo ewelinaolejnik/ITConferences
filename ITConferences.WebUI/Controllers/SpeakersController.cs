@@ -109,7 +109,7 @@ namespace ITConferences.WebUI.Controllers
 
             var eval = _controllerHelper.GetEvaluation(ownerId, comment, countOfStars);
             speaker.Evaluations.Add(eval);
-            _speakerRepository.UpdateAndSubmit();
+            _speakerRepository.UpdateAndSubmit(speaker);
 
             return View("Details", speaker);
         }

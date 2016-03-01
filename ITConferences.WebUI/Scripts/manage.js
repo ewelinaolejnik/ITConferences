@@ -45,7 +45,7 @@ $m(document).ready(function () {
             contentType: false,
             data: formData,
             success: function (data) {
-                $m("#conferences").html(data);
+                $m("#manage").html(data);
             }
         });
     });

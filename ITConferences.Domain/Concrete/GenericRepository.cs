@@ -40,8 +40,9 @@ namespace ITConferences.Domain.Concrete
             _dataContext.SaveChanges();
         }
 
-        public void UpdateAndSubmit()
+        public void UpdateAndSubmit(T entity)
         {
+           // _dataContext.Entry<T>(entity).State = EntityState.Modified;
             _dataContext.SaveChanges();
         }
 
