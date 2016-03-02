@@ -24,13 +24,13 @@ namespace ITConferences.Domain.Entities
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Start date: ")]
+        [Display(Name = "Start date:")]
         public DateTime StartDate { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        [Display(Name = "End date: ")]
+        [Display(Name = "End date:")]
         public DateTime EndDate { get; set; }
 
         [Required]

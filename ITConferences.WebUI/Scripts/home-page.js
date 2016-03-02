@@ -2,10 +2,7 @@
 
 //pass name filter to filter conferences
 $m("#homeButton").click(function () {
-
-    $m("#loading").show();
-    $("#conferences").hide();
-
+    var r = "";
     $m.ajax({
         url: '/Conferences/Index/',
         type: "POST",
@@ -14,10 +11,6 @@ $m("#homeButton").click(function () {
         success: function (data) {
             $m("#conferences").html(data);
 
-        },
-        complete: function () {
-            $m("#loading").hide();
-            $m("#conferences").show();
         }
     });
 

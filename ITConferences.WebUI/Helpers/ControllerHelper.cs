@@ -83,5 +83,18 @@ namespace ITConferences.WebUI.Helpers
                 .ForEach(e => e.Conferences.Add(conference));
             tagsList.ToList().ForEach(e => tagRepository.UpdateAndSubmit(e));
         }
+
+        public void EditConferenceProperties(Conference conference, Conference confToEdit, City city, Country country)
+        {
+            confToEdit.Name = conference.Name;
+            confToEdit.StartDate = conference.StartDate;
+            confToEdit.EndDate = conference.EndDate;
+            confToEdit.Url = conference.Url;
+            confToEdit.IsPaid = confToEdit.IsPaid;
+            confToEdit.TargetCityId = conference.TargetCityId;
+            confToEdit.TargetCity = city;
+            confToEdit.TargetCountryId = conference.TargetCountryId;
+            confToEdit.TargetCountry = country;
+        }
     }
 }

@@ -37,6 +37,9 @@ namespace ITConferences.WebUI
 
             bundles.Add(new ScriptBundle("~/bundles/manage").Include(
                     "~/Scripts/jquery-{version}.js",
+                    "~/Scripts/jquery-ui.min.js",
+                    "~/Scripts/jquery.multi-select.js",
+                    "~/Scripts/jquery.multiselect.filter.js",
                     "~/Scripts/manage.js"));
 
 

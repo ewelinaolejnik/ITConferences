@@ -13,7 +13,7 @@ namespace ITConferences.WebUI.Controllers
             {
                 return RedirectToAction("Index", "Conferences", new { nameFilter = nameFilter });
             }
-            
+
             return View();
         }
 

@@ -29,13 +29,12 @@ $m(document).ready(function () {
         formData.append("tags", $m("#tags").val());
         formData.append("Name", $m("#Name").val());
         formData.append("TargetCityId", $m("#TargetCityId").val());
+        formData.append("ConferenceID", $m("#ConferenceID").val());
         formData.append("StartDate", $m("#StartDate").val());
         formData.append("EndDate", $m("#EndDate").val());
         formData.append("Url", $m("#Url").val());
         formData.append("IsPaid", $m('#IsPaid').prop('checked'));
         formData.append("TargetCountryId", $m("#TargetCountryId").val());
-        if ($("#userId").is(':checked'))
-            formData.append("userId", $m("#userId").val());
 
         $m.ajax({
             url: '/Conferences/Manage/',

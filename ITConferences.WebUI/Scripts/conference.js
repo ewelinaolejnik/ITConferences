@@ -68,11 +68,8 @@ $m(document).ready(function () {
 
 
     $m("#location").autocomplete({
-
         source: function (request, response) {
-
             $m.ajax({
-
                 url: '/Conferences/GetLocations/',
                 type: "POST",
                 dataType: "JSON",

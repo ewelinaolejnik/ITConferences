@@ -43,6 +43,11 @@ namespace ITConferences.WebUI.Controllers
             get { return _tagRepository.GetAll().ToList(); }
         }
 
+        public IEnumerable<City> Cities
+        {
+            get { return _cityRepository.GetAll(); }
+        }
+
         #endregion
 
         #region Ctor
@@ -77,10 +82,10 @@ namespace ITConferences.WebUI.Controllers
         public ActionResult Index(string nameFilter, int? tagsFilter)
         {
             _conferenceFilter.FilterByName(ViewData, nameFilter);
-            _conferenceFilter.FilterByTags(ViewData, new int[] { tagsFilter ?? 0 }, Tags); //TODO: filter by tags
+            _conferenceFilter.FilterByTags(ViewData, new int[] { tagsFilter ?? 0 }, Tags);
 
             ViewData["TagsFilter"] = new MultiSelectList(_tagRepository.GetAll(), "TagID", "Name");
-            ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_conferenceFilter.Conferences.Count());
+            ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_conferenceFilter.Conferences.Count(),true);
 
             var pageSize = _controllerHelper.GetPageSize(0, PageSize, _conferenceFilter.Conferences.Count());
             PagedConferences =
@@ -237,28 +242,38 @@ namespace ITConferences.WebUI.Controllers
 
             ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName");
             ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name", conference.TargetCountryId);
-            ViewData["Cities"] = new SelectList(conference.TargetCountry.Cities, "CityID", "Name", conference.TargetCity);
+            ViewData["Cities"] = new SelectList(conference.TargetCountry.Cities, "CityID", "Name", conference.TargetCityId);
             ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", conference.Tags.Select(e=>e.TagID));
             return View(conference);
         }
 
         [HttpPost]
-        public ActionResult Manage(string tags, Conference conference, HttpPostedFileBase image)
+        public ActionResult Manage(string tags, [Bind(Include = "ConferenceID,Name,StartDate,EndDate,Url,IsPaid,TargetCityId,TargetCountryId")]Conference conference, HttpPostedFileBase image)
         {
-            ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName");
-            ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name", conference.TargetCountry);
-            ViewData["Cities"] = new SelectList(conference.TargetCountry.Cities, "CityID", "Name", conference.TargetCity); //take cities from repository
-            ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", conference.Tags.Select(e => e.TagID));
+            
 
             try
             {
                 if (image != null)
                     _controllerHelper.AssignImage(image, conference);
 
+
+                var repoConf = _conferenceRepository.GetById(conference.ConferenceID, null);
+                var city = _cityRepository.GetById(conference.TargetCityId);
+                var country = _countryRepository.GetById(conference.TargetCountryId);
+                _controllerHelper.EditConferenceProperties(conference, repoConf, city, country);
+
                 _conferenceRepository.UpdateAndSubmit(conference);
 
                 if (tags != "null")
                     _controllerHelper.AssignTags(tags, Tags, _tagRepository, conference);
+
+
+                ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName");
+                ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name", conference.TargetCountryId);
+                var cities = Cities.Where(e => e.CityID == conference.TargetCityId);
+                ViewData["Cities"] = new SelectList(cities, "CityID", "Name", conference.TargetCityId);
+                ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", repoConf.Tags); //take selected tags
 
                 Success("Great job, You change the event!", true);
                 return View(conference);

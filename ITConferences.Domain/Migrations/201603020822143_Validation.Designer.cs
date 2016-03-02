@@ -7,13 +7,13 @@ namespace ITConferences.Domain.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class OrganizerForAttendee : IMigrationMetadata
+    public sealed partial class Validation : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(OrganizerForAttendee));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Validation));
         
         string IMigrationMetadata.Id
         {
-            get { return "201601272238563_OrganizerForAttendee"; }
+            get { return "201603020822143_Validation"; }
         }
         
         string IMigrationMetadata.Source
