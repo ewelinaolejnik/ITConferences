@@ -19,7 +19,8 @@ namespace ITConferences.WebUI.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = @"The website was created for the engineering thesis needs. <br/>
+                If you found any bug, please write me: mailto:ewelina.olejnik@outlook.com";
 
             return View();
         }

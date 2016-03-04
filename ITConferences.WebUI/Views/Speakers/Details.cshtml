@@ -123,9 +123,9 @@
 <script type="text/javascript">
 
     //pass name filter to filter conferences
-    var conference =
+    var speaker =
     {
-        "conferenceId": @Model.SpeakerID,
+        "speakerId": @Model.SpeakerID,
     };
 
     var owner =
@@ -139,7 +139,7 @@
             url: '/Speakers/AddEvaluation/',
             type: "POST",
             dataType: "HTML",
-            data: { conferenceId: conference.conferenceId, countOfStars:  $("#input-id").val(), comment: $("#full").val(), ownerId: owner.ownerId },
+            data: { speakerId: speaker.speakerId, countOfStars:  $("#input-id").val(), comment: $("#full").val(), ownerId: owner.ownerId },
             success: function (data) {
                 if (data != "") {
                     $("#details").html(data);

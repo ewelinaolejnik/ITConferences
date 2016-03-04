@@ -19,16 +19,20 @@
     <div class="nav navbar-custom navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-5">
-                    <span class="sr-only">Toggle navigation</span>
+                <button type="button" class="navbar-toggle navbar-default" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </button>
                 @Html.Raw(@Html.ActionLink("[replacetext]", "Index", "Home").ToHtmlString().Replace("[replacetext]", "<img class=\"logo-img\" src=\"../../img/Logo.png\" ... />"))
             </div>
-            <div class="nav navbar-nav navbar-right" id="#navbar-collapse-5">
-                <div class="navbar-form navbar-left">
-                    @Html.ActionLink("Add an event", "Create", "Conferences", null, new { @class = "btn btn-danger pull-right" })
-                </div>
+            <div class="navbar-collapse collapse navbar-right" id="#navbar-collapse-5">
                 <ul class="nav navbar-nav">
+                    <li>
+                        @Html.ActionLink("Add an event", "Create", "Conferences", null, new { @class = "btn btn-danger" })
+                    </li>
                     <li>@Html.ActionLink("Conferences", "Index", "Conferences")</li>
                     <li>@Html.ActionLink("Speakers", "Index", "Speakers")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>

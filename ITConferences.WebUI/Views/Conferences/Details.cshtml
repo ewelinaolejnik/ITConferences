@@ -100,7 +100,7 @@
                     </dt>
 
                     <dd>
-                        @Html.ActionLink(Model.Organizer.User.UserName, "Details", "Organizers", new { id = Model.Organizer.OrganizerID }, null)
+                        @Html.ActionLink(Model.Organizer.User.UserName, "Details", "Organizers", new { id = Model.Organizer.OrganizerID }, null)@($"{", "}")
                     </dd>
                 }
                 @if (Model.Speakers != null && Model.Speakers.Count != 0)
@@ -112,7 +112,7 @@
                     <dd>
                         @foreach (var speaker in Model.Speakers)
                         {
-                            @Html.ActionLink(speaker.User.UserName, "Details", "Speakers", new { id = speaker.SpeakerID })@($"{", "}")
+                            @Html.ActionLink(speaker.User.UserName, "Details", "Speakers", new { id = speaker.SpeakerID }, null)@($"{", "}")
                         }
                     </dd>
                 }

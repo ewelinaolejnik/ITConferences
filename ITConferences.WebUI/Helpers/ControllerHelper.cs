@@ -84,6 +84,17 @@ namespace ITConferences.WebUI.Helpers
             tagsList.ToList().ForEach(e => tagRepository.UpdateAndSubmit(e));
         }
 
+        public void AssignSpeakers(string speakers, Conference conference)
+        {
+            conference.Tags = new List<Tag>();
+            var stringSpeakers = speakers.Split(',').ToList();
+            var attendees = AllUsers.Where(e => stringSpeakers.Any(l => l == e.Id));
+            foreach (var attendee in attendees)
+            {
+                conference.Speakers.Add(new Speaker() { User = attendee });
+            }
+        }
+
         public void EditConferenceProperties(Conference conference, Conference confToEdit, City city, Country country)
         {
             confToEdit.Name = conference.Name;

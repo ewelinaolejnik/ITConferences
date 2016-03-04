@@ -240,40 +240,42 @@ namespace ITConferences.WebUI.Controllers
             if (conference == null)
                 return HttpNotFound();
 
-            ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName");
+            var users = (conference.Speakers == null || conference.Speakers.Count == 0) ? new List<string>() : _controllerHelper.AllUsers.Where(e=>conference.Speakers.Any(l=>l.User.Id == e.Id)).Select(e=>e.Id).ToList();
+            ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName", new List<string>() { "5fcdb87d-874b-45ed-984f-1cc1742c4f2e" });
             ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name", conference.TargetCountryId);
             ViewData["Cities"] = new SelectList(conference.TargetCountry.Cities, "CityID", "Name", conference.TargetCityId);
-            ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", conference.Tags.Select(e=>e.TagID));
+            ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", conference.Tags ?? new List<Tag>());
             return View(conference);
         }
 
         [HttpPost]
-        public ActionResult Manage(string tags, [Bind(Include = "ConferenceID,Name,StartDate,EndDate,Url,IsPaid,TargetCityId,TargetCountryId")]Conference conference, HttpPostedFileBase image)
+        public ActionResult Manage(string speakers, string tags, [Bind(Include = "ConferenceID,Name,StartDate,EndDate,Url,IsPaid,TargetCityId,TargetCountryId")]Conference conference, HttpPostedFileBase imageManage)
         {
-            
-
             try
             {
-                if (image != null)
-                    _controllerHelper.AssignImage(image, conference);
-
-
+                
                 var repoConf = _conferenceRepository.GetById(conference.ConferenceID, null);
                 var city = _cityRepository.GetById(conference.TargetCityId);
                 var country = _countryRepository.GetById(conference.TargetCountryId);
                 _controllerHelper.EditConferenceProperties(conference, repoConf, city, country);
+                if (speakers != "null")
+                    _controllerHelper.AssignSpeakers(speakers, repoConf);
+                if (imageManage != null)
+                    _controllerHelper.AssignImage(imageManage, repoConf);
 
+                
                 _conferenceRepository.UpdateAndSubmit(conference);
+                conference.ImageId = repoConf.Image != null ? repoConf.Image.ImageID : new int?();
 
                 if (tags != "null")
                     _controllerHelper.AssignTags(tags, Tags, _tagRepository, conference);
 
 
-                ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName");
+                ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName", repoConf.Speakers ?? new List<Speaker>());
                 ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name", conference.TargetCountryId);
                 var cities = Cities.Where(e => e.CityID == conference.TargetCityId);
                 ViewData["Cities"] = new SelectList(cities, "CityID", "Name", conference.TargetCityId);
-                ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", repoConf.Tags); //take selected tags
+                ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", repoConf.Tags ?? new List<Tag>());
 
                 Success("Great job, You change the event!", true);
                 return View(conference);
@@ -284,6 +286,7 @@ namespace ITConferences.WebUI.Controllers
                 return View();
             }
         }
+        
         #endregion
 
         protected override void Dispose(bool disposing)

@@ -25,8 +25,9 @@ $m(document).ready(function () {
     //pass parameters to change conference
     $m("#manageButton").click(function () {
         var formData = new FormData();
-        formData.append("image", $m("#image").prop('files')[0]);
+        formData.append("imageManage", $m("#imageManage").prop('files')[0]);
         formData.append("tags", $m("#tags").val());
+        formData.append("speakers", $m("#speakers").val());
         formData.append("Name", $m("#Name").val());
         formData.append("TargetCityId", $m("#TargetCityId").val());
         formData.append("ConferenceID", $m("#ConferenceID").val());
@@ -48,5 +49,16 @@ $m(document).ready(function () {
             }
         });
     });
+
+    //create multiselect tags
+    $m("#tags").multiselect({
+        noneSelectedText: "Select tags",
+        selectedList: 4
+    }).multiselectfilter();
+
+    $m("#speakers").multiselect({
+        noneSelectedText: "Select speakers",
+        selectedList: 4
+    }).multiselectfilter();
 
 });

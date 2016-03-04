@@ -242,7 +242,6 @@ namespace ITConferences.WebUI.Controllers
 
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public PartialViewResult SetImage(HttpPostedFileBase image)
         {
             var attendee = _attendeeRepository.GetById(null, User.Identity.GetUserId());

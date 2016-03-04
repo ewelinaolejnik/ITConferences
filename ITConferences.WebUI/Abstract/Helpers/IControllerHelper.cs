@@ -18,6 +18,7 @@ namespace ITConferences.WebUI.Abstract.Helpers
         void AssignImage(HttpPostedFileBase image, Conference conference);
         void AssignOrganizer(string userId, Conference conference);
         void AssignTags(string tags, IEnumerable<Tag> tagsList, IGenericRepository<Tag> tagRepository, Conference conference);
+        void AssignSpeakers(string speakers, Conference conference);
         void EditConferenceProperties(Conference conference, Conference confToEdit, City city, Country country);
     }
 }

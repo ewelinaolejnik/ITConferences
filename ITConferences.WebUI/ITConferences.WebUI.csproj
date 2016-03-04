@@ -481,6 +481,7 @@
     <Content Include="Views\Manage\SpokenConferences.cshtml" />
     <Content Include="Views\Manage\OrganizedConferences.cshtml" />
     <Content Include="Views\Conferences\Manage.cshtml" />
+    <Content Include="Views\Conferences\_ManageImage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

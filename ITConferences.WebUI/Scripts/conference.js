@@ -41,7 +41,7 @@ $m(document).ready(function () {
     //pass parameters to add conference
     $m("#submitButton").click(function () {
         var formData = new FormData();
-        formData.append("image", $m("#image").prop('files')[0]);
+        formData.append("imageCreate", $m("#imageCreate").prop('files')[0]);
         formData.append("tags", $m("#tags").val());
         formData.append("Name", $m("#Name").val());
         formData.append("TargetCityId", $m("#TargetCityId").val());
@@ -88,7 +88,7 @@ $m(document).ready(function () {
     var page = 0;
 
     //pass parameters to filter conferences
-    $m("#submitButton").click(function () {
+    $m("#submitButtonIndex").click(function () {
         updateConferences();
     });
 
