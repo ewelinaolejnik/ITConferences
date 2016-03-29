@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace ITConferences.Domain.Abstract
 {
-    public interface IGenericRepository<T> where T : class
+    public interface IGenericRepository
     {
-        IEnumerable<T> GetAll();
-        T GetById(int? id, string idStr = null);
-        void InsertAndSubmit(T entity);
-        void UpdateAndSubmit(T entity);
-        void DeleteAndSubmit(T entity);
+        IEnumerable<T> GetAll<T>() where T : class;
+        T GetById<T>(int? id, string idStr = null) where T : class;
+        void InsertAndSubmit<T>(T entity) where T : class;
+        void UpdateAndSubmit<T>(T entity) where T : class;
+        void DeleteAndSubmit<T>(T entity) where T : class;
         void DisposeDataContext();
     }
 }

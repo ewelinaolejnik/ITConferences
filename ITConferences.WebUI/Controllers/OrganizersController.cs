@@ -9,18 +9,11 @@ namespace ITConferences.WebUI.Controllers
 {
     public class OrganizersController : BaseController
     {
-        private IGenericRepository<Organizer> _organizerRepository;
-
         #region Ctor
-        public OrganizersController(IGenericRepository<Organizer> organizerRepository, IGenericRepository<Image> imageRepository)
-            : base(imageRepository)
+        public OrganizersController(IGenericRepository repository)
+            : base(repository)
         {
-            if (organizerRepository == null)
-            {
-                throw new ArgumentNullException("Some repository does not exist!");
-            }
-
-            _organizerRepository = organizerRepository;
+            
         }
         #endregion
 
@@ -33,7 +26,7 @@ namespace ITConferences.WebUI.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Organizer organizer = _organizerRepository.GetById(id);
+            Organizer organizer = _repository.GetById<Organizer>(id);
 
             if (organizer == null)
             {
@@ -48,7 +41,7 @@ namespace ITConferences.WebUI.Controllers
         {
             if (disposing)
             {
-                _organizerRepository.DisposeDataContext();
+                _repository.DisposeDataContext();
             }
             base.Dispose(disposing);
         }

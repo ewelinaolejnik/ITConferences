@@ -16,8 +16,7 @@ namespace ITConferences.UnitTests.Helpers
     {
         #region | Sut |
         FilterHelper sut;
-        private Mock<IGenericRepository<Conference>> _conferenceRepositoryMock;
-        private Mock<IGenericRepository<Tag>> _tagRepositoryMock;
+        private Mock<IGenericRepository> _repositoryMock;
         private ViewDataDictionary viewData;
         private Tag tag1;
         private Tag tag2;
@@ -27,8 +26,7 @@ namespace ITConferences.UnitTests.Helpers
         public void StartUp()
         {
             viewData = new ViewDataDictionary();
-            _conferenceRepositoryMock = new Mock<IGenericRepository<Conference>>();
-            _tagRepositoryMock = new Mock<IGenericRepository<Tag>>();
+            _repositoryMock = new Mock<IGenericRepository>();
             var city1 = new City() { Name = "Asd", CityID = 1, Country = new Country() { Name = "Asd" } };
             var country1 = new Country() { Name = "Asd", CountryID = 1, Cities = new City[] { city1 } };
             var city2 = new City() { Name = "Test", CityID = 2, Country = new Country() { Name = "Test" } };
@@ -54,20 +52,20 @@ namespace ITConferences.UnitTests.Helpers
                 }
             };
 
-            _conferenceRepositoryMock.Setup(e => e.GetAll())
+            _repositoryMock.Setup(e => e.GetAll<Conference>())
                 .Returns(conferences);
 
-            _tagRepositoryMock.Setup(e => e.GetAll()).Returns(new[] { tag1, tag2, tag3, new Tag() { TagID = 4 } });
+            _repositoryMock.Setup(e => e.GetAll<Tag>()).Returns(new[] { tag1, tag2, tag3, new Tag() { TagID = 4 } });
 
-            sut = new FilterHelper { Conferences = _conferenceRepositoryMock.Object.GetAll() };
+            sut = new FilterHelper { Conferences = _repositoryMock.Object.GetAll<Conference>() };
             sut.Speakers = new List<Speaker>() { new Speaker() { User = new Attendee() } };
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            _conferenceRepositoryMock = null;
-            _tagRepositoryMock = null;
+            _repositoryMock = null;
+            _repositoryMock = null;
             sut = null;
             viewData = null;
         }
@@ -161,13 +159,13 @@ namespace ITConferences.UnitTests.Helpers
         public void FilterHelper_FilterByTags_assign_view_data_with_selected_tags()
         {
             //Arrange
-            sut.FilterByTags(viewData, new int[] { 1, 4 }, _tagRepositoryMock.Object.GetAll());
+            sut.FilterByTags(viewData, new int[] { 1, 4 }, _repositoryMock.Object.GetAll<Tag>());
 
             //Assign
             var actualViewData = ((MultiSelectList)viewData["TagsFilter"]);
             var selectedTags = new[] { tag1, new Tag() { TagID = 4 } };
             var filteredTags = new[] { tag1 };
-            var expectedData = new MultiSelectList(_tagRepositoryMock.Object.GetAll(), "TagID", "Name", selectedTags);
+            var expectedData = new MultiSelectList(_repositoryMock.Object.GetAll<Tag>(), "TagID", "Name", selectedTags);
 
             //Assert
             Assert.AreEqual(expectedData.ToList().Count, actualViewData.ToList().Count);

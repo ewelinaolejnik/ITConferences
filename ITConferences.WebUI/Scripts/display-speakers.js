@@ -81,10 +81,4 @@ $m(document).ready(function () {
         }
         lastScrollTop = st;
     });
-
-
-
-
-    
-
 });

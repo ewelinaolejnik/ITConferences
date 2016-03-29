@@ -1,33 +1,29 @@
 ﻿using ITConferences.WebUI.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using ITConferences.Domain.Abstract;
 using ITConferences.Domain.Entities;
-using Microsoft.AspNet.Identity;
-using Ninject;
 
 namespace ITConferences.WebUI.Controllers
 {
     public class BaseController : Controller
     {
-        private IGenericRepository<Image> _imageRepository;
+        protected IGenericRepository _repository;
         public Dictionary<string, object> ViewDataDictionary { get; set; }
 
-        public BaseController(IGenericRepository<Image> imageRepository)
+        public BaseController(IGenericRepository repository)
         {
-            if (imageRepository == null)
+            if (repository == null)
             {
                 throw new ArgumentNullException("Some repository does not exist!");
             }
-            _imageRepository = imageRepository;
+            _repository = repository;
         }
 
         public FileContentResult GetImage(int? imageId)
         {
-            var image = _imageRepository.GetById(imageId);
+            var image = _repository.GetById<Image>(imageId);
             return File(image.ImageData, image.ImageMimeType);
         }
 

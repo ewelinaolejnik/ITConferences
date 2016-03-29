@@ -14,15 +14,13 @@ namespace ITConferences.UnitTests.Controllers
     {
         #region | Sut |
         OrganizersController sut;
-        private Mock<IGenericRepository<Organizer>> _organizerRepositoryMock;
-        private Mock<IGenericRepository<Image>> _imageRepositoryMock;
+        private Mock<IGenericRepository> _repositoryMock;
         private Organizer[] organizers;
 
         [TestInitialize]
         public void StartUp()
         {
-            _organizerRepositoryMock = new Mock<IGenericRepository<Organizer>>();
-            _imageRepositoryMock = new Mock<IGenericRepository<Image>>();
+            _repositoryMock = new Mock<IGenericRepository>();
 
             organizers = new[]
             {
@@ -36,20 +34,20 @@ namespace ITConferences.UnitTests.Controllers
                 }
             };
 
-            _organizerRepositoryMock.Setup(e => e.GetAll())
+            _repositoryMock.Setup(e => e.GetAll<Organizer>())
                 .Returns(organizers);
 
-            sut = new OrganizersController(_organizerRepositoryMock.Object, _imageRepositoryMock.Object);
+            sut = new OrganizersController(_repositoryMock.Object);
 
-            _organizerRepositoryMock.Setup(e => e.GetById(1, null)).Returns((Organizer)null);
-            _organizerRepositoryMock.Setup(e => e.GetById(2, null)).Returns(new Organizer());
+            _repositoryMock.Setup(e => e.GetById<Organizer>(1, null)).Returns((Organizer)null);
+            _repositoryMock.Setup(e => e.GetById<Organizer>(2, null)).Returns(new Organizer());
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            _organizerRepositoryMock = null;
-            _imageRepositoryMock = null;
+            _repositoryMock = null;
+            _repositoryMock = null;
             sut = null;
         }
         #endregion
@@ -60,9 +58,9 @@ namespace ITConferences.UnitTests.Controllers
         [TestCategory("OrganizersController")]
         [Owner("Ewelina Olejnik")]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void OrganizersController_Ctor_throws_exception_if_organizer_repository_is_null()
+        public void OrganizersController_Ctor_throws_exception_if_repository_is_null()
         {
-            sut = new OrganizersController(null, _imageRepositoryMock.Object);
+            sut = new OrganizersController(null);
         }
         #endregion
 

@@ -18,8 +18,7 @@ namespace ITConferences.UnitTests.Controllers
     {
         #region | Sut |
         SpeakersController sut;
-        private Mock<IGenericRepository<Speaker>> _speakerRepositoryMock;
-        private Mock<IGenericRepository<Image>> _imageRepositoryMock;
+        private Mock<IGenericRepository> _repositoryMock;
         private Mock<IFilterSpeakerHelper> _filterHelperMock;
         private Mock<IControllerHelper> _controllerHelperMock;
         private Speaker[] speakers;
@@ -28,10 +27,9 @@ namespace ITConferences.UnitTests.Controllers
         [TestInitialize]
         public void StartUp()
         {
-            _speakerRepositoryMock = new Mock<IGenericRepository<Speaker>>();
+            _repositoryMock = new Mock<IGenericRepository>();
             _filterHelperMock = new Mock<IFilterSpeakerHelper>();
             _controllerHelperMock = new Mock<IControllerHelper>();
-            _imageRepositoryMock = new Mock<IGenericRepository<Image>>();
             requestMock = new Mock<HttpRequestBase>();
 
             speakers = new[]
@@ -46,15 +44,15 @@ namespace ITConferences.UnitTests.Controllers
                 }
             };
 
-            _speakerRepositoryMock.Setup(e => e.GetAll())
+            _repositoryMock.Setup(e => e.GetAll<Speaker>())
                 .Returns(speakers);
 
             _filterHelperMock.Setup(e => e.Speakers)
                 .Returns(speakers);
 
            
-            sut = new SpeakersController(_speakerRepositoryMock.Object, _filterHelperMock.Object,
-                _controllerHelperMock.Object, _imageRepositoryMock.Object);
+            sut = new SpeakersController(_repositoryMock.Object, _filterHelperMock.Object,
+                _controllerHelperMock.Object);
 
 
             _controllerHelperMock.Setup(e => e.GetPageSize(0, It.IsAny<int>(), 2)).Returns(2);
@@ -68,15 +66,14 @@ namespace ITConferences.UnitTests.Controllers
             context.SetupGet(x => x.Request).Returns(requestMock.Object);
             sut.ControllerContext = new ControllerContext(context.Object, new RouteData(), sut);
 
-            _speakerRepositoryMock.Setup(e => e.GetById(1, null)).Returns((Speaker)null);
-            _speakerRepositoryMock.Setup(e => e.GetById(2, null)).Returns(new Speaker());
+            _repositoryMock.Setup(e => e.GetById<Speaker>(1, null)).Returns((Speaker)null);
+            _repositoryMock.Setup(e => e.GetById<Speaker>(2, null)).Returns(new Speaker());
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            _speakerRepositoryMock = null;
-            _imageRepositoryMock = null;
+            _repositoryMock = null;
             _filterHelperMock = null;
             _controllerHelperMock = null;
             sut = null;
@@ -89,10 +86,10 @@ namespace ITConferences.UnitTests.Controllers
         [TestCategory("SpeakersController")]
         [Owner("Ewelina Olejnik")]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void SpeakersController_Ctor_throws_exception_if_speaker_repository_is_null()
+        public void SpeakersController_Ctor_throws_exception_if_repository_is_null()
         {
             sut = new SpeakersController(null, _filterHelperMock.Object,
-                _controllerHelperMock.Object, _imageRepositoryMock.Object);
+                _controllerHelperMock.Object);
         }
 
 
@@ -102,7 +99,7 @@ namespace ITConferences.UnitTests.Controllers
         [ExpectedException(typeof(ArgumentNullException))]
         public void SpeakersController_Ctor_throws_exception_if_speakers_filter_is_null()
         {
-            sut = new SpeakersController(_speakerRepositoryMock.Object, null, _controllerHelperMock.Object, _imageRepositoryMock.Object);
+            sut = new SpeakersController(_repositoryMock.Object, null, _controllerHelperMock.Object);
         }
 
         [TestMethod]
@@ -111,7 +108,7 @@ namespace ITConferences.UnitTests.Controllers
         [ExpectedException(typeof(ArgumentNullException))]
         public void SpeakersController_Ctor_throws_exception_if_controller_helper_is_null()
         {
-            sut = new SpeakersController(_speakerRepositoryMock.Object, _filterHelperMock.Object, null, _imageRepositoryMock.Object);
+            sut = new SpeakersController(_repositoryMock.Object, _filterHelperMock.Object, null);
         }
         #endregion
 
@@ -286,7 +283,7 @@ namespace ITConferences.UnitTests.Controllers
         public void SpeakersController_AddEvaluation_returns_http_not_found_if_speaker_hasnt_been_found()
         {
             //Arrange
-            _speakerRepositoryMock.Setup(e => e.GetById(4, null)).Returns((Speaker)null);
+            _repositoryMock.Setup(e => e.GetById<Speaker>(4, null)).Returns((Speaker)null);
             var result = sut.AddEvaluation(4, 0, null, null);
 
             //Assign
@@ -302,7 +299,7 @@ namespace ITConferences.UnitTests.Controllers
         public void SpeakersController_AddEvaluation_call_get_evaluation()
         {
             //Arrange
-            _speakerRepositoryMock.Setup(e => e.GetById(1, null)).Returns(new Speaker() { Evaluations = new List<Evaluation>() });
+            _repositoryMock.Setup(e => e.GetById<Speaker>(1, null)).Returns(new Speaker() { Evaluations = new List<Evaluation>() });
             _controllerHelperMock.Setup(e => e.GetEvaluation(It.IsAny<string>(), "asd", 1)).Returns(new Evaluation());
             sut.AddEvaluation(1, 1, "asd", "1234");
 

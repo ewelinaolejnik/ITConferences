@@ -11,15 +11,15 @@ namespace ITConferences.WebUI.Helpers
 {
     public class ControllerHelper : IControllerHelper
     {
-        private IGenericRepository<Attendee> _attendeeRepository;
-        public ControllerHelper(IGenericRepository<Attendee> attendeeRepository)
+        private IGenericRepository _repository;
+        public ControllerHelper(IGenericRepository repository)
         {
-            _attendeeRepository = attendeeRepository;
+            _repository = repository;
         }
 
         public IEnumerable<Attendee> AllUsers
         {
-            get { return _attendeeRepository.GetAll(); }
+            get { return _repository.GetAll<Attendee>(); }
         }
 
         public string GetResultsCount(int itemsCount, bool empty = false)
@@ -40,7 +40,7 @@ namespace ITConferences.WebUI.Helpers
 
         public Evaluation GetEvaluation(string ownerId, string comment, int countOfStars)
         {
-            var owner = _attendeeRepository.GetById(null, ownerId);
+            var owner = _repository.GetById<Attendee>(null, ownerId);
             var eval = new Evaluation()
             {
                 Comment = comment,
@@ -64,7 +64,7 @@ namespace ITConferences.WebUI.Helpers
 
         public void AssignOrganizer(string userId, Conference conference)
         {
-            var attendee = _attendeeRepository.GetById(null, userId);
+            var attendee = _repository.GetById<Attendee>(null, userId);
             var organizer = attendee.Organizer ?? new Organizer()
             {
                 User = attendee
@@ -74,14 +74,14 @@ namespace ITConferences.WebUI.Helpers
             conference.Organizer = organizer;
         }
 
-        public void AssignTags(string tags, IEnumerable<Tag> tagsList, IGenericRepository<Tag> tagRepository, Conference conference)
+        public void AssignTags(string tags, IEnumerable<Tag> tagsList, Conference conference)
         {
             conference.Tags = new List<Tag>();
             var stringTags = tags.Split(',');
             var intTag = stringTags.Select(e => int.Parse(e)).ToList();
             tagsList.Where(e => intTag.Contains(e.TagID)).ToList()
                 .ForEach(e => e.Conferences.Add(conference));
-            tagsList.ToList().ForEach(e => tagRepository.UpdateAndSubmit(e));
+            tagsList.ToList().ForEach(e => _repository.UpdateAndSubmit(e));
         }
 
         public void AssignSpeakers(string speakers, Conference conference)

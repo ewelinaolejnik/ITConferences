@@ -13,8 +13,7 @@ namespace ITConferences.WebUI.Controllers
     public class SpeakersController : BaseController
     {
         private const int PageSize = 9;
-
-        private IGenericRepository<Speaker> _speakerRepository;
+        
         private IFilterSpeakerHelper _speakersFilter;
         private IControllerHelper _controllerHelper;
 
@@ -23,22 +22,17 @@ namespace ITConferences.WebUI.Controllers
         public IEnumerable<Speaker> Speakers { get; private set; }
 
         #region Ctor
-        public SpeakersController(IGenericRepository<Speaker> speakerRepository, IFilterSpeakerHelper speakersFilter, IControllerHelper controllerHelper, IGenericRepository<Image> imageRepository) 
-            : base(imageRepository)
+        public SpeakersController(IGenericRepository repository, IFilterSpeakerHelper speakersFilter, IControllerHelper controllerHelper) 
+            : base(repository)
         {
-            if (speakerRepository == null)
-            {
-                throw new ArgumentNullException("Some repository does not exist!");
-            }
-
             if (speakersFilter == null || controllerHelper == null)
             {
                 throw new ArgumentNullException("Filter or controllerHelper does not exist!");
             }
 
-            _speakerRepository = speakerRepository;
+            
             _speakersFilter = speakersFilter;
-            Speakers = _speakerRepository.GetAll().ToList();
+            Speakers = repository.GetAll<Speaker>().ToList();
             _controllerHelper = controllerHelper;
         }
         #endregion
@@ -86,7 +80,7 @@ namespace ITConferences.WebUI.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            Speaker speaker = _speakerRepository.GetById(id);
+            Speaker speaker = _repository.GetById<Speaker>(id);
 
             if (speaker == null)
                 return HttpNotFound();
@@ -99,7 +93,7 @@ namespace ITConferences.WebUI.Controllers
             if (!Request.IsAuthenticated)
                return GetLoginMessage("Log in to add evaluation, please");
 
-            Speaker speaker = _speakerRepository.GetById(speakerId);
+            Speaker speaker = _repository.GetById<Speaker>(speakerId);
 
             if (speaker == null)
                 return HttpNotFound();
@@ -109,7 +103,7 @@ namespace ITConferences.WebUI.Controllers
 
             var eval = _controllerHelper.GetEvaluation(ownerId, comment, countOfStars);
             speaker.Evaluations.Add(eval);
-            _speakerRepository.UpdateAndSubmit(speaker);
+            _repository.UpdateAndSubmit(speaker);
 
             return View("Details", speaker);
         }
@@ -119,7 +113,7 @@ namespace ITConferences.WebUI.Controllers
         {
             if (disposing)
             {
-                _speakerRepository.DisposeDataContext();
+                _repository.DisposeDataContext();
             }
             base.Dispose(disposing);
         }

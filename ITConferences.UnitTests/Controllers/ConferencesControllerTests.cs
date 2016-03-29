@@ -21,11 +21,7 @@ namespace ITConferences.UnitTests.Controllers
     {
         #region | Sut |
         ConferencesController sut;
-        private Mock<IGenericRepository<Conference>> _conferenceRepositoryMock;
-        private Mock<IGenericRepository<Country>> _countryRepositoryMock;
-        private Mock<IGenericRepository<City>> _cityRepositoryMock;
-        private Mock<IGenericRepository<Tag>> _tagRepositoryMock;
-        private Mock<IGenericRepository<Image>> _imageRepositoryMock;
+        private Mock<IGenericRepository> _repositoryMock;
         private Mock<IFilterConferenceHelper> _filterHelperMock;
         private Mock<IControllerHelper> _controllerHelperMock;
         private Country country1;
@@ -35,11 +31,7 @@ namespace ITConferences.UnitTests.Controllers
         [TestInitialize]
         public void StartUp()
         {
-            _conferenceRepositoryMock = new Mock<IGenericRepository<Conference>>();
-            _countryRepositoryMock = new Mock<IGenericRepository<Country>>();
-            _cityRepositoryMock = new Mock<IGenericRepository<City>>();
-            _tagRepositoryMock = new Mock<IGenericRepository<Tag>>();
-            _imageRepositoryMock = new Mock<IGenericRepository<Image>>();
+            _repositoryMock = new Mock<IGenericRepository>();
             _filterHelperMock = new Mock<IFilterConferenceHelper>();
             _controllerHelperMock = new Mock<IControllerHelper>();
             requestMock = new Mock<HttpRequestBase>();
@@ -70,25 +62,24 @@ namespace ITConferences.UnitTests.Controllers
                 }
             };
 
-            _conferenceRepositoryMock.Setup(e => e.GetAll())
+            _repositoryMock.Setup(e => e.GetAll<Conference>())
                 .Returns(conferences);
 
             _filterHelperMock.Setup(e => e.Conferences)
                 .Returns(conferences);
 
-            _countryRepositoryMock.Setup(e => e.GetAll())
+            _repositoryMock.Setup(e => e.GetAll<Country>())
                 .Returns(new[]
                 {country1, country2});
 
-            _cityRepositoryMock.Setup(e => e.GetAll())
+            _repositoryMock.Setup(e => e.GetAll<City>())
                 .Returns(new[]
                 {city1, city2});
 
-            _tagRepositoryMock.Setup(e => e.GetAll()).Returns(new[] { tag1, tag2, tag3 });
+            _repositoryMock.Setup(e => e.GetAll<Tag>()).Returns(new[] { tag1, tag2, tag3 });
 
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object,
-                _tagRepositoryMock.Object, _cityRepositoryMock.Object, _filterHelperMock.Object,
-                _imageRepositoryMock.Object, _controllerHelperMock.Object);
+            sut = new ConferencesController(_filterHelperMock.Object,
+                _repositoryMock.Object, _controllerHelperMock.Object);
 
             
             _controllerHelperMock.Setup(e => e.GetPageSize(0, It.IsAny<int>(), 2)).Returns(2);
@@ -102,58 +93,28 @@ namespace ITConferences.UnitTests.Controllers
             context.SetupGet(x => x.Request).Returns(requestMock.Object);
             sut.ControllerContext = new ControllerContext(context.Object, new RouteData(), sut);
 
-            _conferenceRepositoryMock.Setup(e => e.GetById(1, null)).Returns((Conference)null);
-            _conferenceRepositoryMock.Setup(e => e.GetById(2, null)).Returns(new Conference());
+            _repositoryMock.Setup(e => e.GetById<Conference>(1, null)).Returns((Conference)null);
+            _repositoryMock.Setup(e => e.GetById<Conference>(2, null)).Returns(new Conference());
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            _conferenceRepositoryMock = null;
-            _countryRepositoryMock = null;
-            _cityRepositoryMock = null;
+            _repositoryMock = null;
             sut = null;
         }
         #endregion
 
         #region | Ctor |
-
         [TestMethod]
         [TestCategory("ConferencesController")]
         [Owner("Ewelina Olejnik")]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void ConferencesController_Ctor_throws_exception_if_conference_repository_is_null()
+        public void ConferencesController_Ctor_throws_exception_if_repository_is_null()
         {
-            sut = new ConferencesController(null, _countryRepositoryMock.Object, _tagRepositoryMock.Object, _cityRepositoryMock.Object, _filterHelperMock.Object, _imageRepositoryMock.Object, _controllerHelperMock.Object);
+            sut = new ConferencesController(_filterHelperMock.Object, null, _controllerHelperMock.Object);
         }
-
-
-        [TestMethod]
-        [TestCategory("ConferencesController")]
-        [Owner("Ewelina Olejnik")]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void ConferencesController_Ctor_throws_exception_if_country_repository_is_null()
-        {
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, null, _tagRepositoryMock.Object, _cityRepositoryMock.Object, _filterHelperMock.Object, _imageRepositoryMock.Object, _controllerHelperMock.Object);
-        }
-
-        [TestMethod]
-        [TestCategory("ConferencesController")]
-        [Owner("Ewelina Olejnik")]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void ConferencesController_Ctor_throws_exception_if_tag_repository_is_null()
-        {
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, null, _cityRepositoryMock.Object, _filterHelperMock.Object, _imageRepositoryMock.Object, _controllerHelperMock.Object);
-        }
-
-        [TestMethod]
-        [TestCategory("ConferencesController")]
-        [Owner("Ewelina Olejnik")]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void ConferencesController_Ctor_throws_exception_if_city_repository_is_null()
-        {
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, _tagRepositoryMock.Object, null, _filterHelperMock.Object, _imageRepositoryMock.Object, _controllerHelperMock.Object);
-        }
+        
 
         [TestMethod]
         [TestCategory("ConferencesController")]
@@ -161,7 +122,7 @@ namespace ITConferences.UnitTests.Controllers
         [ExpectedException(typeof(ArgumentNullException))]
         public void ConferencesController_Ctor_throws_exception_if_filter_helper_is_null()
         {
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, _tagRepositoryMock.Object, _cityRepositoryMock.Object, null, _imageRepositoryMock.Object, _controllerHelperMock.Object);
+            sut = new ConferencesController(null, _repositoryMock.Object, _controllerHelperMock.Object);
         }
 
         [TestMethod]
@@ -170,7 +131,7 @@ namespace ITConferences.UnitTests.Controllers
         [ExpectedException(typeof(ArgumentNullException))]
         public void ConferencesController_Ctor_throws_exception_if_controller_helper_is_null()
         {
-            sut = new ConferencesController(_conferenceRepositoryMock.Object, _countryRepositoryMock.Object, _tagRepositoryMock.Object, _cityRepositoryMock.Object, _filterHelperMock.Object, _imageRepositoryMock.Object, null);
+            sut = new ConferencesController(_filterHelperMock.Object, _repositoryMock.Object, null);
         }
         #endregion
 
@@ -185,7 +146,7 @@ namespace ITConferences.UnitTests.Controllers
 
             //Assign
             var viewData = ((MultiSelectList)sut.ViewData["TagsFilter"]).ToList();
-            var expectedData = new MultiSelectList(_tagRepositoryMock.Object.GetAll(), "TagID", "Name").ToList();
+            var expectedData = new MultiSelectList(_repositoryMock.Object.GetAll<Tag>(), "TagID", "Name").ToList();
 
             //Assert
             Assert.AreEqual(expectedData.Count, viewData.Count);
@@ -281,7 +242,7 @@ namespace ITConferences.UnitTests.Controllers
         public void ConferencesController_GetSelectedCities_returns_json_data_with_specified_formatting()
         {
             //Arrange
-            _countryRepositoryMock.Setup(e => e.GetById(1, null))
+            _repositoryMock.Setup(e => e.GetById<Country>(1, null))
              .Returns(country1);
 
             //Assign
@@ -402,7 +363,7 @@ namespace ITConferences.UnitTests.Controllers
         public void ConferencesController_AddEvaluation_returns_http_not_found_if_conference_hasnt_been_found()
         {
             //Arrange
-            _conferenceRepositoryMock.Setup(e => e.GetById(1, null)).Returns((Conference)null);
+            _repositoryMock.Setup(e => e.GetById<Conference>(1, null)).Returns((Conference)null);
             var result = sut.AddEvaluation(1, 0, null, null);
 
             //Assign
@@ -418,7 +379,7 @@ namespace ITConferences.UnitTests.Controllers
         public void ConferencesController_AddEvaluation_call_get_evaluation()
         {
             //Arrange
-            _conferenceRepositoryMock.Setup(e => e.GetById(1, null)).Returns(new Conference() { Evaluation = new List<Evaluation>() });
+            _repositoryMock.Setup(e => e.GetById<Conference>(1, null)).Returns(new Conference() { Evaluation = new List<Evaluation>() });
             _controllerHelperMock.Setup(e => e.GetEvaluation(It.IsAny<string>(), "asd", 1)).Returns(new Evaluation());
             sut.AddEvaluation(1, 1, "asd", "1234");
 
@@ -441,10 +402,10 @@ namespace ITConferences.UnitTests.Controllers
 
             //Assign
             var viewDataTag = ((MultiSelectList)sut.ViewData["TagsSelector"]).ToList();
-            var expectedDataTag = new MultiSelectList(_tagRepositoryMock.Object.GetAll(), "TagID", "Name").ToList();
+            var expectedDataTag = new MultiSelectList(_repositoryMock.Object.GetAll<Tag>(), "TagID", "Name").ToList();
 
             var viewDataCountry = ((SelectList)sut.ViewData["TargetCountryId"]).ToList();
-            var expectedDataCountry = new SelectList(_countryRepositoryMock.Object.GetAll(), "CountryID", "Name").ToList();
+            var expectedDataCountry = new SelectList(_repositoryMock.Object.GetAll<Country>(), "CountryID", "Name").ToList();
 
             //Assert
             Assert.AreEqual(expectedDataTag.Count, viewDataTag.Count);
@@ -467,8 +428,7 @@ namespace ITConferences.UnitTests.Controllers
 
             //Assert
             _controllerHelperMock.Verify(e => e.AssignOrganizer("123",conferences[0]), Times.Once);
-            _controllerHelperMock.Verify(e => e.AssignTags("1,3", sut.Tags, It.IsAny<IGenericRepository<Tag>>(), conferences[0]), Times.Once);
-            _conferenceRepositoryMock.Verify(e => e.InsertAndSubmit(conferences[0]), Times.Once);
+            _repositoryMock.Verify(e => e.InsertAndSubmit(conferences[0]), Times.Once);
         }
 
         #endregion
@@ -485,13 +445,13 @@ namespace ITConferences.UnitTests.Controllers
 
             //Assign
             var viewDataTag = ((MultiSelectList)sut.ViewData["TagsSelector"]).ToList();
-            var expectedDataTag = new MultiSelectList(_tagRepositoryMock.Object.GetAll(), "TagID", "Name").ToList();
+            var expectedDataTag = new MultiSelectList(_repositoryMock.Object.GetAll<Tag>(), "TagID", "Name").ToList();
 
             var viewDataSpeaker = ((MultiSelectList)sut.ViewData["SpeakersSelector"]).ToList();
             var expectedDataSpeaker = new MultiSelectList(_controllerHelperMock.Object.AllUsers, "TagID", "Name").ToList();
 
             var viewDataCountry = ((SelectList)sut.ViewData["TargetCountryId"]).ToList();
-            var expectedDataCountry = new SelectList(_countryRepositoryMock.Object.GetAll(), "CountryID", "Name").ToList();
+            var expectedDataCountry = new SelectList(_repositoryMock.Object.GetAll<Country>(), "CountryID", "Name").ToList();
 
             //Assert
             Assert.AreEqual(expectedDataTag.Count, viewDataTag.Count);
@@ -543,8 +503,7 @@ namespace ITConferences.UnitTests.Controllers
 
 
             //Assert
-            _controllerHelperMock.Verify(e => e.AssignTags("1,3", sut.Tags, It.IsAny<IGenericRepository<Tag>>(), conferences[0]), Times.Once);
-            _conferenceRepositoryMock.Verify(e => e.UpdateAndSubmit(conferences[0]), Times.Once);
+            _repositoryMock.Verify(e => e.UpdateAndSubmit(conferences[0]), Times.Once);
         }
 
         #endregion

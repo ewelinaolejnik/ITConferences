@@ -218,8 +218,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Alert.cs" />
-    <Compile Include="Helpers\AlertStyles.cs" />
+    <Compile Include="Models\Alert.cs" />
+    <Compile Include="Models\AlertStyles.cs" />
     <Compile Include="Helpers\ControllerHelper.cs" />
     <Compile Include="Helpers\DateFilter.cs" />
     <Compile Include="Helpers\FilterHelper.cs" />
@@ -342,7 +342,6 @@
     <Content Include="Scripts\bootstrap\js\tests\vendor\qunit.js" />
     <Content Include="Scripts\conference.js" />
     <Content Include="Content\grayscale.css" />
-    <Content Include="Scripts\display-conferences.js" />
     <Content Include="Scripts\display-speakers.js" />
     <Content Include="Scripts\home-page.js" />
     <Content Include="Scripts\html5shiv.js" />

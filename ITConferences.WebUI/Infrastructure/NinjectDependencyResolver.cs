@@ -24,15 +24,7 @@ namespace ITConferences.WebUI.Infrastructure
         private void AddBindings()
         {
             _kernel.Bind<IDataContext>().To<DataContext>().InRequestScope();
-            _kernel.Bind<IGenericRepository<Attendee>>().To<GenericRepository<Attendee>>();
-            _kernel.Bind<IGenericRepository<City>>().To<GenericRepository<City>>();
-            _kernel.Bind<IGenericRepository<Conference>>().To<GenericRepository<Conference>>();
-            _kernel.Bind<IGenericRepository<Country>>().To<GenericRepository<Country>>();
-            _kernel.Bind<IGenericRepository<Evaluation>>().To<GenericRepository<Evaluation>>();
-            _kernel.Bind<IGenericRepository<Organizer>>().To<GenericRepository<Organizer>>();
-            _kernel.Bind<IGenericRepository<Speaker>>().To<GenericRepository<Speaker>>();
-            _kernel.Bind<IGenericRepository<Tag>>().To<GenericRepository<Tag>>();
-            _kernel.Bind<IGenericRepository<Image>>().To<GenericRepository<Image>>();
+            _kernel.Bind<IGenericRepository>().To<GenericRepository>();
             _kernel.Bind<IFilterConferenceHelper>().To<FilterHelper>();
             _kernel.Bind<IFilterSpeakerHelper>().To<FilterHelper>();
             _kernel.Bind<IControllerHelper>().To<ControllerHelper>();

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ITConferences.Domain.Concrete
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository : IGenericRepository
     {
         private IDataContext _dataContext;
 
@@ -20,12 +20,12 @@ namespace ITConferences.Domain.Concrete
             _dataContext = dataContext;
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll<T>() where T : class
         {
             return _dataContext.Set<T>();
         }
 
-        public T GetById(int? id, string idStr = null)
+        public T GetById<T>(int? id, string idStr = null) where T : class
         {
             if (idStr != null)
             {
@@ -34,19 +34,18 @@ namespace ITConferences.Domain.Concrete
             return _dataContext.Set<T>().Find(id);
         }
 
-        public void InsertAndSubmit(T entity)
+        public void InsertAndSubmit<T>(T entity) where T : class
         {
             this._dataContext.Set<T>().Add(entity);
             _dataContext.SaveChanges();
         }
 
-        public void UpdateAndSubmit(T entity)
+        public void UpdateAndSubmit<T>(T entity) where T : class
         {
-           // _dataContext.Entry<T>(entity).State = EntityState.Modified;
             _dataContext.SaveChanges();
         }
 
-        public void DeleteAndSubmit(T entity)
+        public void DeleteAndSubmit<T>(T entity) where T : class
         {
             _dataContext.Set<T>().Remove(entity);
             _dataContext.SaveChanges();

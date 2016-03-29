@@ -13,12 +13,12 @@ namespace ITConferences.UnitTests.Controllers
     {
         #region | Sut |
         BaseController sut;
-        private Mock<IGenericRepository<Image>> _imageRepositoryMock;
+        private Mock<IGenericRepository> _imageRepositoryMock;
 
         [TestInitialize]
         public void StartUp()
         {
-            _imageRepositoryMock = new Mock<IGenericRepository<Image>>();
+            _imageRepositoryMock = new Mock<IGenericRepository>();
             sut = new BaseController(_imageRepositoryMock.Object);
            
         }
@@ -51,11 +51,11 @@ namespace ITConferences.UnitTests.Controllers
         public void BaseController_GetImage_returns_type_of_file_and_calls_get_image()
         {
             //Arrange
-            _imageRepositoryMock.Setup(e => e.GetById(1, null)).Returns(new Image() { ImageMimeType = "jpg", ImageData = new byte[0] });
+            _imageRepositoryMock.Setup(e => e.GetById<Image>(1, null)).Returns(new Image() { ImageMimeType = "jpg", ImageData = new byte[0] });
             var result = sut.GetImage(1);
 
             //Assert
-            _imageRepositoryMock.Verify(e => e.GetById(1, null), Times.Once);
+            _imageRepositoryMock.Verify(e => e.GetById<Image>(1, null), Times.Once);
             Assert.IsInstanceOfType(result, typeof(FileContentResult));
 
         }

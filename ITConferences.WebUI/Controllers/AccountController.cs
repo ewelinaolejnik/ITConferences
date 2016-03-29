@@ -29,7 +29,7 @@ namespace ITConferences.WebUI.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IGenericRepository<Attendee> attendeeRepository)
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IGenericRepository attendeeRepository)
         {   UserManager = userManager;
             SignInManager = signInManager;
         }

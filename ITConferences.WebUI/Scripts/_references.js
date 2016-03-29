@@ -32,7 +32,6 @@
 /// <reference path="bootstrap/js/tests/vendor/jquery.js" />
 /// <reference path="bootstrap/js/tests/vendor/qunit.js" />
 /// <reference path="conference.js" />
-/// <reference path="display-conferences.js" />
 /// <reference path="display-speakers.js" />
 /// <reference path="home-page.js" />
 /// <reference path="html5shiv.js" />

@@ -17,14 +17,14 @@ namespace ITConferences.WebUI.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        private IGenericRepository<Attendee> _attendeeRepository;
+        private IGenericRepository _attendeeRepository;
 
         public Attendee ActualUser
         {
-            get { return _attendeeRepository.GetById(null, User.Identity.GetUserId()); }
+            get { return _attendeeRepository.GetById<Attendee>(null, User.Identity.GetUserId()); }
         }
 
-        public ManageController(IGenericRepository<Attendee> attendeeRepository)
+        public ManageController(IGenericRepository attendeeRepository)
         {
             _attendeeRepository = attendeeRepository;
         }
@@ -244,7 +244,7 @@ namespace ITConferences.WebUI.Controllers
         [HttpPost]
         public PartialViewResult SetImage(HttpPostedFileBase image)
         {
-            var attendee = _attendeeRepository.GetById(null, User.Identity.GetUserId());
+            var attendee = _attendeeRepository.GetById<Attendee>(null, User.Identity.GetUserId());
             if (image != null)
             {
                 var img = new Image()
