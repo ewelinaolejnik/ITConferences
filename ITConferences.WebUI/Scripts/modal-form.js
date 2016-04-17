@@ -1,26 +1,25 @@
-﻿  //$(function() {
-  //    $( "#dialog" ).dialog();
-  //});
+﻿//$(function() {
+//    $( "#dialog" ).dialog();
+//});
 
 
-
-$(function () {
+$(function() {
 
     $.ajaxSetup({ cache: false });
 
-    $("a[data-modal]").on("click", function (e) {
+    $("a[data-modal]").on("click", function(e) {
 
         // hide dropdown if any
-        $(e.target).closest('.btn-group').children('.dropdown-toggle').dropdown('toggle');
+        $(e.target).closest(".btn-group").children(".dropdown-toggle").dropdown("toggle");
 
 
-        $('#myModalContent').load(this.href, function () {
+        $("#myModalContent").load(this.href, function() {
 
 
-            $('#myModal').modal({
+            $("#myModal").modal({
                 /*backdrop: 'static',*/
                 keyboard: true
-            }, 'show');
+            }, "show");
 
             //bindForm(this);
         });

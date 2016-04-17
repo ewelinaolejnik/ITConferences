@@ -1,16 +1,12 @@
-﻿using ITConferences.Domain.Abstract;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ITConferences.Domain.Abstract;
 
 namespace ITConferences.Domain.Concrete
 {
     public class GenericRepository : IGenericRepository
     {
-        private IDataContext _dataContext;
+        private readonly IDataContext _dataContext;
 
         public GenericRepository(IDataContext dataContext)
         {
@@ -36,7 +32,7 @@ namespace ITConferences.Domain.Concrete
 
         public void InsertAndSubmit<T>(T entity) where T : class
         {
-            this._dataContext.Set<T>().Add(entity);
+            _dataContext.Set<T>().Add(entity);
             _dataContext.SaveChanges();
         }
 

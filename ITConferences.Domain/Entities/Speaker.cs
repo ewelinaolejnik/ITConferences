@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITConferences.Domain.Entities
 {
@@ -17,6 +13,7 @@ namespace ITConferences.Domain.Entities
 
         [DisplayName("Spoken conferences:")]
         public virtual ICollection<Conference> SpokenConferences { get; set; }
+
         public virtual ICollection<Evaluation> Evaluations { get; set; }
 
         [Required]

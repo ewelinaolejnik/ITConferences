@@ -21,16 +21,17 @@
                     @Html.TextBox("LocationFilter", ViewData["LocationFilter"], new {@id = "location", @type = "text", @class = "form-control", @placeholder = "Location"})
                 </div>
                 <div class="col-md-3 col-xs-4">
-                    @Html.ListBox("TagsFilter", ViewData["TagsFilter"] as MultiSelectList, htmlAttributes: new {@id = "tags", @class = "hide"})
+                    @Html.ListBox("TagsFilter", ViewData["TagsFilter"] as MultiSelectList, new {@id = "tags", @class = "hide"})
                 </div>
                 <div class="col-md-2 col-xs-4">
-                    @Html.DropDownList("DateFilter", EnumHelper.GetSelectList(typeof (DateFilter)), htmlAttributes: new {@id = "dateFilter", @class = "form-control"})
+                    @Html.DropDownList("DateFilter", EnumHelper.GetSelectList(typeof (DateFilter)), new {@id = "dateFilter", @class = "form-control"})
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <button id="submitButtonIndex" type="submit" value="Submit" class="btn btn-success btn-lg pull-right"><span class="glyphicon glyphicon-search"></span></button>
+            <button id="submitButtonIndex" type="submit" value="Submit" class="btn btn-success btn-lg pull-right">
+                <span class="glyphicon glyphicon-search"></span></button>
         </div>
 
     </div>
@@ -39,4 +40,3 @@
         @Html.Partial("_ConferencesView")
     </div>
 </div>
-

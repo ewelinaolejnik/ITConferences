@@ -1,23 +1,25 @@
-﻿@model ITConferences.WebUI.Models.ExternalLoginListViewModel
-@using Microsoft.Owin.Security
+﻿@using Microsoft.Owin.Security
+@model ITConferences.WebUI.Models.ExternalLoginListViewModel
 
 
 @Styles.Render("~/Content/create-conference")
 
 <h4>Use another service to log in.</h4>
-<hr />
+<hr/>
 @{
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
-    if (loginProviders.Count() == 0) {
-        
+    if (loginProviders.Count() == 0)
+    {
     }
-    else {
-        using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl })) {
+    else
+    {
+        using (Html.BeginForm("ExternalLogin", "Account", new {Model.ReturnUrl}))
+        {
             @Html.AntiForgeryToken()
             <div id="socialLoginList">
                 <p>
-                    @foreach (AuthenticationDescription p in loginProviders) {
-                        
+                    @foreach (var p in loginProviders)
+                    {
                         <button type="submit" class="btn btn-@p.AuthenticationType" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">@p.AuthenticationType</button>
                     }
                 </p>

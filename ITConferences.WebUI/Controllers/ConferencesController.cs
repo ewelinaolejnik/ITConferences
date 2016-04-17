@@ -1,32 +1,54 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ITConferences.Domain.Abstract;
-using ITConferences.Domain.Concrete;
 using ITConferences.Domain.Entities;
 using ITConferences.WebUI.Abstract.Helpers;
 using ITConferences.WebUI.Helpers;
-using WebGrease.Css.Extensions;
-
 
 namespace ITConferences.WebUI.Controllers
 {
     public class ConferencesController : BaseController
     {
-        #region Fields
-        private const int PageSize = 21;
-       
-        private IFilterConferenceHelper _conferenceFilter;
-        private IControllerHelper _controllerHelper;
+        #region Ctor
 
-        public IEnumerable<Conference> Conferences { get; private set; }
+        public ConferencesController(IFilterConferenceHelper conferenceFilter,
+            IGenericRepository repository, IControllerHelper controllerHelper) : base(repository)
+        {
+            if (conferenceFilter == null || controllerHelper == null)
+            {
+                throw new ArgumentNullException("Some helper is null!");
+            }
+
+            _conferenceFilter = conferenceFilter;
+            _controllerHelper = controllerHelper;
+
+            Conferences = _repository.GetAll<Conference>().ToList();
+            _conferenceFilter.Conferences = Conferences.OrderBy(e => e.StartDate);
+        }
+
+        #endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _repository.DisposeDataContext();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Fields
+
+        private const int PageSize = 21;
+
+        private readonly IFilterConferenceHelper _conferenceFilter;
+        private readonly IControllerHelper _controllerHelper;
+
+        public IEnumerable<Conference> Conferences { get; }
         public IEnumerable<Conference> PagedConferences { get; private set; }
 
         public IEnumerable<Country> Countries
@@ -46,32 +68,16 @@ namespace ITConferences.WebUI.Controllers
 
         #endregion
 
-        #region Ctor
-        public ConferencesController(IFilterConferenceHelper conferenceFilter,
-            IGenericRepository repository, IControllerHelper controllerHelper) : base(repository)
-        {
-            if (conferenceFilter == null || controllerHelper == null)
-            {
-                throw new ArgumentNullException("Some helper is null!");
-            }
-            
-            _conferenceFilter = conferenceFilter;
-            _controllerHelper = controllerHelper;
-
-            Conferences = _repository.GetAll<Conference>().ToList();
-            _conferenceFilter.Conferences = Conferences.OrderBy(e => e.StartDate);
-        }
-        #endregion
-
         #region Index
+
         // GET: Conferences
         public ActionResult Index(string nameFilter, int? tagsFilter)
         {
             _conferenceFilter.FilterByName(ViewData, nameFilter);
-            _conferenceFilter.FilterByTags(ViewData, new int[] { tagsFilter ?? 0 }, Tags);
+            _conferenceFilter.FilterByTags(ViewData, new[] {tagsFilter ?? 0}, Tags);
 
             ViewData["TagsFilter"] = new MultiSelectList(_repository.GetAll<Tag>(), "TagID", "Name");
-            ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_conferenceFilter.Conferences.Count(),true);
+            ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_conferenceFilter.Conferences.Count(), true);
 
             var pageSize = _controllerHelper.GetPageSize(0, PageSize, _conferenceFilter.Conferences.Count());
             PagedConferences =
@@ -88,13 +94,14 @@ namespace ITConferences.WebUI.Controllers
                         e.Name.ToLower().StartsWith(locationFilter.ToLower()) ||
                         e.Country.Name.ToLower().StartsWith(locationFilter.ToLower())).ToList();
 
-            List<string> result = new List<string>();
+            var result = new List<string>();
             filteredLocation.ForEach(e => result.Add(e.Name + ", " + e.Country.Name));
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        public PartialViewResult GetConferences(string nameFilter, string locationFilter, int[] selectedTagsIds, DateFilter? dateFilter, int? page, bool filter = false)
+        public PartialViewResult GetConferences(string nameFilter, string locationFilter, int[] selectedTagsIds,
+            DateFilter? dateFilter, int? page, bool filter = false)
         {
             _conferenceFilter.Conferences = Conferences.OrderBy(e => e.StartDate);
             _conferenceFilter.FilterByName(ViewData, nameFilter);
@@ -106,27 +113,28 @@ namespace ITConferences.WebUI.Controllers
             if (_conferenceFilter.Conferences.Count() == 0)
                 return PartialView("_NoResuls");
 
-            if ((page ?? 0) * PageSize >= _conferenceFilter.Conferences.Count())
+            if ((page ?? 0)*PageSize >= _conferenceFilter.Conferences.Count())
                 return null;
 
             ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_conferenceFilter.Conferences.Count(), !filter);
 
             var pageSize = _controllerHelper.GetPageSize(page ?? 0, PageSize, _conferenceFilter.Conferences.Count());
             PagedConferences =
-                 _conferenceFilter.Conferences.ToList().GetRange((page ?? 0) * PageSize, pageSize);
+                _conferenceFilter.Conferences.ToList().GetRange((page ?? 0)*PageSize, pageSize);
             return PartialView("_ConferencesView", PagedConferences.ToList());
         }
 
         #endregion
 
         #region Details
+
         // GET: Conferences/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            Conference conference = _repository.GetById<Conference>(id);
+            var conference = _repository.GetById<Conference>(id);
 
             if (conference == null)
                 return HttpNotFound();
@@ -139,7 +147,7 @@ namespace ITConferences.WebUI.Controllers
             if (!Request.IsAuthenticated)
                 return GetLoginMessage("Log in to add evaluation, please");
 
-            Conference conference = _repository.GetById<Conference>(conferenceId);
+            var conference = _repository.GetById<Conference>(conferenceId);
 
             if (conference == null)
                 return HttpNotFound();
@@ -157,6 +165,7 @@ namespace ITConferences.WebUI.Controllers
         #endregion
 
         #region Create
+
         // GET: Conferences/Create
         public ActionResult Create()
         {
@@ -195,7 +204,8 @@ namespace ITConferences.WebUI.Controllers
             }
             catch (Exception dbEx)
             {
-                Danger("Unable to save changes. Try again, and if the problem persists see your system administrator.", true);
+                Danger("Unable to save changes. Try again, and if the problem persists see your system administrator.",
+                    true);
                 return View();
             }
         }
@@ -203,7 +213,7 @@ namespace ITConferences.WebUI.Controllers
         public JsonResult GetSelectedCities(int countryId)
         {
             var country = _repository.GetById<Country>(countryId);
-            var selectedCities = country.Cities.Select(c => new SelectListItem()
+            var selectedCities = country.Cities.Select(c => new SelectListItem
             {
                 Text = c.Name,
                 Value = c.CityID.ToString()
@@ -211,44 +221,52 @@ namespace ITConferences.WebUI.Controllers
 
             return Json(selectedCities, JsonRequestBehavior.AllowGet);
         }
+
         #endregion
 
         #region Manage
+
         [HttpGet]
         public ActionResult Manage(int? id)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            Conference conference = _repository.GetById<Conference>(id);
+            var conference = _repository.GetById<Conference>(id);
 
 
             if (conference == null)
                 return HttpNotFound();
 
-            var users = (conference.Speakers == null || conference.Speakers.Count == 0) ? new List<string>() : _controllerHelper.AllUsers.Where(e=>conference.Speakers.Any(l=>l.User.Id == e.Id)).Select(e=>e.Id).ToList();
-            ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName", new List<string>() { "5fcdb87d-874b-45ed-984f-1cc1742c4f2e" });
+            var users = conference.Speakers == null || conference.Speakers.Count == 0
+                ? new List<string>()
+                : _controllerHelper.AllUsers.Where(e => conference.Speakers.Any(l => l.User.Id == e.Id))
+                    .Select(e => e.Id)
+                    .ToList();
+            ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName");
             ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name", conference.TargetCountryId);
-            ViewData["Cities"] = new SelectList(conference.TargetCountry.Cities, "CityID", "Name", conference.TargetCityId);
+            ViewData["Cities"] = new SelectList(conference.TargetCountry.Cities, "CityID", "Name",
+                conference.TargetCityId);
             ViewData["TagsSelector"] = new MultiSelectList(Tags, "TagID", "Name", conference.Tags ?? new List<Tag>());
             return View(conference);
         }
 
         [HttpPost]
-        public ActionResult Manage(string speakers, string tags, [Bind(Include = "ConferenceID,Name,StartDate,EndDate,Url,IsPaid,TargetCityId,TargetCountryId")]Conference conference, HttpPostedFileBase imageManage)
+        public ActionResult Manage(string speakers, string tags,
+            [Bind(Include = "ConferenceID,Name,StartDate,EndDate,Url,IsPaid,TargetCityId,TargetCountryId")] Conference
+                conference, HttpPostedFileBase imageManage)
         {
             try
             {
-                
                 var repoConf = _repository.GetById<Conference>(conference.ConferenceID, null);
                 var city = _repository.GetById<City>(conference.TargetCityId);
                 var country = _repository.GetById<Country>(conference.TargetCountryId);
+                var speakersDb = _repository.GetAll<Speaker>();
                 _controllerHelper.EditConferenceProperties(conference, repoConf, city, country);
                 if (speakers != "null")
-                    _controllerHelper.AssignSpeakers(speakers, repoConf);
+                    _controllerHelper.AssignSpeakers(speakers, speakersDb, repoConf);
                 if (imageManage != null)
                     _controllerHelper.AssignImage(imageManage, repoConf);
-
                 
                 _repository.UpdateAndSubmit(conference);
                 conference.ImageId = repoConf.Image != null ? repoConf.Image.ImageID : new int?();
@@ -257,7 +275,8 @@ namespace ITConferences.WebUI.Controllers
                     _controllerHelper.AssignTags(tags, Tags, conference);
 
 
-                ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName", repoConf.Speakers ?? new List<Speaker>());
+                ViewData["SpeakersSelector"] = new MultiSelectList(_controllerHelper.AllUsers, "Id", "UserName",
+                    repoConf.Speakers ?? new List<Speaker>());
                 ViewData["Countries"] = new SelectList(Countries, "CountryID", "Name", conference.TargetCountryId);
                 var cities = Cities.Where(e => e.CityID == conference.TargetCityId);
                 ViewData["Cities"] = new SelectList(cities, "CityID", "Name", conference.TargetCityId);
@@ -268,20 +287,14 @@ namespace ITConferences.WebUI.Controllers
             }
             catch (Exception dbEx)
             {
-                Danger("Unable to save changes. Try again, and if the problem persists see your system administrator.", true);
+                Danger("Unable to save changes. Try again, and if the problem persists see your system administrator.",
+                    true);
                 return View();
             }
         }
-        
+
         #endregion
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _repository.DisposeDataContext();
-            }
-            base.Dispose(disposing);
-        }
+
     }
 }

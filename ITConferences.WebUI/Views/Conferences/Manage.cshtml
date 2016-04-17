@@ -5,8 +5,8 @@
 
 
 <div class="container" id="manage">
-    @Html.EditorFor(model => model.ConferenceID, new { htmlAttributes = new { @class = "hidden" } })
-    @Html.EditorFor(model => model.OrganizerId, new { htmlAttributes = new { @class = "hidden" } })
+    @Html.EditorFor(model => model.ConferenceID, new {htmlAttributes = new {@class = "hidden"}})
+    @Html.EditorFor(model => model.OrganizerId, new {htmlAttributes = new {@class = "hidden"}})
     <div class="row buffer">
         <div class="col-md-4 col-xs-4">
             @Html.ActionLink("Back to your conferences", "OrganizedConferences", "Manage")
@@ -38,40 +38,40 @@
 
         <div class="col-md-8 col-xs-8 form-horizontal container">
             <div class="form-group">
-                @Html.LabelFor(model => model.TargetCountry.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.TargetCountry.Name, new {@class = "control-label col-md-2"})
                 <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.TargetCountryId, ViewData["Countries"] as SelectList, "Select city", htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.TargetCountryId, "", new { @class = "text-danger" })
+                    @Html.DropDownListFor(model => model.TargetCountryId, ViewData["Countries"] as SelectList, "Select city", new {@class = "form-control"})
+                    @Html.ValidationMessageFor(model => model.TargetCountryId, "", new {@class = "text-danger"})
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.TargetCity.Name, htmlAttributes: new {@class = "control-label col-md-2"})
+                @Html.LabelFor(model => model.TargetCity.Name, new {@class = "control-label col-md-2"})
                 <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.TargetCityId, ViewData["Cities"] as SelectList, "Select city", htmlAttributes: new {@class = "form-control"})
+                    @Html.DropDownListFor(model => model.TargetCityId, ViewData["Cities"] as SelectList, "Select city", new {@class = "form-control"})
                     @Html.ValidationMessageFor(model => model.TargetCityId, "", new {@class = "text-danger"})
                 </div>
             </div>
 
 
             <div class="form-group">
-                @Html.LabelFor(model => model.StartDate, htmlAttributes: new {@class = "control-label col-md-2"})
+                @Html.LabelFor(model => model.StartDate, new {@class = "control-label col-md-2"})
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.StartDate, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.TextBoxFor(model => model.StartDate, "{0:dd/MM/yyyy}", new {@class = "form-control"})
                     @Html.ValidationMessageFor(model => model.StartDate, "", new {@class = "text-danger"})
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.EndDate, htmlAttributes: new {@class = "control-label col-md-2"})
+                @Html.LabelFor(model => model.EndDate, new {@class = "control-label col-md-2"})
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.EndDate, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.TextBoxFor(model => model.EndDate, "{0:dd/MM/yyyy}", new {@class = "form-control"})
                     @Html.ValidationMessageFor(model => model.EndDate, "", new {@class = "text-danger"})
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Url, htmlAttributes: new {@class = "control-label col-md-2"})
+                @Html.LabelFor(model => model.Url, new {@class = "control-label col-md-2"})
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.Url, new {htmlAttributes = new {@class = "form-control"}})
                     @Html.ValidationMessageFor(model => model.Url, "", new {@class = "text-danger"})
@@ -79,7 +79,7 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.IsPaid, htmlAttributes: new {@class = "control-label col-md-2"})
+                @Html.LabelFor(model => model.IsPaid, new {@class = "control-label col-md-2"})
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.IsPaid)
                     @Html.ValidationMessageFor(model => model.IsPaid, "", new {@class = "text-danger"})
@@ -87,16 +87,16 @@
             </div>
 
             <div class="form-group">
-                @Html.Label("Change tags:", htmlAttributes: new {@class = "control-label col-md-2"})
+                @Html.Label("Change tags:", new {@class = "control-label col-md-2"})
                 <div class="col-md-10">
-                    @Html.ListBox("TagsSelector", ViewData["TagsSelector"] as MultiSelectList, htmlAttributes: new {@id = "tags", @class = "hide"})
+                    @Html.ListBox("TagsSelector", ViewData["TagsSelector"] as MultiSelectList, new {@id = "tags", @class = "hide"})
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.Label("Add speakers:", htmlAttributes: new {@class = "control-label col-md-2"})
+                @Html.Label("Add speakers:", new {@class = "control-label col-md-2"})
                 <div class="col-md-10">
-                    @Html.ListBox("SpeakersSelector", ViewData["SpeakersSelector"] as MultiSelectList, htmlAttributes: new {@id = "speakers", @class = "hide"})
+                    @Html.ListBox("SpeakersSelector", ViewData["SpeakersSelector"] as MultiSelectList, new {@id = "speakers", @class = "hide"})
                 </div>
             </div>
 

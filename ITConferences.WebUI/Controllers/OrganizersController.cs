@@ -1,8 +1,6 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Web.Mvc;
 using ITConferences.Domain.Abstract;
-using ITConferences.Domain.Concrete;
 using ITConferences.Domain.Entities;
 
 namespace ITConferences.WebUI.Controllers
@@ -10,13 +8,13 @@ namespace ITConferences.WebUI.Controllers
     public class OrganizersController : BaseController
     {
         #region Ctor
+
         public OrganizersController(IGenericRepository repository)
             : base(repository)
         {
-            
         }
-        #endregion
 
+        #endregion
 
         // GET: Organizers/Details/5
         public ActionResult Details(int? id)
@@ -26,7 +24,7 @@ namespace ITConferences.WebUI.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Organizer organizer = _repository.GetById<Organizer>(id);
+            var organizer = _repository.GetById<Organizer>(id);
 
             if (organizer == null)
             {
@@ -34,7 +32,6 @@ namespace ITConferences.WebUI.Controllers
             }
             return View(organizer);
         }
-
 
 
         protected override void Dispose(bool disposing)

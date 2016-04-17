@@ -1,8 +1,8 @@
-﻿using ITConferences.Domain.Abstract;
+﻿using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using ITConferences.Domain.Abstract;
 using ITConferences.Domain.Entities;
 using Microsoft.AspNet.Identity.EntityFramework;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 
 namespace ITConferences.Domain.Concrete
 {
@@ -10,8 +10,15 @@ namespace ITConferences.Domain.Concrete
     {
         public DataContext() : base("ITConferences")
         {
-
         }
+
+        public IDbSet<Attendee> Attendees { get; set; }
+        public IDbSet<Organizer> Organizers { get; set; }
+        public IDbSet<Speaker> Speakers { get; set; }
+        public IDbSet<Evaluation> Evaluations { get; set; }
+        public IDbSet<City> Cities { get; set; }
+        public IDbSet<Tag> Tags { get; set; }
+        public IDbSet<Image> Images { get; set; }
 
         public new IDbSet<T> Set<T>() where T : class
         {
@@ -30,14 +37,7 @@ namespace ITConferences.Domain.Concrete
 
 
         public IDbSet<Conference> Conferences { get; set; }
-        public IDbSet<Attendee> Attendees { get; set; }
-        public IDbSet<Organizer> Organizers { get; set; }
-        public IDbSet<Speaker> Speakers { get; set; }
-        public IDbSet<Evaluation> Evaluations { get; set; }
         public IDbSet<Country> Countries { get; set; }
-        public IDbSet<City> Cities { get; set; }
-        public IDbSet<Tag> Tags { get; set; }
-        public IDbSet<Image> Images { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -46,7 +46,7 @@ namespace ITConferences.Domain.Concrete
 
         public void ExecuteCommand(string command, params object[] parameters)
         {
-            base.Database.ExecuteSqlCommand(command, parameters);
+            Database.ExecuteSqlCommand(command, parameters);
         }
 
         public static DataContext Create()

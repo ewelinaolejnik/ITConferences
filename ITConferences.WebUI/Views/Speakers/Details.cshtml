@@ -1,5 +1,5 @@
-﻿@model ITConferences.Domain.Entities.Speaker
-@using Microsoft.AspNet.Identity
+﻿@using Microsoft.AspNet.Identity
+@model ITConferences.Domain.Entities.Speaker
 
 @Styles.Render("~/Content/details")
 @Scripts.Render("~/bundles/rating")
@@ -26,11 +26,11 @@
         <div class="col-md-4 col-xs-4">
             @if (Model.User.Image != null)
             {
-                <img src="@Url.Action("GetImage","Speakers", new {imageId = Model.User.Image.ImageID}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
+                <img src="@Url.Action("GetImage", "Speakers", new {imageId = Model.User.Image.ImageID}, null)" class="img-responsive img-thumbnail" alt="Conference image"/>
             }
             else
             {
-                <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
+                <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image"/>
             }
         </div>
 
@@ -45,13 +45,13 @@
                 </dd>
 
                 <dt>
-                   @Html.DisplayNameFor(model => model.SpokenConferences)
+                    @Html.DisplayNameFor(model => model.SpokenConferences)
                 </dt>
 
                 <dd>
                     @foreach (var conf in Model.SpokenConferences)
                     {
-                        @Html.ActionLink(conf.Name, "Details", "Conferences", new { id = conf.ConferenceID }, null)@($"{", "}")
+                        @Html.ActionLink(conf.Name, "Details", "Conferences", new {id = conf.ConferenceID}, null)@($"{", "}")
                     }
                 </dd>
             </dl>
@@ -60,7 +60,7 @@
     </div>
 
     <div class="row buffer">
-        
+
     </div>
 
 
@@ -74,13 +74,14 @@
             <div class="thumbnail row" style="overflow: hidden;">
 
                 <div class="col-md-7 col-xs-6">
-                    <input type="text" id="full" />
+                    <input type="text" id="full"/>
                 </div>
                 <div class="col-md-4 col-xs-3">
-                    <input id="input-id" type="number" class="rating pull-right" step="1" min=0 max=5 data-size="xs">
+                    <input id="input-id" type="number" class="rating pull-right" step="1" min="0" max="5" data-size="xs">
                 </div>
                 <div class="col-md-1 col-xs-1">
-                    <button id="submitButton" type="submit" value="Submit" class="btn btn-success btn-lg pull-right"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button id="submitButton" type="submit" value="Submit" class="btn btn-success btn-lg pull-right">
+                        <span class="glyphicon glyphicon-ok"></span></button>
                 </div>
 
             </div>
@@ -95,11 +96,11 @@
                             @if (Request.IsAuthenticated && eval.Owner.Image != null)
                             {
                                 <label>@eval.Owner.UserName</label>
-                                <img src="@Url.Action("GetImage","Speakers", new {imageId = eval.Owner.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
+                                <img src="@Url.Action("GetImage", "Speakers", new {imageId = eval.Owner.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image"/>
                             }
                             else
                             {
-                                <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
+                                <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image"/>
                             }
                         </div>
                         <div class="col-md-7 col-xs-6">
@@ -133,14 +134,14 @@
         "ownerId": "@User.Identity.GetUserId()",
     };
 
-    $("#submitButton").click(function () {
+    $("#submitButton").click(function() {
 
         $.ajax({
             url: '/Speakers/AddEvaluation/',
             type: "POST",
             dataType: "HTML",
-            data: { speakerId: speaker.speakerId, countOfStars:  $("#input-id").val(), comment: $("#full").val(), ownerId: owner.ownerId },
-            success: function (data) {
+            data: { speakerId: speaker.speakerId, countOfStars: $("#input-id").val(), comment: $("#full").val(), ownerId: owner.ownerId },
+            success: function(data) {
                 if (data != "") {
                     $("#details").html(data);
                 }

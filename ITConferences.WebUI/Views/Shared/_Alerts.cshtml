@@ -1,8 +1,8 @@
-﻿@using ITConferences.WebUI.Helpers
+﻿@using ITConferences.WebUI.Models
 @{
     var alerts = TempData.ContainsKey(Alert.TempDataKey)
-                ? (List<Alert>)TempData[Alert.TempDataKey]
-                : new List<Alert>();
+        ? (List<Alert>) TempData[Alert.TempDataKey]
+        : new List<Alert>();
 
 
     @Styles.Render("~/Content/alerts")

@@ -1,28 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using ITConferences.Domain.Entities;
 using ITConferences.WebUI.Abstract.Helpers;
-using WebGrease.Css.Extensions;
 
 namespace ITConferences.WebUI.Helpers
 {
     public class FilterHelper : IFilterConferenceHelper, IFilterSpeakerHelper
     {
         public IEnumerable<Conference> Conferences { get; set; }
-
-        public IEnumerable<Speaker> Speakers { get; set; }
-
-        public void FilterBySpeakerName(ViewDataDictionary viewData, string nameFilter)
-        {
-            if (!string.IsNullOrEmpty(nameFilter))
-            {
-                viewData["NameFilter"] = nameFilter;
-                Speakers = Speakers.Where(e => e.User.UserName.ToLower().Contains(nameFilter.ToLower())).ToList();
-            }
-        }
 
         public void FilterByName(ViewDataDictionary viewData, string nameFilter)
         {
@@ -56,7 +43,6 @@ namespace ITConferences.WebUI.Helpers
                             e =>
                                 e.TargetCity.Name.ToLower().Contains(locationFilter.ToLower()) ||
                                 e.TargetCountry.Name.ToLower().Contains(locationFilter.ToLower())).ToList();
-
                 }
             }
         }
@@ -102,6 +88,17 @@ namespace ITConferences.WebUI.Helpers
                 case DateFilter.All:
                     Conferences = conferences;
                     break;
+            }
+        }
+
+        public IEnumerable<Speaker> Speakers { get; set; }
+
+        public void FilterBySpeakerName(ViewDataDictionary viewData, string nameFilter)
+        {
+            if (!string.IsNullOrEmpty(nameFilter))
+            {
+                viewData["NameFilter"] = nameFilter;
+                Speakers = Speakers.Where(e => e.User.UserName.ToLower().Contains(nameFilter.ToLower())).ToList();
             }
         }
     }

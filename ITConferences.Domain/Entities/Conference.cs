@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using ITConferences.Domain.Migrations;
 
 namespace ITConferences.Domain.Entities
 {
@@ -44,15 +39,19 @@ namespace ITConferences.Domain.Entities
 
         [DisplayName("City:")]
         public virtual City TargetCity { get; set; }
+
         [DisplayName("Country:")]
         public virtual Country TargetCountry { get; set; }
+
         [DisplayName("Image:")]
         public virtual Image Image { get; set; }
+
         public virtual ICollection<Attendee> Attendees { get; set; }
         public virtual ICollection<Speaker> Speakers { get; set; }
 
         [Display(Name = "Organizer:")]
         public virtual Organizer Organizer { get; set; }
+
         public virtual ICollection<Tag> Tags { get; set; }
         public virtual ICollection<Evaluation> Evaluation { get; set; }
 

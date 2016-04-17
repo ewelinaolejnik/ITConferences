@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITConferences.Domain.Entities
 {
@@ -16,6 +12,7 @@ namespace ITConferences.Domain.Entities
 
         [Display(Name = "Topics:")]
         public string Name { get; set; }
+
         public virtual ICollection<Conference> Conferences { get; set; }
     }
 }

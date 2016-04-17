@@ -3,7 +3,8 @@
     ViewBag.Title = "OrganizedConferences";
 }
 
-@Styles.Render("~/Content/details")
+@*@Styles.Render("~/Content/details")*@
+@Styles.Render("~/Content/create-conference")
 
 <div class="container form-group">
     <h4 class="text-success">You are an organizer at:</h4>
@@ -11,16 +12,16 @@
     <div >
         @foreach (var item in Model)
         {
-            <div class="col-md-4 col-xs-1 btn buffer">
+            <div class="col-lg-4 col-xs-1 btn buffer">
                 <a href="@Url.Action("Manage", "Conferences", new {id = item.ConferenceID})" class="link-format">
                     <div class="col-md-4 col-xs-6">
                         @if (item.Image != null)
                         {
-                            <img src="@Url.Action("GetImage", "Conferences", new {imageId = item.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
+                            <img src="@Url.Action("GetImage", "Conferences", new {imageId = item.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image"/>
                         }
                         else
                         {
-                            <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
+                            <img src="~/img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image"/>
                         }
                     </div>
 

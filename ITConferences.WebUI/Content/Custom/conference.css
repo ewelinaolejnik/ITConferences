@@ -1,31 +1,21 @@
-﻿.btn:active {
-    box-shadow: none;
-}
+﻿.btn:active { box-shadow: none; }
 
-.link-format {
+.link-format { color: lightseagreen; }
+
+.link-format:hover {
     color: lightseagreen;
+    text-decoration: none;
 }
 
-    .link-format:hover {
-        color: lightseagreen;
-        text-decoration: none;
-    }
+.conference-name { font-weight: bold; }
 
-.conference-name {
-    font-weight: bold;
-}
+.body { overflow-scrolling: touch; }
 
-.body {
-    overflow-scrolling: touch;
-}
-
-.buffer {
-    margin-top: 30px;
-}
+.buffer { margin-top: 30px; }
 
 #full {
-    width: 100%;
     height: 100%;
+    width: 100%;
 }
 
 .btn-Twitter {
@@ -34,14 +24,12 @@
     color: #fff;
 }
 
-    .btn-twitter:link, .btn-twitter:visited {
-        color: #fff;
-    }
+.btn-twitter:link, .btn-twitter:visited { color: #fff; }
 
-    .btn-twitter:active, .btn-twitter:hover {
-        background: #0087bd;
-        color: #fff;
-    }
+.btn-twitter:active, .btn-twitter:hover {
+    background: #0087bd;
+    color: #fff;
+}
 
 .btn-Facebook {
     background: #3b5998;
@@ -49,14 +37,12 @@
     color: #fff;
 }
 
-    .btn-facebook:link, .btn-facebook:visited {
-        color: #fff;
-    }
+.btn-facebook:link, .btn-facebook:visited { color: #fff; }
 
-    .btn-facebook:active, .btn-facebook:hover {
-        background: #30477a;
-        color: #fff;
-    }
+.btn-facebook:active, .btn-facebook:hover {
+    background: #30477a;
+    color: #fff;
+}
 
 .btn-googleplus {
     background: #e93f2e;
@@ -64,14 +50,12 @@
     color: #fff;
 }
 
-    .btn-googleplus:link, .btn-googleplus:visited {
-        color: #fff;
-    }
+.btn-googleplus:link, .btn-googleplus:visited { color: #fff; }
 
-    .btn-googleplus:active, .btn-googleplus:hover {
-        background: #ba3225;
-        color: #fff;
-    }
+.btn-googleplus:active, .btn-googleplus:hover {
+    background: #ba3225;
+    color: #fff;
+}
 
 .btn-linkedin {
     background: #0e76a8;
@@ -79,12 +63,9 @@
     color: #fff;
 }
 
-    .btn-linkedin:link, .btn-linkedin:visited {
-        color: #fff;
-    }
+.btn-linkedin:link, .btn-linkedin:visited { color: #fff; }
 
-    .btn-linkedin:active, .btn-linkedin:hover {
-        background: #0b6087;
-        color: #fff;
-    }
-
+.btn-linkedin:active, .btn-linkedin:hover {
+    background: #0b6087;
+    color: #fff;
+}

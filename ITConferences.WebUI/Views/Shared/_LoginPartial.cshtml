@@ -1,14 +1,12 @@
 ﻿@using ITConferences.Domain.Concrete
 @using ITConferences.Domain.Entities
-@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity
 @using Microsoft.AspNet.Identity.EntityFramework
-
-
-<link rel="stylesheet" href="~/Content/Custom/login.css" />
+<link rel="stylesheet" href="~/Content/Custom/login.css"/>
 
 @if (Request.IsAuthenticated)
 {
-    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new {id = "logoutForm", @class = "navbar-right"}))
     {
         @Html.AntiForgeryToken()
         var manager = new UserManager<Attendee>(new UserStore<Attendee>(new DataContext()));
@@ -20,7 +18,7 @@
                 <li class="profile-img">
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-menu-left" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <img src="../../img/profile-picture.ico" class="profile-img" alt="No image"/> 
+                            <img src="../../img/profile-picture.ico" class="profile-img" alt="No image"/>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li>@Html.ActionLink("Settings", "Index", "Manage")</li>
@@ -31,8 +29,10 @@
                             @if (currentUser.Organizer != null)
                             {
                                 <li>@Html.ActionLink("Organized conferences", "OrganizedConferences", "Manage")</li>
-                            } 
-                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                            }
+                            <li>
+                                <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -41,12 +41,12 @@
             {
                 var base64 = Convert.ToBase64String(currentUser.Image.ImageData);
                 var dataType = currentUser.Image.ImageMimeType;
-                var imgSrc = String.Format("data:{0};base64,{1}", dataType, base64);
+                var imgSrc = string.Format("data:{0};base64,{1}", dataType, base64);
 
                 <li class="profile-img">
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-menu-left" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <img src="@imgSrc" class="profile-img" alt="No image" />
+                            <img src="@imgSrc" class="profile-img" alt="No image"/>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li>@Html.ActionLink("Settings", "Index", "Manage")</li>
@@ -58,7 +58,9 @@
                             {
                                 <li>@Html.ActionLink("Organized conferences", "OrganizedConferences", "Manage")</li>
                             }
-                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                            <li>
+                                <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -69,8 +71,7 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Sign in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
-        <li>@Html.ActionLink("Sign up", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Sign in", "Login", "Account", null, new {id = "loginLink"})</li>
+        <li>@Html.ActionLink("Sign up", "Register", "Account", null, new {id = "registerLink"})</li>
     </ul>
 }
-

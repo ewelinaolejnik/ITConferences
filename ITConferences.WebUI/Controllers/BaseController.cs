@@ -1,16 +1,15 @@
-﻿using ITConferences.WebUI.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using ITConferences.Domain.Abstract;
 using ITConferences.Domain.Entities;
+using ITConferences.WebUI.Models;
 
 namespace ITConferences.WebUI.Controllers
 {
     public class BaseController : Controller
     {
         protected IGenericRepository _repository;
-        public Dictionary<string, object> ViewDataDictionary { get; set; }
 
         public BaseController(IGenericRepository repository)
         {
@@ -20,6 +19,8 @@ namespace ITConferences.WebUI.Controllers
             }
             _repository = repository;
         }
+
+        public Dictionary<string, object> ViewDataDictionary { get; set; }
 
         public FileContentResult GetImage(int? imageId)
         {
@@ -62,7 +63,7 @@ namespace ITConferences.WebUI.Controllers
         private void AddAlert(string alertStyle, string message, bool dismissable)
         {
             var alerts = TempData.ContainsKey(Alert.TempDataKey)
-                ? (List<Alert>)TempData[Alert.TempDataKey]
+                ? (List<Alert>) TempData[Alert.TempDataKey]
                 : new List<Alert>();
 
             alerts.Add(new Alert

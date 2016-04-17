@@ -1,19 +1,32 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ITConferences.WebUI.Controllers;
-using ITConferences.Domain.Entities;
-using ITConferences.Domain.Abstract;
-using Moq;
-using System.Web;
 using System.Web.Mvc;
+using ITConferences.Domain.Abstract;
+using ITConferences.Domain.Entities;
+using ITConferences.WebUI.Controllers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace ITConferences.UnitTests.Controllers
 {
     [TestClass]
     public class OrganizersControllerTests
     {
+        #region | Ctor |
+
+        [TestMethod]
+        [TestCategory("OrganizersController")]
+        [Owner("Ewelina Olejnik")]
+        [ExpectedException(typeof (ArgumentNullException))]
+        public void OrganizersController_Ctor_throws_exception_if_repository_is_null()
+        {
+            sut = new OrganizersController(null);
+        }
+
+        #endregion
+
         #region | Sut |
-        OrganizersController sut;
+
+        private OrganizersController sut;
         private Mock<IGenericRepository> _repositoryMock;
         private Organizer[] organizers;
 
@@ -24,11 +37,11 @@ namespace ITConferences.UnitTests.Controllers
 
             organizers = new[]
             {
-                new Organizer()
+                new Organizer
                 {
                     User = new Attendee()
                 },
-                new Organizer()
+                new Organizer
                 {
                     User = new Attendee()
                 }
@@ -39,7 +52,7 @@ namespace ITConferences.UnitTests.Controllers
 
             sut = new OrganizersController(_repositoryMock.Object);
 
-            _repositoryMock.Setup(e => e.GetById<Organizer>(1, null)).Returns((Organizer)null);
+            _repositoryMock.Setup(e => e.GetById<Organizer>(1, null)).Returns((Organizer) null);
             _repositoryMock.Setup(e => e.GetById<Organizer>(2, null)).Returns(new Organizer());
         }
 
@@ -50,21 +63,11 @@ namespace ITConferences.UnitTests.Controllers
             _repositoryMock = null;
             sut = null;
         }
-        #endregion
 
-        #region | Ctor |
-
-        [TestMethod]
-        [TestCategory("OrganizersController")]
-        [Owner("Ewelina Olejnik")]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void OrganizersController_Ctor_throws_exception_if_repository_is_null()
-        {
-            sut = new OrganizersController(null);
-        }
         #endregion
 
         #region | Details |
+
         [TestMethod]
         [TestCategory("OrganizersController")]
         [Owner("Ewelina Olejnik")]
@@ -77,7 +80,7 @@ namespace ITConferences.UnitTests.Controllers
 
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(HttpStatusCodeResult));
+            Assert.IsInstanceOfType(result, typeof (HttpStatusCodeResult));
         }
 
         [TestMethod]
@@ -92,8 +95,9 @@ namespace ITConferences.UnitTests.Controllers
 
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsInstanceOfType(result, typeof (HttpNotFoundResult));
         }
+
         #endregion
     }
 }

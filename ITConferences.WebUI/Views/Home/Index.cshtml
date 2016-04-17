@@ -1,10 +1,9 @@
-﻿@using Microsoft.AspNet.Identity;
-@{
+﻿@{
     ViewBag.Title = "Home Page";
 }
 
 
-<link rel="stylesheet" href="~/Content/grayscale.css" />
+<link rel="stylesheet" href="~/Content/grayscale.css"/>
 @*@Scripts.Render("~/bundles/home")*@
 
 <header class="intro">
@@ -24,7 +23,8 @@
                     <form class="form-inline" role="form">
                         <div class="form-group">
                             @Html.TextBox("NameFilter", null, new {@class = "form-control input-lg", @placeholder = "Search..."})
-                            <button id="homeButton" type="submit" value="Submit" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-search"></span></button>
+                            <button id="homeButton" type="submit" value="Submit" class="btn btn-success btn-lg">
+                                <span class="glyphicon glyphicon-search"></span></button>
                         </div>
                     </form>
                 </div>

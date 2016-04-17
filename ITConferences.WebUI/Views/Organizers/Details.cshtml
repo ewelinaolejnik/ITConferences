@@ -18,11 +18,11 @@
         <div class="col-md-4 col-xs-4">
             @if (Model.User.Image != null)
             {
-                <img src="@Url.Action("GetImage","Organizers", new {imageId = Model.User.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
+                <img src="@Url.Action("GetImage", "Organizers", new {imageId = Model.User.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image"/>
             }
             else
             {
-                <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
+                <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image"/>
             }
         </div>
 
@@ -43,7 +43,7 @@
                 <dd>
                     @foreach (var conf in Model.OrganizedConferences)
                     {
-                        @Html.ActionLink(conf.Name, "Details", "Conferences", new { id = conf.ConferenceID },null)@($"{", "}")
+                        @Html.ActionLink(conf.Name, "Details", "Conferences", new {id = conf.ConferenceID}, null)@($"{", "}")
                     }
 
                 </dd>

@@ -6,7 +6,6 @@
 }
 
 
-
 <div id="loading" style="display: none">
     <img src="~/img/ajax-loader.gif" class="img-responsive center-block" alt="Loading image"/>
 </div>
@@ -25,11 +24,11 @@
                     <div class="row">
                         @if (item.User.Image != null)
                         {
-                            <img src="@Url.Action("GetImage", "Speakers", new {imageId = item.User.Image.ImageID}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
+                            <img src="@Url.Action("GetImage", "Speakers", new {imageId = item.User.Image.ImageID}, null)" class="img-responsive img-thumbnail" alt="Conference image"/>
                         }
                         else
                         {
-                            <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Speaker image" />
+                            <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Speaker image"/>
                         }
                     </div>
                 </a>

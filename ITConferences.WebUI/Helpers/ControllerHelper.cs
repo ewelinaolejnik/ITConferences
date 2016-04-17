@@ -11,7 +11,8 @@ namespace ITConferences.WebUI.Helpers
 {
     public class ControllerHelper : IControllerHelper
     {
-        private IGenericRepository _repository;
+        private readonly IGenericRepository _repository;
+
         public ControllerHelper(IGenericRepository repository)
         {
             _repository = repository;
@@ -27,21 +28,21 @@ namespace ITConferences.WebUI.Helpers
             return empty
                 ? string.Empty
                 : (itemsCount == 1
-                    ? itemsCount.ToString() + " result"
-                    : itemsCount.ToString() + " results");
+                    ? itemsCount + " result"
+                    : itemsCount + " results");
         }
 
         public int GetPageSize(int pageId, int pageSize, int itemsCount)
         {
-            return (pageSize * pageId) + pageSize < itemsCount
+            return pageSize*pageId + pageSize < itemsCount
                 ? pageSize
-                : Math.Abs(itemsCount) - (pageSize * pageId);
+                : Math.Abs(itemsCount) - pageSize*pageId;
         }
 
         public Evaluation GetEvaluation(string ownerId, string comment, int countOfStars)
         {
             var owner = _repository.GetById<Attendee>(null, ownerId);
-            var eval = new Evaluation()
+            var eval = new Evaluation
             {
                 Comment = comment,
                 CountOfStars = countOfStars,
@@ -53,11 +54,10 @@ namespace ITConferences.WebUI.Helpers
 
         public void AssignImage(HttpPostedFileBase image, Conference conference)
         {
-            var img = new Image()
+            var img = new Image
             {
                 ImageData = image.InputStream.ToByteArray(),
                 ImageMimeType = image.ContentType
-
             };
             conference.Image = img;
         }
@@ -65,11 +65,11 @@ namespace ITConferences.WebUI.Helpers
         public void AssignOrganizer(string userId, Conference conference)
         {
             var attendee = _repository.GetById<Attendee>(null, userId);
-            var organizer = attendee.Organizer ?? new Organizer()
+            var organizer = attendee.Organizer ?? new Organizer
             {
                 User = attendee
             };
-            
+
 
             conference.Organizer = organizer;
         }
@@ -84,14 +84,15 @@ namespace ITConferences.WebUI.Helpers
             tagsList.ToList().ForEach(e => _repository.UpdateAndSubmit(e));
         }
 
-        public void AssignSpeakers(string speakers, Conference conference)
+        public void AssignSpeakers(string speakers, IEnumerable<Speaker> speakersDb, Conference conference)
         {
             conference.Tags = new List<Tag>();
             var stringSpeakers = speakers.Split(',').ToList();
             var attendees = AllUsers.Where(e => stringSpeakers.Any(l => l == e.Id));
             foreach (var attendee in attendees)
             {
-                conference.Speakers.Add(new Speaker() { User = attendee });
+                var speaker = new Speaker() {User = attendee};
+                speakersDb.ToList().Add(speaker);
             }
         }
 

@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
+using ITConferences.Domain.Concrete;
+using ITConferences.Domain.Entities;
+using ITConferences.WebUI.Service;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using ITConferences.Domain.Entities;
-using ITConferences.Domain.Abstract;
-using ITConferences.Domain.Concrete;
-using System.Net.Mail;
-using ITConferences.WebUI.Service;
 
 namespace ITConferences.WebUI
 {
@@ -22,8 +17,8 @@ namespace ITConferences.WebUI
     {
         public async Task SendAsync(IdentityMessage message)
         {
-            MailMessage email = new MailMessage(new MailAddress("noreply@itconferences.com", "(do not reply)"),
-            new MailAddress(message.Destination));
+            var email = new MailMessage(new MailAddress("noreply@itconferences.com", "(do not reply)"),
+                new MailAddress(message.Destination));
 
             email.Subject = message.Subject;
             email.Body = message.Body;
@@ -50,7 +45,6 @@ namespace ITConferences.WebUI
     //}
 
 
-
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
     public class ApplicationUserManager : UserManager<Attendee>
     {
@@ -59,7 +53,8 @@ namespace ITConferences.WebUI
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options,
+            IOwinContext context)
         {
             var manager = new ApplicationUserManager(new UserStore<Attendee>(context.Get<DataContext>()));
             // Configure validation logic for usernames
@@ -76,7 +71,7 @@ namespace ITConferences.WebUI
                 RequireNonLetterOrDigit = true,
                 RequireDigit = true,
                 RequireLowercase = true,
-                RequireUppercase = true,
+                RequireUppercase = true
             };
 
             // Configure user lockout defaults
@@ -117,10 +112,11 @@ namespace ITConferences.WebUI
 
         public override Task<ClaimsIdentity> CreateUserIdentityAsync(Attendee user)
         {
-            return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager);
+            return user.GenerateUserIdentityAsync((ApplicationUserManager) UserManager);
         }
 
-        public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
+        public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options,
+            IOwinContext context)
         {
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
         }

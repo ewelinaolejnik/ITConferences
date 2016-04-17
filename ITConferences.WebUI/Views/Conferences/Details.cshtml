@@ -1,5 +1,5 @@
-﻿@model ITConferences.Domain.Entities.Conference
-@using Microsoft.AspNet.Identity
+﻿@using Microsoft.AspNet.Identity
+@model ITConferences.Domain.Entities.Conference
 
 @Styles.Render("~/Content/details")
 @Scripts.Render("~/bundles/rating")
@@ -22,11 +22,11 @@
         <div class="col-md-4 col-xs-4">
             @if (Model.Image != null)
             {
-                <img src="@Url.Action("GetImage","Conferences", new {imageId = Model.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
+                <img src="@Url.Action("GetImage", "Conferences", new {imageId = Model.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image"/>
             }
             else
             {
-                <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
+                <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image"/>
             }
         </div>
 
@@ -88,7 +88,7 @@
                     <dd>
                         @foreach (var tag in Model.Tags)
                         {
-                            @Html.ActionLink(tag.Name, "Index", new { tagsFilter = tag.TagID })@($"{", "}")
+                            @Html.ActionLink(tag.Name, "Index", new {tagsFilter = tag.TagID})@($"{", "}")
                         }
                     </dd>
                 }
@@ -100,7 +100,7 @@
                     </dt>
 
                     <dd>
-                        @Html.ActionLink(Model.Organizer.User.UserName, "Details", "Organizers", new { id = Model.Organizer.OrganizerID }, null)@($"{", "}")
+                        @Html.ActionLink(Model.Organizer.User.UserName, "Details", "Organizers", new {id = Model.Organizer.OrganizerID}, null)@($"{", "}")
                     </dd>
                 }
                 @if (Model.Speakers != null && Model.Speakers.Count != 0)
@@ -112,7 +112,7 @@
                     <dd>
                         @foreach (var speaker in Model.Speakers)
                         {
-                            @Html.ActionLink(speaker.User.UserName, "Details", "Speakers", new { id = speaker.SpeakerID }, null)@($"{", "}")
+                            @Html.ActionLink(speaker.User.UserName, "Details", "Speakers", new {id = speaker.SpeakerID}, null)@($"{", "}")
                         }
                     </dd>
                 }
@@ -141,19 +141,20 @@
         <p class="pull-left">
             Evaluations:
         </p>
-        <br />
+        <br/>
         <div class="well">
 
             <div class="thumbnail row" style="overflow: hidden;">
 
                 <div class="col-md-7 col-xs-6">
-                    <input type="text" id="full" />
+                    <input type="text" id="full"/>
                 </div>
                 <div class="col-md-4 col-xs-3">
-                    <input id="input-id" type="number" class="rating pull-right" step="1" min=0 max=5 data-size="xs">
+                    <input id="input-id" type="number" class="rating pull-right" step="1" min="0" max="5" data-size="xs">
                 </div>
                 <div class="col-md-1 col-xs-1">
-                    <button id="submitButton" type="submit" value="Submit" class="btn btn-success btn-lg pull-right"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button id="submitButton" type="submit" value="Submit" class="btn btn-success btn-lg pull-right">
+                        <span class="glyphicon glyphicon-ok"></span></button>
                 </div>
 
             </div>
@@ -168,11 +169,11 @@
                             @if (Request.IsAuthenticated && eval.Owner.Image != null)
                             {
                                 <label>@eval.Owner.UserName</label>
-                                <img src="@Url.Action(" GetImage","Conferences", new {imageId=eval.Owner.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image" />
+                                <img src="@Url.Action(" GetImage", "Conferences", new {imageId = eval.Owner.ImageId}, null)" class="img-responsive img-thumbnail" alt="Conference image"/>
                             }
                             else
                             {
-                                <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image" />
+                                <img src="../../img/default.jpg" class="img-responsive img-thumbnail" alt="Conference image"/>
                             }
                         </div>
                         <div class="col-md-6 col-xs-6">
@@ -204,14 +205,14 @@
         "ownerId": "@User.Identity.GetUserId()",
     };
 
-    $("#submitButton").click(function () {
+    $("#submitButton").click(function() {
 
         $.ajax({
             url: '/Conferences/AddEvaluation/',
             type: "POST",
             dataType: "HTML",
-            data: { conferenceId: conference.conferenceId, countOfStars:  $("#input-id").val(), comment: $("#full").val(), ownerId: owner.ownerId },
-            success: function (data) {
+            data: { conferenceId: conference.conferenceId, countOfStars: $("#input-id").val(), comment: $("#full").val(), ownerId: owner.ownerId },
+            success: function(data) {
                 if (data != "") {
                     $("#details").html(data);
                 }
@@ -221,4 +222,3 @@
 
     });
 </script>
-

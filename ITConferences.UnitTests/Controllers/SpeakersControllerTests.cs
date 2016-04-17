@@ -1,15 +1,16 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 using ITConferences.Domain.Abstract;
-using ITConferences.WebUI.Controllers;
-using Moq;
 using ITConferences.Domain.Entities;
 using ITConferences.WebUI.Abstract.Helpers;
-using System.Web;
-using System.Web.Routing;
-using System.Web.Mvc;
-using System.Linq;
-using System.Collections.Generic;
+using ITConferences.WebUI.Controllers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace ITConferences.UnitTests.Controllers
 {
@@ -17,7 +18,8 @@ namespace ITConferences.UnitTests.Controllers
     public class SpeakersControllerTests
     {
         #region | Sut |
-        SpeakersController sut;
+
+        private SpeakersController sut;
         private Mock<IGenericRepository> _repositoryMock;
         private Mock<IFilterSpeakerHelper> _filterHelperMock;
         private Mock<IControllerHelper> _controllerHelperMock;
@@ -34,11 +36,11 @@ namespace ITConferences.UnitTests.Controllers
 
             speakers = new[]
             {
-                new Speaker()
+                new Speaker
                 {
                     User = new Attendee()
                 },
-                new Speaker()
+                new Speaker
                 {
                     User = new Attendee()
                 }
@@ -50,7 +52,7 @@ namespace ITConferences.UnitTests.Controllers
             _filterHelperMock.Setup(e => e.Speakers)
                 .Returns(speakers);
 
-           
+
             sut = new SpeakersController(_repositoryMock.Object, _filterHelperMock.Object,
                 _controllerHelperMock.Object);
 
@@ -58,15 +60,16 @@ namespace ITConferences.UnitTests.Controllers
             _controllerHelperMock.Setup(e => e.GetPageSize(0, It.IsAny<int>(), 2)).Returns(2);
 
             requestMock.SetupGet(x => x.Headers).Returns(
-               new System.Net.WebHeaderCollection {
-                {"X-Requested-With", "XMLHttpRequest"}
-               });
+                new WebHeaderCollection
+                {
+                    {"X-Requested-With", "XMLHttpRequest"}
+                });
             requestMock.Setup(e => e.IsAuthenticated).Returns(true);
             var context = new Mock<HttpContextBase>();
             context.SetupGet(x => x.Request).Returns(requestMock.Object);
             sut.ControllerContext = new ControllerContext(context.Object, new RouteData(), sut);
 
-            _repositoryMock.Setup(e => e.GetById<Speaker>(1, null)).Returns((Speaker)null);
+            _repositoryMock.Setup(e => e.GetById<Speaker>(1, null)).Returns((Speaker) null);
             _repositoryMock.Setup(e => e.GetById<Speaker>(2, null)).Returns(new Speaker());
         }
 
@@ -78,6 +81,7 @@ namespace ITConferences.UnitTests.Controllers
             _controllerHelperMock = null;
             sut = null;
         }
+
         #endregion
 
         #region | Ctor |
@@ -85,7 +89,7 @@ namespace ITConferences.UnitTests.Controllers
         [TestMethod]
         [TestCategory("SpeakersController")]
         [Owner("Ewelina Olejnik")]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof (ArgumentNullException))]
         public void SpeakersController_Ctor_throws_exception_if_repository_is_null()
         {
             sut = new SpeakersController(null, _filterHelperMock.Object,
@@ -96,7 +100,7 @@ namespace ITConferences.UnitTests.Controllers
         [TestMethod]
         [TestCategory("SpeakersController")]
         [Owner("Ewelina Olejnik")]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof (ArgumentNullException))]
         public void SpeakersController_Ctor_throws_exception_if_speakers_filter_is_null()
         {
             sut = new SpeakersController(_repositoryMock.Object, null, _controllerHelperMock.Object);
@@ -105,11 +109,12 @@ namespace ITConferences.UnitTests.Controllers
         [TestMethod]
         [TestCategory("SpeakersController")]
         [Owner("Ewelina Olejnik")]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof (ArgumentNullException))]
         public void SpeakersController_Ctor_throws_exception_if_controller_helper_is_null()
         {
             sut = new SpeakersController(_repositoryMock.Object, _filterHelperMock.Object, null);
         }
+
         #endregion
 
         #region | Index |
@@ -124,7 +129,7 @@ namespace ITConferences.UnitTests.Controllers
             sut.Index(null);
 
             //Assign
-            var viewData = ((string)sut.ViewData["ResultsCount"]);
+            var viewData = (string) sut.ViewData["ResultsCount"];
             var expectedData = "2 results";
 
             //Assert
@@ -176,9 +181,11 @@ namespace ITConferences.UnitTests.Controllers
             //Assert
             Assert.AreEqual(expected, actual);
         }
+
         #endregion
 
         #region | Details |
+
         [TestMethod]
         [TestCategory("SpeakersController")]
         [Owner("Ewelina Olejnik")]
@@ -191,7 +198,7 @@ namespace ITConferences.UnitTests.Controllers
 
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(HttpStatusCodeResult));
+            Assert.IsInstanceOfType(result, typeof (HttpStatusCodeResult));
         }
 
         [TestMethod]
@@ -206,11 +213,13 @@ namespace ITConferences.UnitTests.Controllers
 
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsInstanceOfType(result, typeof (HttpNotFoundResult));
         }
+
         #endregion
 
         #region | GetSpeakers |
+
         [TestMethod]
         [TestCategory("SpeakersController")]
         [Owner("Ewelina Olejnik")]
@@ -230,7 +239,9 @@ namespace ITConferences.UnitTests.Controllers
         [TestMethod]
         [TestCategory("SpeakersController")]
         [Owner("Ewelina Olejnik")]
-        public void SpeakersController_GetSpeakers_returns_null_if_there_is_count_conferences_less_then_multiplication_of_pagesize_and_page_id()
+        public void
+            SpeakersController_GetSpeakers_returns_null_if_there_is_count_conferences_less_then_multiplication_of_pagesize_and_page_id
+            ()
         {
             //Arrange
             var result = sut.GetSpeakers("test", 1);
@@ -252,7 +263,7 @@ namespace ITConferences.UnitTests.Controllers
             sut.GetSpeakers("test", 0);
 
             //Assign
-            var viewData = ((string)sut.ViewData["ResultsCount"]);
+            var viewData = (string) sut.ViewData["ResultsCount"];
             var expectedData = string.Empty;
 
             //Assert
@@ -274,23 +285,25 @@ namespace ITConferences.UnitTests.Controllers
             //Assert
             Assert.AreEqual(expected, actual);
         }
+
         #endregion
 
         #region | AddEvaluation |
+
         [TestMethod]
         [TestCategory("SpeakersController")]
         [Owner("Ewelina Olejnik")]
         public void SpeakersController_AddEvaluation_returns_http_not_found_if_speaker_hasnt_been_found()
         {
             //Arrange
-            _repositoryMock.Setup(e => e.GetById<Speaker>(4, null)).Returns((Speaker)null);
+            _repositoryMock.Setup(e => e.GetById<Speaker>(4, null)).Returns((Speaker) null);
             var result = sut.AddEvaluation(4, 0, null, null);
 
             //Assign
 
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(HttpNotFoundResult));
+            Assert.IsInstanceOfType(result, typeof (HttpNotFoundResult));
         }
 
         [TestMethod]
@@ -299,7 +312,8 @@ namespace ITConferences.UnitTests.Controllers
         public void SpeakersController_AddEvaluation_call_get_evaluation()
         {
             //Arrange
-            _repositoryMock.Setup(e => e.GetById<Speaker>(1, null)).Returns(new Speaker() { Evaluations = new List<Evaluation>() });
+            _repositoryMock.Setup(e => e.GetById<Speaker>(1, null))
+                .Returns(new Speaker {Evaluations = new List<Evaluation>()});
             _controllerHelperMock.Setup(e => e.GetEvaluation(It.IsAny<string>(), "asd", 1)).Returns(new Evaluation());
             sut.AddEvaluation(1, 1, "asd", "1234");
 
@@ -309,6 +323,7 @@ namespace ITConferences.UnitTests.Controllers
             //Assert
             _controllerHelperMock.Verify(e => e.GetEvaluation(It.IsAny<string>(), "asd", 1), Times.Once);
         }
+
         #endregion
     }
 }

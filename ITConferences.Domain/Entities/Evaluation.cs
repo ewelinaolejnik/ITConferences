@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ITConferences.Domain.Entities
 {
@@ -17,10 +12,10 @@ namespace ITConferences.Domain.Entities
         [Range(1, 5)]
         public int CountOfStars { get; set; }
 
-        [StringLength(100,MinimumLength = 3, ErrorMessage = "Comment cannot be longer than 100 characters.")]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "Comment cannot be longer than 100 characters.")]
         public string Comment { get; set; }
-      
-       public virtual Attendee Owner { get; set; }
+
+        public virtual Attendee Owner { get; set; }
 
         [ForeignKey("Owner")]
         public string OwnerId { get; set; }

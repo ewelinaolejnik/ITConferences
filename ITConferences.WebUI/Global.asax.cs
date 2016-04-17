@@ -1,12 +1,13 @@
-﻿using System.Web.Mvc;
+﻿using System.Globalization;
+using System.Threading;
+using System.Web;
+using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using ITConferences.Domain;
-using System.Globalization;
 
 namespace ITConferences.WebUI
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         protected void Application_Start()
         {
@@ -18,9 +19,9 @@ namespace ITConferences.WebUI
 
         protected void Application_BeginRequest()
         {
-            CultureInfo info = new CultureInfo(System.Threading.Thread.CurrentThread.CurrentCulture.ToString());
+            var info = new CultureInfo(Thread.CurrentThread.CurrentCulture.ToString());
             info.DateTimeFormat.ShortDatePattern = "dd/MM/yyyy";
-            System.Threading.Thread.CurrentThread.CurrentCulture = info;
+            Thread.CurrentThread.CurrentCulture = info;
         }
     }
 }

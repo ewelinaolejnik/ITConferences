@@ -2,7 +2,8 @@
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(Startup))]
+[assembly: OwinStartup(typeof (Startup))]
+
 namespace ITConferences.WebUI
 {
     public partial class Startup

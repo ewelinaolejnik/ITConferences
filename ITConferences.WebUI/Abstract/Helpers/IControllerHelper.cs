@@ -1,11 +1,6 @@
-﻿using ITConferences.Domain.Abstract;
-using ITConferences.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Web;
+using ITConferences.Domain.Entities;
 
 namespace ITConferences.WebUI.Abstract.Helpers
 {
@@ -18,7 +13,7 @@ namespace ITConferences.WebUI.Abstract.Helpers
         void AssignImage(HttpPostedFileBase image, Conference conference);
         void AssignOrganizer(string userId, Conference conference);
         void AssignTags(string tags, IEnumerable<Tag> tagsList, Conference conference);
-        void AssignSpeakers(string speakers, Conference conference);
+        void AssignSpeakers(string speakers, IEnumerable<Speaker> speakersDb, Conference conference);
         void EditConferenceProperties(Conference conference, Conference confToEdit, City city, Country country);
     }
 }
