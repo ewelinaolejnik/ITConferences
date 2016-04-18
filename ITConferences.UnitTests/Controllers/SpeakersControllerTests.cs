@@ -128,7 +128,7 @@ namespace ITConferences.UnitTests.Controllers
             _controllerHelperMock.Setup(e => e.GetResultsCount(2, false)).Returns("2 results");
             sut.Index(null);
 
-            //Assign
+            //Act
             var viewData = (string) sut.ViewData["ResultsCount"];
             var expectedData = "2 results";
 
@@ -144,7 +144,7 @@ namespace ITConferences.UnitTests.Controllers
             //Arrange
             sut.Index("test");
 
-            //Assign
+            //Act
 
 
             //Assert
@@ -159,7 +159,7 @@ namespace ITConferences.UnitTests.Controllers
             //Arrange
             sut.Index(null);
 
-            //Assign
+            //Act
 
 
             //Assert
@@ -174,7 +174,7 @@ namespace ITConferences.UnitTests.Controllers
             //Arrange
             sut.Index(null);
 
-            //Assign
+            //Act
             var actual = sut.PagedSpeakers.Count();
             var expected = 2;
 
@@ -194,7 +194,7 @@ namespace ITConferences.UnitTests.Controllers
             //Arrange
             var result = sut.Details(null);
 
-            //Assign
+            //Act
 
 
             //Assert
@@ -209,7 +209,7 @@ namespace ITConferences.UnitTests.Controllers
             //Arrange
             var result = sut.Details(1);
 
-            //Assign
+            //Act
 
 
             //Assert
@@ -228,7 +228,7 @@ namespace ITConferences.UnitTests.Controllers
             //Arrange
             sut.GetSpeakers("test", 1);
 
-            //Assign
+            //Act
 
 
             //Assert
@@ -246,7 +246,7 @@ namespace ITConferences.UnitTests.Controllers
             //Arrange
             var result = sut.GetSpeakers("test", 1);
 
-            //Assign
+            //Act
 
 
             //Assert
@@ -262,7 +262,7 @@ namespace ITConferences.UnitTests.Controllers
             _controllerHelperMock.Setup(e => e.GetResultsCount(2, true)).Returns(string.Empty);
             sut.GetSpeakers("test", 0);
 
-            //Assign
+            //Act
             var viewData = (string) sut.ViewData["ResultsCount"];
             var expectedData = string.Empty;
 
@@ -278,7 +278,7 @@ namespace ITConferences.UnitTests.Controllers
             //Arrange
             sut.GetSpeakers("test", 0);
 
-            //Assign
+            //Act
             var actual = sut.PagedSpeakers.Count();
             var expected = 2;
 
@@ -299,7 +299,7 @@ namespace ITConferences.UnitTests.Controllers
             _repositoryMock.Setup(e => e.GetById<Speaker>(4, null)).Returns((Speaker) null);
             var result = sut.AddEvaluation(4, 0, null, null);
 
-            //Assign
+            //Act
 
 
             //Assert
@@ -317,7 +317,7 @@ namespace ITConferences.UnitTests.Controllers
             _controllerHelperMock.Setup(e => e.GetEvaluation(It.IsAny<string>(), "asd", 1)).Returns(new Evaluation());
             sut.AddEvaluation(1, 1, "asd", "1234");
 
-            //Assign
+            //Act
 
 
             //Assert

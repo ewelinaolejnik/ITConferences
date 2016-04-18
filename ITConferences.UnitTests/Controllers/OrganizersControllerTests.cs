@@ -76,7 +76,7 @@ namespace ITConferences.UnitTests.Controllers
             //Arrange
             var result = sut.Details(null);
 
-            //Assign
+            //Act
 
 
             //Assert
@@ -91,7 +91,7 @@ namespace ITConferences.UnitTests.Controllers
             //Arrange
             var result = sut.Details(1);
 
-            //Assign
+            //Act
 
 
             //Assert

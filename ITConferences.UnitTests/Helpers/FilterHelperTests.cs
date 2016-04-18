@@ -22,7 +22,7 @@ namespace ITConferences.UnitTests.Helpers
             //Arrange
             sut.FilterByName(viewData, "asd");
 
-            //Assign
+            //Act
             var nameFilter = "asd";
             var expectedConferences = new[]
             {
@@ -50,7 +50,7 @@ namespace ITConferences.UnitTests.Helpers
             //Arrange
             sut.FilterByTags(viewData, new[] {1, 4}, _repositoryMock.Object.GetAll<Tag>());
 
-            //Assign
+            //Act
             var actualViewData = (MultiSelectList) viewData["TagsFilter"];
             var selectedTags = new[] {tag1, new Tag {TagID = 4}};
             var filteredTags = new[] {tag1};
@@ -134,7 +134,7 @@ namespace ITConferences.UnitTests.Helpers
             //Arrange
             sut.FilterByLocation(viewData, "asd");
 
-            //Assign
+            //Act
             var locationFilter = "asd";
 
             //Assert
@@ -151,7 +151,7 @@ namespace ITConferences.UnitTests.Helpers
             //Arrange
             sut.FilterByLocation(viewData, "asd, asd");
 
-            //Assign
+            //Act
             var expectedConferencesByCity = new[] {new Conference {TargetCity = new City {Name = "Asd"}}};
             var expectedConferencesByCountry = new[] {new Conference {TargetCountry = new Country {Name = "Asd"}}};
             var actualConferences = sut.Conferences.ToArray();
@@ -173,7 +173,7 @@ namespace ITConferences.UnitTests.Helpers
             //Arrange
             sut.FilterByLocation(viewData, "asd");
 
-            //Assign
+            //Act
             var expectedConferencesByCity = new[] {new Conference {TargetCity = new City {Name = "Asd"}}};
             var expectedConferencesByCountry = new[] {new Conference {TargetCountry = new Country {Name = "Asd"}}};
             var actualConferences = sut.Conferences.ToArray();

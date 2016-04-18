@@ -56,7 +56,7 @@ namespace ITConferences.WebUI.Controllers
             _speakersFilter.Speakers = Speakers;
             _speakersFilter.FilterBySpeakerName(ViewData, nameFilter);
 
-            ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_speakersFilter.Speakers.Count(), true);
+            ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_speakersFilter.Speakers.Count());
 
 
             var pageSize = _controllerHelper.GetPageSize(0, PageSize, _speakersFilter.Speakers.Count());

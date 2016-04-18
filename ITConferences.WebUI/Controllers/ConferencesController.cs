@@ -77,7 +77,7 @@ namespace ITConferences.WebUI.Controllers
             _conferenceFilter.FilterByTags(ViewData, new[] {tagsFilter ?? 0}, Tags);
 
             ViewData["TagsFilter"] = new MultiSelectList(_repository.GetAll<Tag>(), "TagID", "Name");
-            ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_conferenceFilter.Conferences.Count(), true);
+            ViewData["ResultsCount"] = _controllerHelper.GetResultsCount(_conferenceFilter.Conferences.Count());
 
             var pageSize = _controllerHelper.GetPageSize(0, PageSize, _conferenceFilter.Conferences.Count());
             PagedConferences =
